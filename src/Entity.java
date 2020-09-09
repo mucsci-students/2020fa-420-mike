@@ -5,10 +5,6 @@ public class Entity {
 	String name;
 	ArrayList<String> attributes;
 
-	public Entity() {
-		attributes = new ArrayList<String>();
-	}
-
 	public Entity(String newname) {
 		name = newname;
 		attributes = new ArrayList<String>();
@@ -36,8 +32,11 @@ public class Entity {
 	// Attribute Functions                                    //
 	//********************************************************//
 	
-	
 	public boolean createAttribute(String attribute) {
+		if (attributes.contains(attribute))
+		{
+			return true;
+		}
 		return attributes.add(attribute);
 	}	
 

@@ -4,17 +4,17 @@ public class Classes {
 	static ArrayList<Entity> entities;
 	static ArrayList<Relationship> relationships;
 
-	//********************************************************//
-	// Constructors                                           //
-	//********************************************************//
+	// ********************************************************//
+	// Constructors //
+	// ********************************************************//
 	public Classes() {
 		entities = new ArrayList<Entity>();
 		relationships = new ArrayList<Relationship>();
 	}
-	
-	//********************************************************//
-	// Class Functions                                        //
-	//********************************************************//
+
+	// ********************************************************//
+	// Class Functions //
+	// ********************************************************//
 	public boolean createClass(String name) {
 		for (Entity e : entities) {
 			if (e.name.equals(name)) {
@@ -35,12 +35,22 @@ public class Classes {
 	}
 
 	public boolean deleteClass(String target) {
-		return entities.remove(new Entity(target));
+		int index = entities.indexOf(new Entity(target));
+		if (index >= 0) {
+			for (Relationship r : relationships) {
+				if (r.class1.equals(target) || r.class2.equals(target)) {
+					relationships.remove(r);
+				}
+			}
+
+			entities.remove(index);
+		}
+		return false;
 	}
 
-	//********************************************************//
-	// Attribute Functions                                    //
-	//********************************************************//
+	// ********************************************************//
+	// Attribute Functions //
+	// ********************************************************//
 	public boolean createAttribute(String targetclass, String attribute) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
@@ -55,8 +65,7 @@ public class Classes {
 		return false;
 	}
 
-	public boolean renameAttribute(String targetclass, String targetattribute, String newattribute)
-	{
+	public boolean renameAttribute(String targetclass, String targetattribute, String newattribute) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
@@ -69,9 +78,8 @@ public class Classes {
 		// Target not found.
 		return false;
 	}
-	
-	public boolean deleteAttribute(String targetclass, String targetattribute)
-	{
+
+	public boolean deleteAttribute(String targetclass, String targetattribute) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
@@ -83,5 +91,10 @@ public class Classes {
 		}
 		// Target not found.
 		return false;
+	}
+
+	public void clear() {
+		entities.clear();
+		relationships.clear();
 	}
 }

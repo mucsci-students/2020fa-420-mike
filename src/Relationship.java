@@ -31,6 +31,4 @@ public class Relationship {
 				&& Objects.equals(this.class1, other.class1)
 				&& Objects.equals(this.class2, other.class2);
 	}
-	
-	
 }
