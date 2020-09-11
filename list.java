@@ -1,38 +1,34 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
-import org.json.simple.JSONArray; 
-import org.json.simple.JSONObject; 
-import org.json.simple.parser.*; 
-
 public class list {
-
-	public list(String listType) throws FileNotFoundException, IOException, ParseException {
-		//Create list of files in saves folder
-		File f = new File(System.getProperty("user.dir") + "\\save");
-		String[] contents = f.list();
-		String saveFile = null;
-
-		// Find umlSave.json file
-		for (int x = 0; x < contents.length; ++x) {
-			if (contents[x].equals("umlSave.json")){
-				saveFile = contents[x];
-				break;
-			}
-		}
-
-		//Decode json file into a JSONArray
-		Object obj = new JSONParser().parse(new FileReader(saveFile));
-		JSONObject javaObj = (JSONObject) obj;
-		JSONArray list = (JSONArray) javaObj.get(listType);
 	
-		// Print out list
-		System.out.println(listType + ":");
-		for (int x = 0; x < list.size(); x++) {
-			System.out.println("   -- " + list.get(x));
+	// Lists all of the classes and their respective attributes
+	public static void listClasses()
+	{
+		System.out.println("Classes:");
+		for(Entity entity : Classes.entities)
+		{			
+			System.out.print("   -- " + entity.name + ": [ ");
+			
+			//Prints out all of the attributes
+			for(int x = 0; x < entity.attributes.size(); x++)
+			{
+				System.out.print(entity.attributes.get(x));
+				if(x != entity.attributes.size()-1)
+				{
+					System.out.print(", ");
+				}
+			}
+			System.out.println(" ]");
 		}
 	}
 	
-}
+	// Lists all of the relationships and the classes they are pointing to
+	public static void listRelationships()
+	{
+		System.out.println("Relationships:");
+		for(Relationship relation : Classes.relationships)
+		{
+			System.out.println("   -- " + relation.name + ": " + relation.class1 + "--" + relation.class2);
+		}
+	}
+	
+} 
