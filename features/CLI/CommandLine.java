@@ -3,154 +3,108 @@ import java.util.Scanner;
 
 public class CommandLine {
 
-	public static void main(String[] args) {
+	public static void commandLineInterface() {
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
 		System.out.println("To exit the program, type quit");
 		System.out.println("To see all the commands available, type help");
 
 
-		while(true)
-		{
+		while(true) {
 			String line = cmdLine.nextLine();
 			//parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
-			//get first command
-			String command = commands[0];
 
-			if (command.equals("quit"))
-			{
+			if (command[0].equals("quit")) {
 				break;
 			}
 			
-			switch(command)
-			{
+			switch(command[0]) {
 				case "help":
 					help(); 
 					break;
 					
 				case "save":
 					//call save depending on if pathname was specified or not
-					if(commands.length == 2)
-					{
+					if (commands.length == 2) {
 						save(commands[1]);
-					}
-					else if (commands.length == 3)
-					{
+					} else if (commands.length == 3) {
 						save(commands[1], commands[2]);							
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
 					
 				case "load":
-					if (commands.length == 2)
-					{
+					if (commands.length == 2) {
 						load(commands[1]);					
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
 					
 				case "cla":
-	
-					// If commands.length == 3 do create or delete	
-					// Else if commands.length == 4 do rename
-					// else break
-
-					//check command after cla
-					if (commands.length == 3)
-					{
-						if(commands[1].equals("create"))
-						{
+					// Call class create, delete, or rename based on length & input
+					if (commands.length == 3) {
+						if (commands[1].equals("create")) {
 							claCreate(commands[2]);
-						}
-						else if(commands[1].equals("delete"))
-						{
+						} else if (commands[1].equals("delete")) {
 							claDelete(commands[2]);
-						}
-						else
-						{
+						} else {
 							commandError();
 						}
-					}
-					else if (commands.length == 4 && commands[1].equals("rename"))
-					{
+					} else if (commands.length == 4 && commands[1].equals("rename")) {
 						claRename(commands[2], commands[3]);
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
 
 				case "rel":
-					//check command after rel
-					if (commands.length == 5 && commands[1].equals("create"))
-					{
+					// Call relationship create, or delete based on length & input
+					if (commands.length == 5 && commands[1].equals("create")) {
 						relCreate(relName, commands[3], commands[4]);
-					}
-					else if (commands.length == 3 && commands[1].equals("delete"))
-					{
+					} else if (commands.length == 3 && commands[1].equals("delete")) {
 						relDelete(relName);
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
 
 				case "att":
-					//check command after cla
-					if (commands.length == 4)
-					{
-						if(commands[1].equals("create"))
-						{
+					// Call attribute create, delete, or rename based on length & input
+					if (commands.length == 4) {
+						if (commands[1].equals("create")) {
 							attCreate(commands[2], commands[3]);
-						}
-						else if(commands[1].equals("delete"))
-						{
+						} else if (commands[1].equals("delete")) {
 							attDelete(commands[2], commands[3]);
-						}
-						else
-						{
+						} else {
 							commandError();
 						}
-					}
-					else if (commands.length == 5 && commands[1].equals("rename"))
-					{
+					} else if (commands.length == 5 && commands[1].equals("rename")) {
 						attRename(commands[2], commands[3], commands[4]);
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
 
 				case "list":
-					if (commands.length == 2)
-					{
+					// Call class or relationship list based on length & input
+					if (commands.length == 2) {
 						list(commands[1]);
-					}
-					else
-					{
+					} else {
 						commandError();
 					}
 					break;
-
+				
+				// Proper command not dectected, throw error
 				default:
 					commandError();
 			}	
 		}
-
 	}
 	
-	public static void help()
-	{
+	public static void help() {
 		System.out.println("Here is a list of available commands:");
 		
 		System.out.println("save <name> (optional <path>) - Save file to specific path\n"
@@ -175,12 +129,9 @@ public class CommandLine {
 				+ "	all relationships");
 	}
 
-	//ensures the length of an array "array" is of at least int arrayLength
-	//To be used for checking # of commands in command line to avoid errors
-	public static void commandError()
-	{
+	// Prints an error if the user gives an incorrect or unlisted command.
+	public static void commandError() {
 		throw new IllegalArgumentException("Invalid command.\nType help to see command usage.");
-
 	}
 
 }
