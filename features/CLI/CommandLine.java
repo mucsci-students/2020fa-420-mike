@@ -91,7 +91,11 @@ public class CommandLine {
 				case "list":
 					// Call class or relationship list based on length & input
 					if (commands.length == 2) {
-						list(commands[1]);
+						if (commands[1].equals("classes")) {
+							listClasses();	
+						} else if (commands[1].equals("relationships")) {
+							listRelationships();
+						}
 					} else {
 						commandError();
 					}
