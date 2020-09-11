@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 
-public class CommandLine {
+public class CommandLine extends list {
 
 	public static void commandLineInterface() {
 		Scanner cmdLine = new Scanner(System.in);
