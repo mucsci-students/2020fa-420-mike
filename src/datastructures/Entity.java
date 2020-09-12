@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.ArrayList;
 
 public class Entity {
-	String name;
-	ArrayList<String> attributes;
+	private String name;
+	private ArrayList<String> attributes;
 
 	//*********************************************************//
 	// Constructor //
@@ -57,7 +57,7 @@ public class Entity {
 	public boolean createAttribute(String attribute) {
 		if (attributes.contains(attribute))
 		{
-			return true;
+			return false;
 		}
 		return attributes.add(attribute);
 	}	

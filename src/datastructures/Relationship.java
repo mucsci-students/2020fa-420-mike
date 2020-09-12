@@ -3,9 +3,9 @@ package datastructures;
 import java.util.Objects;
 
 public class Relationship {
-	String name;
-	String class1;
-	String class2;
+	private String name;
+	private String class1;
+	private String class2;
 	
 	//*********************************************************//
 	// Constructors //
