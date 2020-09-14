@@ -85,17 +85,14 @@ public class HelperMethods {
 			directory = System.getProperty("user.dir");
 			System.out.println("Created new file in " + directory);
 		}
-		else 
-		{
-			JSONObject saveFile = new JSONObject();
+		JSONObject saveFile = new JSONObject();
 			
-			saveFile = saveClasses(saveFile, userClasses);
-			saveFile = saveRelationships(saveFile, userClasses);
+		saveFile = saveClasses(saveFile, userClasses);
+		saveFile = saveRelationships(saveFile, userClasses);
 			
-			directory += ("\\" + filename);
-			System.out.println(directory);
-			writeFile(saveFile, directory);
-		}
+		directory += ("\\" + filename);
+		System.out.println(directory);
+		writeFile(saveFile, directory);
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
