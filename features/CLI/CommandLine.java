@@ -93,6 +93,8 @@ public class CommandLine extends HelperMethods {
 							listClasses(userClasses);	
 						} else if (commands[1].equals("relationships")) {
 							listRelationships(userClasses);
+						} else {
+							commandError();
 						}
 					} else {
 						commandError();
