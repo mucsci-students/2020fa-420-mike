@@ -1,4 +1,4 @@
-package datastructures;
+//package datastructures;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -7,7 +7,7 @@ import org.json.simple.parser.ParseException;
 public class CommandLine extends HelperMethods {
 	static Classes userClasses;
 
-	public static void CommandLine(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException {
 		userClasses = new Classes();
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
@@ -23,12 +23,12 @@ public class CommandLine extends HelperMethods {
 			if (commands[0].equals("quit")) {
 				break;
 			}
-			
+
 			switch(commands[0]) {
 				case "help":
 					help(); 
 					break;
-					
+
 				case "save":
 					//call save depending on if pathname was specified or not
 					if (commands.length == 2) {
@@ -39,7 +39,7 @@ public class CommandLine extends HelperMethods {
 						commandError();
 					}
 					break;
-					
+
 				case "load":
 					if (commands.length == 2) {
 						load(commands[1], userClasses);					
@@ -47,46 +47,39 @@ public class CommandLine extends HelperMethods {
 						commandError();
 					}
 					break;
-					
-				case "class":
+
+				case "create":
 					// Call class create, delete, or rename based on length & input
-					if (commands.length == 3) {
-						if (commands[1].equals("create")) {
-							userClasses.createClass(commands[2]);
-						} else if (commands[1].equals("delete")) {
-							userClasses.deleteClass(commands[2]);
-						} else {
-							commandError();
-						}
-					} else if (commands.length == 4 && commands[1].equals("rename")) {
-						userClasses.renameClass(commands[2], commands[3]);
-					} else {
+					if (commands.length == 3 && commands[1].equals("class")) {
+						userClasses.createClass(commands[2]);
+					} else if (commands.length == 4 && commands[1].equals("att")) {
+						userClasses.createAttribute(commands[2], commands[3]);
+					} else if (commands.length == 5) {
+						userClasses.createRelationship(commands[2], commands[3], commands[4]);
+					}
+					else {
 						commandError();
 					}
 					break;
 
-				case "rel":
+				case "delete":
 					// Call relationship create, or delete based on length & input
-					if (commands.length == 5 && commands[1].equals("create")) {
-						userClasses.createRelationship(commands[2], commands[3], commands[4]);
-					} else if (commands.length == 3 && commands[1].equals("delete")) {
+					if (commands.length == 3 && commands[1].equals("class")){
+						userClasses.deleteClass(commands[2]);
+					} else if (commands.length == 4 && commands[1].equals("att")) {
+						userClasses.deleteAttribute(commands[2], commands[3]);
+					} else if (commands.length == 5 && commands[1].equals("rel")) {
 						userClasses.deleteRelationship(commands[2], commands[3], commands[4]);
 					} else {
 						commandError();
 					}
 					break;
 
-				case "att":
+				case "rename":
 					// Call attribute create, delete, or rename based on length & input
-					if (commands.length == 4) {
-						if (commands[1].equals("create")) {
-							userClasses.createAttribute(commands[2], commands[3]);
-						} else if (commands[1].equals("delete")) {
-							userClasses.deleteAttribute(commands[2], commands[3]);
-						} else {
-							commandError();
-						}
-					} else if (commands.length == 5 && commands[1].equals("rename")) {
+					if (commands.length == 4 && commands[1].equals("class")) {
+						userClasses.renameClass(commands[2], commands[3]);
+					} else if (commands.length == 5 && commands[1].equals("att")) {
 						userClasses.renameAttribute(commands[2], commands[3], commands[4]);
 					} else {
 						commandError();
@@ -105,7 +98,7 @@ public class CommandLine extends HelperMethods {
 						commandError();
 					}
 					break;
-				
+
 				// Proper command not detected, throw error
 				default:
 					commandError();
@@ -113,28 +106,28 @@ public class CommandLine extends HelperMethods {
 		}
 		cmdLine.close();
 	}
-	
+
 	public static void help() {
 		System.out.println("Here is a list of available commands:");
-		
+
 		System.out.println("save <name> (optional <path>) - Save file to specific path\n"
 				+ "load <path> - Loads a file at a specific path\n\n"
-				
-				+ "class create <name> - create a class with title <name>\n"
-				+ "class rename <name> <newname> - rename class <name> to <newname>\n"
-				+ "class delete <name> - delete a class with title <name>\n\n"
-				
-				+ "rel create <name> <classname1> <classname2> - create a relationship\n"
+
+				+ "create class <name> - create a class with title <name>\n"
+				+ "rename class <name> <newname> - rename class <name> to <newname>\n"
+				+ "delete class <name> - delete a class with title <name>\n\n"
+
+				+ "create rel  <name> <classname1> <classname2> - create a relationship\n"
 				+ "	between <classname1> and <classname2> titled <name>\n"
-				+ "rel delete <name> - delete a relationship with title <name>\n\n"
-				
-				+ "att create <classname> <attribute> - create an attribute in <classname>\n"
+				+ "delete rel <name> <classname1> <classname2> - delete a relationship with title <name>\n\n"
+
+				+ "create att <classname> <attribute> - create an attribute in <classname>\n"
 				+ "	titled <attribute>\n"
-				+ "att rename <classname> <attribute> <newname> - rename attribute\n"
+				+ "rename att <classname> <attribute> <newname> - rename attribute\n"
 				+ "	<name> to <newname> in class titled <classname>\n"
-				+ "att delete <classname> <attribute> - delete attribute titled\n"
+				+ "delete att <classname> <attribute> - delete attribute titled\n"
 				+ "	<attribute> in class titled <classname>\n\n"
-				
+
 				+ "list <object> - List all existing classes and their attributes or\n"
 				+ "	all relationships");
 	}
@@ -145,4 +138,3 @@ public class CommandLine extends HelperMethods {
 	}
 
 }
-
