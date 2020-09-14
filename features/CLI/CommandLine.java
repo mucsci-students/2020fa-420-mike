@@ -7,7 +7,7 @@ import org.json.simple.parser.ParseException;
 public class CommandLine extends HelperMethods {
 	static Classes userClasses;
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void commandLine() throws IOException, ParseException {
 		userClasses = new Classes();
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
