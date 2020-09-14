@@ -52,9 +52,6 @@ public class Classes {
 
 		// Changing entity's name in relationships.
 		for (Relationship r : relationships) {
-			if (r.getName().equals(target)) {
-				r.setName(newname);
-			}
 			if (r.getFirstClass().equals(target)) {
 				r.setFirstClass(newname);
 			}

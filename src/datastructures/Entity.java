@@ -63,6 +63,11 @@ public class Entity {
 	}	
 
 	public boolean renameAttribute(String target, String newattribute) {
+        if (attributes.contains(newattribute))
+        {
+            return false;
+        }
+		
 		int index = attributes.indexOf(target);
 		if (index >= 0) {
 			attributes.set(index, newattribute);
