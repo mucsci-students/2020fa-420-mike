@@ -1,9 +1,14 @@
+package datastructures;
+import java.io.IOException;
 import java.util.Scanner;
 
+import org.json.simple.parser.ParseException;
 
-public class CommandLine extends list {
+public class CommandLine extends HelperMethods {
+	static Classes userClasses;
 
-	public static void commandLineInterface() {
+	public static void CommandLine(String[] args) throws IOException, ParseException {
+		userClasses = new Classes();
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
 		System.out.println("To exit the program, type quit");
@@ -15,11 +20,11 @@ public class CommandLine extends list {
 			//parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
 
-			if (command[0].equals("quit")) {
+			if (commands[0].equals("quit")) {
 				break;
 			}
 			
-			switch(command[0]) {
+			switch(commands[0]) {
 				case "help":
 					help(); 
 					break;
@@ -27,9 +32,9 @@ public class CommandLine extends list {
 				case "save":
 					//call save depending on if pathname was specified or not
 					if (commands.length == 2) {
-						save(commands[1]);
+						save(commands[1], System.getProperty("user.dir"), userClasses);
 					} else if (commands.length == 3) {
-						save(commands[1], commands[2]);							
+						save(commands[1], commands[2], userClasses);							
 					} else {
 						commandError();
 					}
@@ -37,24 +42,24 @@ public class CommandLine extends list {
 					
 				case "load":
 					if (commands.length == 2) {
-						load(commands[1]);					
+						load(commands[1], userClasses);					
 					} else {
 						commandError();
 					}
 					break;
 					
-				case "cla":
+				case "class":
 					// Call class create, delete, or rename based on length & input
 					if (commands.length == 3) {
 						if (commands[1].equals("create")) {
-							claCreate(commands[2]);
+							userClasses.createClass(commands[2]);
 						} else if (commands[1].equals("delete")) {
-							claDelete(commands[2]);
+							userClasses.deleteClass(commands[2]);
 						} else {
 							commandError();
 						}
 					} else if (commands.length == 4 && commands[1].equals("rename")) {
-						claRename(commands[2], commands[3]);
+						userClasses.renameClass(commands[2], commands[3]);
 					} else {
 						commandError();
 					}
@@ -63,9 +68,9 @@ public class CommandLine extends list {
 				case "rel":
 					// Call relationship create, or delete based on length & input
 					if (commands.length == 5 && commands[1].equals("create")) {
-						relCreate(relName, commands[3], commands[4]);
+						userClasses.createRelationship(commands[2], commands[3], commands[4]);
 					} else if (commands.length == 3 && commands[1].equals("delete")) {
-						relDelete(relName);
+						userClasses.deleteRelationship(commands[2], commands[3], commands[4]);
 					} else {
 						commandError();
 					}
@@ -75,14 +80,14 @@ public class CommandLine extends list {
 					// Call attribute create, delete, or rename based on length & input
 					if (commands.length == 4) {
 						if (commands[1].equals("create")) {
-							attCreate(commands[2], commands[3]);
+							userClasses.createAttribute(commands[2], commands[3]);
 						} else if (commands[1].equals("delete")) {
-							attDelete(commands[2], commands[3]);
+							userClasses.deleteAttribute(commands[2], commands[3]);
 						} else {
 							commandError();
 						}
 					} else if (commands.length == 5 && commands[1].equals("rename")) {
-						attRename(commands[2], commands[3], commands[4]);
+						userClasses.renameAttribute(commands[2], commands[3], commands[4]);
 					} else {
 						commandError();
 					}
@@ -92,20 +97,21 @@ public class CommandLine extends list {
 					// Call class or relationship list based on length & input
 					if (commands.length == 2) {
 						if (commands[1].equals("classes")) {
-							listClasses();	
+							listClasses(userClasses);	
 						} else if (commands[1].equals("relationships")) {
-							listRelationships();
+							listRelationships(userClasses);
 						}
 					} else {
 						commandError();
 					}
 					break;
 				
-				// Proper command not dectected, throw error
+				// Proper command not detected, throw error
 				default:
 					commandError();
 			}	
 		}
+		cmdLine.close();
 	}
 	
 	public static void help() {
@@ -114,9 +120,9 @@ public class CommandLine extends list {
 		System.out.println("save <name> (optional <path>) - Save file to specific path\n"
 				+ "load <path> - Loads a file at a specific path\n\n"
 				
-				+ "cla create <name> - create a class with title <name>\n"
-				+ "cla rename <name> <newname> - rename class <name> to <newname>\n"
-				+ "cla delete <name> - delete a class with title <name>\n\n"
+				+ "class create <name> - create a class with title <name>\n"
+				+ "class rename <name> <newname> - rename class <name> to <newname>\n"
+				+ "class delete <name> - delete a class with title <name>\n\n"
 				
 				+ "rel create <name> <classname1> <classname2> - create a relationship\n"
 				+ "	between <classname1> and <classname2> titled <name>\n"
@@ -135,7 +141,8 @@ public class CommandLine extends list {
 
 	// Prints an error if the user gives an incorrect or unlisted command.
 	public static void commandError() {
-		throw new IllegalArgumentException("Invalid command.\nType help to see command usage.");
+		System.out.println("Invalid command.\nType help to see command usage.");
 	}
 
 }
+
