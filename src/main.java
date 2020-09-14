@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+import datastructures.Classes;
+import datastructures.Entity;
+import datastructures.Relationship;
+
 public class main {
 	static Classes classes;
 	

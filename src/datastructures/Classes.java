@@ -1,25 +1,40 @@
+package datastructures;
+
 import java.util.ArrayList;
 
 public class Classes {
-	static ArrayList<Entity> entities;
-	static ArrayList<Relationship> relationships;
+	private static ArrayList<Entity> entities;
+	private static ArrayList<Relationship> relationships;
 
-	// ********************************************************//
-	// Constructors //
-	// ********************************************************//
-	
+	// *********************************************************//
+	// Constructor //
+	// *********************************************************//
+
 	public Classes() {
 		entities = new ArrayList<Entity>();
 		relationships = new ArrayList<Relationship>();
 	}
 
-	// ********************************************************//
+	// *********************************************************//
+	// Accessors //
+	// *********************************************************//
+
+	public ArrayList<Entity> getEntities() {
+		return entities;
+	}
+
+	public ArrayList<Relationship> getRelationships() {
+		return relationships;
+	}
+
+	// *********************************************************//
 	// Class Functions //
-	// ********************************************************//
-	
+	// *********************************************************//
+
 	public boolean createClass(String name) {
 		Entity e = new Entity(name);
 		if (entities.contains(e)) {
+			// Duplicate found.
 			return false;
 		}
 		return entities.add(e);
@@ -27,46 +42,60 @@ public class Classes {
 
 	public boolean renameClass(String target, String newname) {
 		int index = entities.indexOf(new Entity(target));
-		if (index >= 0) {
-			entities.get(index).name = newname;
-			return true;
-		} else {
+
+		if (index < 0) {
+			// Target not found.
 			return false;
 		}
+		// Changing entity name.
+		entities.get(index).setName(newname);
+
+		// Changing entity's name in relationships.
+		for (Relationship r : relationships) {
+			if (r.getFirstClass().equals(target)) {
+				r.setFirstClass(newname);
+			}
+			if (r.getSecondClass().equals(target)) {
+				r.setSecondClass(newname);
+			}
+		}
+		return true;
 	}
 
 	public boolean deleteClass(String target) {
-		ArrayList<Relationship> temp = new ArrayList<Relationship>();
 		int index = entities.indexOf(new Entity(target));
-		
-		if (index >= 0) {
-			// Removing target
-			entities.remove(index);
-			
-			// Removing all relationships associated with target.
-			// Serial removal in the worst-case is O(RN), while serial adding is O(N-R)
-			for (Relationship r : relationships) {
-				if (!r.class1.equals(target) && !r.class2.equals(target)) {
-					temp.add(r);
-				}
-			}
-			relationships = temp;
-			return true;
+
+		if (index > 0) {
+			// Target not found.
+			return false;
 		}
-		// Target not found.
-		return false;
+
+		// Removing target
+		entities.remove(index);
+
+		ArrayList<Relationship> temp = new ArrayList<Relationship>();
+
+		// Removing all relationships associated with target.
+		// Serial removal in the worst-case is O(RN), while serial adding is O(N-R)
+		for (Relationship r : relationships) {
+			if (!r.getFirstClass().equals(target) && !r.getSecondClass().equals(target)) {
+				temp.add(r);
+			}
+		}
+		relationships = temp;
+		return true;
 	}
 
-	// ********************************************************//
+	// *********************************************************//
 	// Attribute Functions //
-	// ********************************************************//
-	
+	// *********************************************************//
+
 	public boolean createAttribute(String targetclass, String attribute) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
-			if (e.name.equals(targetclass)) {
+			if (e.getName().equals(targetclass)) {
 				// Create the attribute.
 				return e.createAttribute(attribute);
 			}
@@ -80,7 +109,7 @@ public class Classes {
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
-			if (e.name.equals(targetclass)) {
+			if (e.getName().equals(targetclass)) {
 				// Try to rename the target attribute.
 				return e.renameAttribute(targetattribute, newattribute);
 			}
@@ -94,7 +123,7 @@ public class Classes {
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
-			if (e.name.equals(targetclass)) {
+			if (e.getName().equals(targetclass)) {
 				// Try to rename the target attribute.
 				return e.deleteAttribute(targetattribute);
 			}
@@ -103,9 +132,9 @@ public class Classes {
 		return false;
 	}
 
-	// ********************************************************//
+	// *********************************************************//
 	// Relationship Functions //
-	// ********************************************************//
+	// *********************************************************//
 
 	public boolean createRelationship(String name, String class1, String class2) {
 		Relationship r = new Relationship(name, class1, class2);
@@ -120,9 +149,9 @@ public class Classes {
 		return relationships.remove(r);
 	}
 
-	// ********************************************************//
+	// *********************************************************//
 	// Member Functions //
-	// ********************************************************//
+	// *********************************************************//
 
 	public void clear() {
 		entities.clear();
