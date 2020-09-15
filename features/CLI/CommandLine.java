@@ -7,7 +7,7 @@ import org.json.simple.parser.ParseException;
 public class CommandLine extends HelperMethods {
 	static Classes userClasses;
 
-	public static void commandLine() throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException {
 		userClasses = new Classes();
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
@@ -16,6 +16,7 @@ public class CommandLine extends HelperMethods {
 
 
 		while(true) {
+			System.out.print("Enter a command: ");
 			String line = cmdLine.nextLine();
 			//parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
@@ -54,7 +55,7 @@ public class CommandLine extends HelperMethods {
 						userClasses.createClass(commands[2]);
 					} else if (commands.length == 4 && commands[1].equals("att")) {
 						userClasses.createAttribute(commands[2], commands[3]);
-					} else if (commands.length == 5) {
+					} else if (commands.length == 5 && comands[1].equals("rel")) {
 						userClasses.createRelationship(commands[2], commands[3], commands[4]);
 					}
 					else {
@@ -104,7 +105,7 @@ public class CommandLine extends HelperMethods {
 				// Proper command not detected, throw error
 				default:
 					commandError();
-			}	
+			}
 		}
 		cmdLine.close();
 	}
@@ -140,3 +141,4 @@ public class CommandLine extends HelperMethods {
 	}
 
 }
+
