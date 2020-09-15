@@ -78,7 +78,7 @@ public class EntityTest {
         assertTrue("Renamed a1 to a3", e.renameAttribute("a1", "a3"));
         assertTrue("a3 attribute exists", e.getAttributes().contains("a3"));
         assertFalse("a1 attribute no longer exists", e.getAttributes().contains("a1"));
-        assertEquals("List size still 1", 1, e.getAttributes().size());
+        assertEquals("List size still 2", 2, e.getAttributes().size());
     }
 
     /* test deleteAttribute */

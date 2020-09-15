@@ -168,7 +168,7 @@ public class Classes {
 
     /* Entity functions */
 
-    public boolean searchClass(String name)
+    public boolean searchEntity(String name)
     {
         for (Entity e : entities)
         {

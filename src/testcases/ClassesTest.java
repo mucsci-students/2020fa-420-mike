@@ -104,25 +104,26 @@ public class ClassesTest {
 
         //add attributes to entity
         classes.createAttribute("E1", "att1");
-        classes.createAttribute("E2", "att2");
-        classes.createAttribute("E3", "att3");
+        classes.createAttribute("E1", "att2");
+        classes.createAttribute("E1", "att3");
 
         Entity new_e1copy = classes.copyEntity("E1");
         assertTrue("Entity with attributes was copied correctly", classes.getEntities().get(0).equals(new_e1copy));
         assertTrue("Attributes are the same", classes.getEntities().get(0).getAttributes().equals(new_e1copy.getAttributes()));
+        assertFalse("Old e1_copy no longer equal to E1", classes.getEntities().get(0).equals(e1copy))
     }
 
-    /** test searchClass
+    /** test searchEntity
      *
      */
     @Test
-    public void testSearchClass()
+    public void testSearchEntity()
     {
         Classes classes = new Classes();
         classes.createClass("e");
 
-        assertTrue("Found class 'e'", classes.searchClass("e"));
-        assertFalse("False for non-existing class", classes.searchClass("fake"));
+        assertTrue("Found class 'e'", classes.searchEntity("e"));
+        assertFalse("False for non-existing class", classes.searchEntity("fake"));
     }
 
     /** test searchRelationship
@@ -140,6 +141,7 @@ public class ClassesTest {
         assertFalse("False when given non-existent relationship name", classes.searchRelationship("fake", "e", "e2"));
         assertFalse("False for non-existent class1 name", classes.searchRelationship("r", "fake", "e2"));
         assertFalse("False for non-existent class2 name", classes.searchRelationship("r", "e", "fake"));
+        assertFalse("False when pairs are in wrong order", classes.searchRelationship("r", "e2", "e"));
     }
 
     /** test getRelationship
@@ -355,7 +357,7 @@ public class ClassesTest {
         assertFalse("False when creating relationship that already exists", classes.createRelationship("r", "e", "e2"));
         assertFalse("False when creating relationship with null name", classes.createRelationship(null, "e", "e2"));
 
-        classes.createRelationship("r", "e", "e2");
+        classes.createRelationship("r", "e2", "e");
         assertTrue("Relationship with existing name but different pair created", classes.searchRelationship("r","e2", "e"));
     }
 
@@ -370,14 +372,14 @@ public class ClassesTest {
         classes.createClass("e2");
         classes.createRelationship("r", "e", "e2");
 
-        assertFalse("False when deleting non-existent relationship", classes.createRelationship("fake", "e", "e2"));
-        assertFalse("False when deleting non-existent relationship (class1)", classes.createRelationship("r", "fake", "e2"));
-        assertFalse("False when deleting non-existent relationship (class2)", classes.createRelationship("r", "e", "fake"));
+        assertFalse("False when deleting non-existent relationship", classes.deleteRelationship("fake", "e", "e2"));
+        assertFalse("False when deleting non-existent relationship (class1)", classes.deleteRelationship("r", "fake", "e2"));
+        assertFalse("False when deleting non-existent relationship (class2)", classes.deleteRelationship("r", "e", "fake"));
 
         classes.deleteRelationship("r", "e", "e2");
         assertFalse("Relationship 'r' was deleted", classes.searchRelationship("r", "e", "e2"));
         assertTrue("Relationships list is empty", classes.getRelationships().isEmpty());
-        assertTrue("Classes e and e2 still exist", classes.searchClass("e") && classes.searchClass("e2"));
+        assertTrue("Classes e and e2 still exist", classes.searchEntity("e") && classes.searchEntity("e2"));
     }
 
 }
