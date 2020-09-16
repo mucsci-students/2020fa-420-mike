@@ -16,7 +16,8 @@ public class EntityTest {
     {
         Entity e = new Entity("e");
         assertEquals("Name was set properly", "e", e.getName());
-        assertTrue("Attributes list was initialized", e.getAttributes().isEmpty());
+        assertTrue("Fields list was initialized", e.getFields().isEmpty());
+        assertTrue("Methods list was initialized", e.getMethods().isEmpty());
     }
 
     /* test equals */
@@ -42,58 +43,112 @@ public class EntityTest {
         assertTrue("Entities should be equal.", e.equals(e_copy));
         assertFalse("Differing names should result in false", e.equals(e2));
 
-        e.createAttribute("a");
-        e.createAttribute("a2");
+        e.createField("a");
+        e.createField("a2");
 
-        assertFalse("Differing attributes results in false", e.equals(e_copy));
+        assertFalse("Differing fields results in false", e.equals(e_copy));
 
-        e_copy.createAttribute("a");
-        e_copy.createAttribute("a2");
+        e_copy.createField("a");
+        e_copy.createField("a2");
 
-        assertTrue("Same attributes and name result in true", e.equals(e_copy));
+        assertTrue("Same fields and name (no methods) result in true", e.equals(e_copy));
+
+        e.createMethod("a");
+        e.createMethod("a2");
+
+        assertFalse("Differing methods results in false", e.equals(e_copy));
+
+        e_copy.createMethod("a");
+        e_copy.createMethod("a2");
+
+        assertTrue("Same fields, methods and name result in true", e.equals(e_copy));
     }
 
-    /* test createAttribute */
+    /* test createField */
     @Test
-    public void testCreateAttribute()
+    public void testCreateField()
     {
         Entity e = new Entity("e");
 
-        e.createAttribute("a1");
-        assertTrue("Attribute a1 was created", e.getAttributes().contains("a1"));
-        assertEquals("List size is 1", 1, e.getAttributes().size());
-        assertFalse("False when duplicating attribute", e.createAttribute("a1"));
+        e.createField("a1");
+        assertTrue("Field a1 was created", e.getFields().contains("a1"));
+        assertEquals("List size is 1", 1, e.getFields().size());
+        assertFalse("False when duplicating field", e.createField("a1"));
     }
 
-    /* test renameAttribute */
+    /* test renameField */
     @Test
-    public void testRenameAttribute()
+    public void testRenameField()
     {
         Entity e = new Entity("e");
-        e.createAttribute("a1");
-        e.createAttribute("a2");
+        e.createField("a1");
+        e.createField("a2");
 
-        assertFalse("False when renaming to already existing attribute", e.renameAttribute("a1", "a2"));
-        assertFalse("False when renaming non-existent attribute", e.renameAttribute("fake", "a3"));
-        assertTrue("Renamed a1 to a3", e.renameAttribute("a1", "a3"));
-        assertTrue("a3 attribute exists", e.getAttributes().contains("a3"));
-        assertFalse("a1 attribute no longer exists", e.getAttributes().contains("a1"));
-        assertEquals("List size still 2", 2, e.getAttributes().size());
+        assertFalse("False when renaming to already existing field", e.renameField("a1", "a2"));
+        assertFalse("False when renaming non-existent field", e.renameField("fake", "a3"));
+        assertTrue("Renamed a1 to a3", e.renameField("a1", "a3"));
+        assertTrue("a3 field exists", e.getFields().contains("a3"));
+        assertFalse("a1 field no longer exists", e.getFields().contains("a1"));
+        assertEquals("List size still 2", 2, e.getFields().size());
     }
 
-    /* test deleteAttribute */
+    /* test deleteField */
     @Test
-    public void testDeleteAttribute()
+    public void testDeleteField()
     {
         Entity e = new Entity("e");
-        e.createAttribute("a1");
-        e.createAttribute("a2");
+        e.createField("a1");
+        e.createField("a2");
 
-        assertFalse("False when deleting non-existent attribute", e.deleteAttribute("fake"));
+        assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
-        e.deleteAttribute("a1");
-        assertFalse("a1 attribute was deleted", e.getAttributes.contains("a1"));
-        assertEquals("List size is 1", 1, e.getAttributes().size());
-        assertTrue("a2 attribute still exists", e.getAttributes.contains("a2"));
+        e.deleteField("a1");
+        assertFalse("a1 field was deleted", e.getFields().contains("a1"));
+        assertEquals("List size is 1", 1, e.getFields().size());
+        assertTrue("a2 field still exists", e.getFields().contains("a2"));
+    }
+
+    /* test createMethod */
+    @Test
+    public void testCreateMethod()
+    {
+        Entity e = new Entity("e");
+
+        e.createMethod("a1");
+        assertTrue("Method a1 was created", e.getMethods().contains("a1"));
+        assertEquals("List size is 1", 1, e.getMethods().size());
+        assertFalse("False when duplicating method", e.createMethod("a1"));
+    }
+
+    /* test renameMethod */
+    @Test
+    public void testRenameMethod()
+    {
+        Entity e = new Entity("e");
+        e.createMethod("a1");
+        e.createMethod("a2");
+
+        assertFalse("False when renaming to already existing method", e.renameMethod("a1", "a2"));
+        assertFalse("False when renaming non-existent method", e.renameMethod("fake", "a3"));
+        assertTrue("Renamed a1 to a3", e.renameMethod("a1", "a3"));
+        assertTrue("a3 method exists", e.getMethods().contains("a3"));
+        assertFalse("a1 method no longer exists", e.getMethods().contains("a1"));
+        assertEquals("List size still 2", 2, e.getMethods().size());
+    }
+
+    /* test deleteMethod */
+    @Test
+    public void testDeleteMethod()
+    {
+        Entity e = new Entity("e");
+        e.createMethod("a1");
+        e.createMethod("a2");
+
+        assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
+
+        e.deleteMethod("a1");
+        assertFalse("a1 method was deleted", e.getMethods().contains("a1"));
+        assertEquals("List size is 1", 1, e.getMethods().size());
+        assertTrue("a2 method still exists", e.getMethods().contains("a2"));
     }
 }
