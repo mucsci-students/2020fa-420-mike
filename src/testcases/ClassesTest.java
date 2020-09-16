@@ -421,11 +421,14 @@ public class ClassesTest {
         assertFalse("False when creating relationship that already exists", classes.createRelationship("r", "e", "e2"));
         assertFalse("False when creating relationship with null name", classes.createRelationship(null, "e2", "e"));
 
-        classes.createRelationship("r", "e2", "e");
-        assertTrue("Relationship with existing name but different pair created", classes.searchRelationship("r","e2", "e"));
+        classes.createClass("e3");
+        classes.createRelationship("r", "e", "e3");
+        assertTrue("Relationship with existing name but different pair created", classes.searchRelationship("r","e", "e3"));
 
         assertFalse("False when creating another relationship between pairs that already have a relationship", classes.createRelationship("r-dup", "e", "e2"));
         assertFalse("Relationship 'r-dup' was not created", classes.searchRelationship("r-dup", "e", "e2"));
+        assertFalse("False when creating relationship with pair flipped", classes.createRelationship("r2", "e2", "e"));
+        assertFalse("Relationship 'r2' was not created", classes.searchRelationship("r2", "e2", "e"));
     }
 
     /** test deleteRelationship
