@@ -42,12 +42,16 @@ public class Classes {
 	}
 
 	public boolean renameClass(String target, String newname) {
+		if (entities.contains(new Entity(newname))) {
+			return false; // Already contains desired name
+		}
+
 		int index = entities.indexOf(new Entity(target));
 
 		if (index < 0) {
-			// Target not found.
-			return false;
+			return false; // Target not found.
 		}
+
 		// Changing entity name.
 		entities.get(index).setName(newname);
 
@@ -88,61 +92,111 @@ public class Classes {
 	}
 
 	// *********************************************************//
-	// Attribute Functions //
+	// Field Functions //
 	// *********************************************************//
 
-	public boolean createAttribute(String targetclass, String attribute) {
+	public boolean createField(String targetclass, String field) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
 			if (e.getName().equals(targetclass)) {
 				// Create the attribute.
-				return e.createAttribute(attribute);
+				return e.createField(field);
 			}
 		}
 		// Target not found.
 		return false;
 	}
 
-	public boolean renameAttribute(String targetclass, String targetattribute, String newattribute) {
+	public boolean renameField(String targetclass, String targetfield, String newfield) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
 			if (e.getName().equals(targetclass)) {
 				// Try to rename the target attribute.
-				return e.renameAttribute(targetattribute, newattribute);
+				return e.renameField(targetfield, newfield);
 			}
 		}
 		// Target not found.
 		return false;
 	}
 
-	public boolean deleteAttribute(String targetclass, String targetattribute) {
+	public boolean deleteField(String targetclass, String targetfield) {
 		Entity e;
 		for (int index = 0; index < entities.size(); ++index) {
 			e = entities.get(index);
 			// If target found.
 			if (e.getName().equals(targetclass)) {
 				// Try to rename the target attribute.
-				return e.deleteAttribute(targetattribute);
+				return e.deleteField(targetfield);
 			}
 		}
 		// Target not found.
 		return false;
 	}
 
+	// *********************************************************//
+	// Method Functions //
+	// *********************************************************//
+
+	public boolean createMethod(String targetclass, String method) {
+		Entity e;
+		for (int index = 0; index < entities.size(); ++index) {
+			e = entities.get(index);
+			// If target found.
+			if (e.getName().equals(targetclass)) {
+				// Create the attribute.
+				return e.createMethod(method);
+			}
+		}
+		// Target not found.
+		return false;
+	}
+
+	public boolean renameMethod(String targetclass, String targetmethod, String newmethod) {
+		Entity e;
+		for (int index = 0; index < entities.size(); ++index) {
+			e = entities.get(index);
+			// If target found.
+			if (e.getName().equals(targetclass)) {
+				// Try to rename the target attribute.
+				return e.renameMethod(targetmethod, newmethod);
+			}
+		}
+		// Target not found.
+		return false;
+	}
+
+	public boolean deleteMethod(String targetclass, String targetmethod) {
+		Entity e;
+		for (int index = 0; index < entities.size(); ++index) {
+			e = entities.get(index);
+			// If target found.
+			if (e.getName().equals(targetclass)) {
+				// Try to rename the target attribute.
+				return e.deleteMethod(targetmethod);
+			}
+		}
+		// Target not found.
+		return false;
+	}
+	
 	// *********************************************************//
 	// Relationship Functions //
 	// *********************************************************//
 
 	public boolean createRelationship(String name, String class1, String class2) {
-		Relationship r = new Relationship(name, class1, class2);
-		if (relationships.contains(r)) {
-			return false;
+		
+		for (Relationship r : relationships) {
+			if ((r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
+					|| r.getFirstClass().equals(class2) && r.getSecondClass().equals(class1)) {
+				// There already exists a relationship between those two classes.
+				return false;
+			}
 		}
-		return relationships.add(r);
+		return relationships.add(new Relationship(name, class1, class2));
 	}
 
 	public boolean deleteRelationship(String name, String class1, String class2) {

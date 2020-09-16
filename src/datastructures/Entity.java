@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class Entity {
 	private String name;
-	private ArrayList<String> attributes;
+	private ArrayList<String> fields;
+	private ArrayList<String> methods;
 
 	//*********************************************************//
 	// Constructor //
@@ -14,7 +15,8 @@ public class Entity {
 	
 	public Entity(String newname) {
 		name = newname;
-		attributes = new ArrayList<String>();
+		fields = new ArrayList<String>();
+		methods = new ArrayList<String>();
 	}
 	
 	//*********************************************************//
@@ -31,9 +33,14 @@ public class Entity {
 		name = newname;
 	}
 	
-	public ArrayList<String> getAttributes()
+	public ArrayList<String> getFields()
 	{
-		return attributes;
+		return fields;
+	}
+	
+	public ArrayList<String> getMethods()
+	{
+		return methods;
 	}
 	
 	//*********************************************************//
@@ -52,32 +59,62 @@ public class Entity {
 	}
 
 	//*********************************************************//
-	// Attribute Functions //
+	// Field Functions //
 	//*********************************************************//
 	
-	public boolean createAttribute(String attribute) {
-		if (attributes.contains(attribute))
+	public boolean createField(String field) {
+		if (fields.contains(field))
 		{
 			return false;
 		}
-		return attributes.add(attribute);
-	}	
-
-	public boolean renameAttribute(String target, String newattribute) {
-        if (attributes.contains(newattribute))
+		return fields.add(field);
+	}
+	
+	public boolean renameField(String target, String newfield) {
+        if (fields.contains(newfield))
         {
             return false;
         }
 		
-		int index = attributes.indexOf(target);
+		int index = fields.indexOf(target);
 		if (index >= 0) {
-			attributes.set(index, newattribute);
+			fields.set(index, newfield);
 			return true;
 		}
 		return false;
 	}
+	
+	public boolean deleteField(String target) {
+		return fields.remove(target);
+	}
+	
+	//*********************************************************//
+	// Field Functions //
+	//*********************************************************//
+	
+	public boolean createMethod(String method) {
+		if (methods.contains(method))
+		{
+			return false;
+		}
+		return methods.add(method);
+	}	
 
-	public boolean deleteAttribute(String target) {
-		return attributes.remove(target);
+	public boolean renameMethod(String target, String newmethod) {
+        if (methods.contains(newmethod))
+        {
+            return false;
+        }
+		
+		int index = methods.indexOf(target);
+		if (index >= 0) {
+			methods.set(index, newmethod);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean deleteMethod(String target) {
+		return methods.remove(target);
 	}
 }
