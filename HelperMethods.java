@@ -91,7 +91,7 @@ public class HelperMethods {
 		saveFile = saveRelationships(saveFile, userClasses);
 			
 		directory += ("\\" + filename);
-		System.out.println("Saving to: " + directory + ".json");
+		System.out.println("Saving to: " + directory);
 		writeFile(saveFile, directory);
 	}
 
