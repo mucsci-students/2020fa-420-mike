@@ -1,14 +1,15 @@
-//package datastructures;
 import java.io.IOException;
 import java.util.Scanner;
 
 import org.json.simple.parser.ParseException;
 
 public class CommandLine extends HelperMethods {
-	static Classes userClasses;
+	
+	CommandLine(){
+	}
 
-	public static void main(String[] args) throws IOException, ParseException {
-		userClasses = new Classes();
+	public static void commandInterface() throws IOException, ParseException {
+		Classes userClasses = new Classes();
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
 		System.out.println("To exit the program, type quit");
@@ -50,7 +51,7 @@ public class CommandLine extends HelperMethods {
 					break;
 
 				case "create":
-					// Call class create, delete, or rename based on length & input
+					// Call create class, attribute, or relationship based on length and user input
 					if (commands.length == 3 && commands[1].equals("class")) {
 						userClasses.createClass(commands[2]);
 					} else if (commands.length == 4 && commands[1].equals("att")) {
@@ -64,7 +65,7 @@ public class CommandLine extends HelperMethods {
 					break;
 
 				case "delete":
-					// Call relationship create, or delete based on length & input
+					// Call delete class, attribute, or relationship based on length and user input
 					if (commands.length == 3 && commands[1].equals("class")){
 						userClasses.deleteClass(commands[2]);
 					} else if (commands.length == 4 && commands[1].equals("att")) {
@@ -77,7 +78,7 @@ public class CommandLine extends HelperMethods {
 					break;
 
 				case "rename":
-					// Call attribute create, delete, or rename based on length & input
+					// Call rename class or attribute based on length and user input
 					if (commands.length == 4 && commands[1].equals("class")) {
 						userClasses.renameClass(commands[2], commands[3]);
 					} else if (commands.length == 5 && commands[1].equals("att")) {
@@ -88,7 +89,7 @@ public class CommandLine extends HelperMethods {
 					break;
 
 				case "list":
-					// Call class or relationship list based on length & input
+					// Call list class or relationship based on length and user input
 					if (commands.length == 2) {
 						if (commands[1].equals("classes")) {
 							listClasses(userClasses);	
@@ -102,7 +103,7 @@ public class CommandLine extends HelperMethods {
 					}
 					break;
 
-				// Proper command not detected, throw error
+				// Proper command not detected, print an error
 				default:
 					commandError();
 			}
@@ -139,6 +140,4 @@ public class CommandLine extends HelperMethods {
 	public static void commandError() {
 		System.out.println("Invalid command.\nType help to see command usage.");
 	}
-
 }
-
