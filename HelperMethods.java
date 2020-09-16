@@ -1,13 +1,13 @@
 package datastructures;
-	import java.io.File;
-	import java.io.FileNotFoundException;
-	import java.io.FileReader;
-	import java.io.FileWriter;
-	import java.io.IOException;
-	import org.json.simple.JSONArray;
-	import org.json.simple.JSONObject;
-	import org.json.simple.parser.*;
-	import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
+import java.util.ArrayList;
 	
 @SuppressWarnings("unchecked")		
 public class HelperMethods {
@@ -91,7 +91,7 @@ public class HelperMethods {
 		saveFile = saveRelationships(saveFile, userClasses);
 			
 		directory += ("\\" + filename);
-		System.out.println(directory);
+		System.out.println("Saving to: " + directory + ".json");
 		writeFile(saveFile, directory);
 	}
 
