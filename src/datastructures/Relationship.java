@@ -1,3 +1,4 @@
+
 package datastructures;
 
 import java.util.Objects;
@@ -69,3 +70,4 @@ public class Relationship {
 		return false;
 	}
 }
+
