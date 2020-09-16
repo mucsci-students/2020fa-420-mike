@@ -42,11 +42,14 @@ public class Classes {
 	}
 
 	public boolean renameClass(String target, String newname) {
+		if (entities.contains(new Entity(newname))) {
+			return false; // Already contains desired name
+		}
+		
 		int index = entities.indexOf(new Entity(target));
 
 		if (index < 0) {
-			// Target not found.
-			return false;
+			return false; // Target not found.
 		}
 		// Changing entity name.
 		entities.get(index).setName(newname);
