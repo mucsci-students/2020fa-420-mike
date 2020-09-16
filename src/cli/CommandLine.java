@@ -65,7 +65,7 @@ public class CommandLine extends HelperMethods {
 						}
 						catch (IOException | ParseException e)
 						{
-							System.out.println("Filed to parse directory. Exiting.");
+							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else {
 						commandError();
