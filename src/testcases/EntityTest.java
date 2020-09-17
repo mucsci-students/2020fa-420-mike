@@ -151,4 +151,4 @@ public class EntityTest {
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertTrue("a2 method still exists", e.getMethods().contains("a2"));
     }
-}
+  
