@@ -1,4 +1,3 @@
-
 import cli.CommandLine;
 
 public class main {
