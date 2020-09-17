@@ -56,10 +56,16 @@ public class HelperMethods {
 	    	String className = (String) objList.get(x).get("className");
 	    	userClasses.createClass(className);
 	        	
-	    	// Extract all attributes of associated class, add to loadFile
-	    	ArrayList<String> classAttributes = (ArrayList<String>) objList.get(x).get("attributes");
-	    	for(int y = 0; y < classAttributes.size(); ++y) {
-	    		userClasses.createAttribute(className, classAttributes.get(y));
+	    	// Extract all fields of associated class, add to loadFile
+	    	ArrayList<String> classFields = (ArrayList<String>) objList.get(x).get("fields");
+	    	for(int y = 0; y < classFields.size(); ++y) {
+	    		userClasses.createField(className, classFields.get(y));
+	    	}
+	    	
+	    	// Extract all methods of associated class, add to loadFile
+	    	ArrayList<String> classMethods = (ArrayList<String>) objList.get(x).get("methods");
+	    	for(int y = 0; y < classMethods.size(); ++y) {
+	    		userClasses.createMethod(className, classMethods.get(y));
 	    	}
 	    }
 	}
@@ -114,13 +120,21 @@ public class HelperMethods {
 			
 			singleClass.put("className", entity.getName());
 			
-			// Create an array of attributes for the class
-			JSONArray attributes = new JSONArray();
-			for(String attribute : entity.getAttributes()) 
+			// Create an array of fields for the class
+			JSONArray fields = new JSONArray();
+			for(String field : entity.getFields()) 
 			{
-				attributes.add(attribute);
+				fields.add(field);
 			}
-			singleClass.put("attributes", attributes);
+			singleClass.put("fields", fields);
+			
+			// Create an array of methods for the class
+			JSONArray methods = new JSONArray();
+			for(String method : entity.getMethods()) 
+			{
+				methods.add(method);
+			}
+			singleClass.put("methods", methods);
 			
 			// Add class with it's name and attributes to the JSONArray allClasses
 			allClasses.add(singleClass);	
@@ -154,10 +168,7 @@ public class HelperMethods {
 	// Creates a file if it does not exist and writes saveFile to the file
 	private static void writeFile (JSONObject saveFile, String directory) throws IOException {
 		File fileDirectory = new File(directory);
-	    if (fileDirectory.createNewFile())
-	    {
-	    	System.out.println("File created: " + fileDirectory.getName());
-	    } 
+		fileDirectory.createNewFile();
 	    
 	    // Converts JSONObject and adds it to file
 	    String fullJSONString = saveFile.toString();
@@ -173,13 +184,26 @@ public class HelperMethods {
 		System.out.println("Classes:");
 		for(Entity entity : userClasses.getEntities())
 		{			
-			System.out.print("   -- " + entity.getName() + ": [ ");
+			System.out.println("	" + curEntity.getName() + ":");
+			System.out.print("		fields: [ ");
 				
-			//Prints out all of the attributes
-			for(int x = 0; x < entity.getAttributes().size(); x++)
+			//Prints out all of the fields
+			for(int x = 0; x < curEntity.getFields().size(); x++)
 			{
-				System.out.print(entity.getAttributes().get(x));
-				if(x != entity.getAttributes().size()-1)
+				System.out.print(curEntity.getFields().get(x));
+				if(x != curEntity.getFields().size()-1)
+				{
+					System.out.print(", ");
+				}
+			}
+			System.out.println(" ]");
+			
+			//Prints out all of the methods
+			System.out.print("		methods: [ ");
+			for(int x = 0; x < curEntity.getMethods().size(); x++)
+			{
+				System.out.print(curEntity.getMethods().get(x));
+				if(x != curEntity.getMethods().size()-1)
 				{
 					System.out.print(", ");
 				}
