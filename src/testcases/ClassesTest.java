@@ -352,7 +352,6 @@ public class ClassesTest {
         assertEquals("e's method list size is 1", 1, classes.getEntities().get(0).getMethods().size());
 
         assertFalse("False when creating method that already exists", classes.createMethod("e", "a"));
-        assertFalse("False when creating method that already exists", classes.createMethod("e", "a"));
         assertEquals("e's method list size is still 1", 1, classes.getEntities().get(0).getMethods().size());
     }
 
