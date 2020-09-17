@@ -152,3 +152,4 @@ public class EntityTest {
         assertTrue("a2 method still exists", e.getMethods().contains("a2"));
     }
   
+}
