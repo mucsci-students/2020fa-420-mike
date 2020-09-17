@@ -156,7 +156,7 @@ public class CommandLine extends HelperMethods {
 				case "list":				
 					if (commands[1].equals("classes")) {
 						if (commands.length != 2) {
-							System.out.println(errorMessage + commandUsage[113] + "\n");
+							System.out.println(errorMessage + commandUsage[13] + "\n");
 						} else {
 							System.out.println();
 							listClasses(userClasses);
