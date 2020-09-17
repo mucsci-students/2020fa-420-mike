@@ -52,12 +52,12 @@ public class CommandLine extends HelperMethods {
 			}
 
 			switch(commands[0]) {
+				// Call help
 				case "help":
 					help(commandUsage); 
 					break;
-
-				case "save":
-					//call save depending on if pathname was specified or not
+				// Call save depending on if pathname was specified or not
+				case "save":				
 					if (commands.length == 2) {
 						try {
 						save(commands[1], System.getProperty("user.dir"), userClasses);
@@ -76,7 +76,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[0] + "\n");
 					}
 					break;
-
+				// Call load given a directory+filename
 				case "load":
 					if (commands.length == 2) {
 						try {
@@ -89,10 +89,8 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[1] + "\n");
 					}
 					break;
-					
+				// Call create class, attribute, or relationship based on length and user input
 				case "create":
-					// Call create class, attribute, or relationship based on length and user input
-					
 					if (commands[1].equals("class")) {
 						if(commands.length != 3 || !userClasses.createClass(commands[2])) {
 							System.out.println(errorMessage + commandUsage[2] + "\n");
@@ -114,9 +112,8 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + "\n");
 					}
 					break;
-
-				case "delete":
-					// Call delete class, attribute, or relationship based on length and user input
+				// Call delete class, attribute, or relationship based on length and user input
+				case "delete":	
 					if (commands[1].equals("class")) {
 						if (commands.length != 3 || !userClasses.deleteClass(commands[2])) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
@@ -137,9 +134,8 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[6] + commandUsage[7] + commandUsage[8] + commandUsage[9] + "\n");
 					}
 					break;
-					
-				case "rename":
-					// Call rename class or attribute based on length and user input
+				// Call rename class or attribute based on length and user input
+				case "rename":		
 					if (commands[1].equals("class")) {
 						if (commands.length != 4 || !userClasses.renameClass(commands[2], commands[3])) {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
@@ -156,9 +152,8 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[10] + commandUsage[11] + commandUsage[12] + "\n");
 					}
 					break;
-
-				case "list":
-					// Call list class or relationship based on length and user input
+				// Call list class or relationship based on length and user input
+				case "list":				
 					if (commands[1].equals("classes")) {
 						if (commands.length != 2) {
 							System.out.println(errorMessage + commandUsage[113] + "\n");
@@ -189,14 +184,14 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[13] + commandUsage[14] + commandUsage[15] + "\n");
 					}
 					break;
-					
+				// Calls clear 
 				case "clear":
 					if (commands.length != 1) {
 						System.out.println(errorMessage + commandUsage[16] + "\n");
 					} else {
 						userClasses.clear();					
 					}
-				break;
+					break;
 
 				// Proper command not detected, print an error
 				default:

@@ -91,23 +91,21 @@ public class HelperMethods {
 	// Main save function. Calls saveClasses and saveRelationships
 	public static void save (String filename, String directory, Classes userClasses) throws IOException {
 		File newFile = new File(directory);
+		// If directory given does not exist, put in user.dir
 		if(!newFile.isDirectory())
 		{
-			System.out.println("Error: no such directory");
 			directory = System.getProperty("user.dir");
-			System.out.println("Created new file in " + directory);
+			System.out.println("Directory does not exisit.");
 		}
-		else 
-		{
-			JSONObject saveFile = new JSONObject();
-			
-			saveFile = saveClasses(saveFile, userClasses);
-			saveFile = saveRelationships(saveFile, userClasses);
-			
-			directory += ("\\" + filename);
-			System.out.println(directory);
-			writeFile(saveFile, directory);
-		}
+
+		JSONObject saveFile = new JSONObject();
+		
+		saveFile = saveClasses(saveFile, userClasses);
+		saveFile = saveRelationships(saveFile, userClasses);
+		
+		directory += ("\\" + filename);
+		writeFile(saveFile, directory);
+		System.out.println("File saved to:" + directory);
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
@@ -175,14 +173,13 @@ public class HelperMethods {
 	    FileWriter myWriter = new FileWriter(fileDirectory);
 		myWriter.write(fullJSONString);
 		myWriter.close();
-		System.out.println("Successfully wrote to the file.");
 	}
 
 	// Lists all of the classes and their respective attributes
 	public static void listClasses(Classes userClasses)
 	{
 		System.out.println("Classes:");
-		for(Entity entity : userClasses.getEntities())
+		for(Entity curEntity : userClasses.getEntities())
 		{			
 			System.out.println("	" + curEntity.getName() + ":");
 			System.out.print("		fields: [ ");
