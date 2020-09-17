@@ -46,7 +46,7 @@ public class ClassesTest {
         classes.createClass("Entity2");
         classes.createRelationship("Linkage", "Entity1", "Entity2");
 
-        classes.clear()
+        classes.clear();
 
         assertTrue("Relationships list is empty after clear is called", classes.getRelationships().isEmpty());
         assertTrue("Entities list is empty after clear is called", classes.getEntities().isEmpty());
