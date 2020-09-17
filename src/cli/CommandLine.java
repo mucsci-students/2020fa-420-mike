@@ -17,13 +17,16 @@ public class CommandLine extends HelperMethods {
 			"\n  save <name (optional <path>)", 
 			"\n  load <path>",
 			"\n  create class <name>",
-			"\n  create att <classname> <attribute>",
+			"\n  create field <classname> <fieldname>",
+			"\n  create method <classname> <methodname>",
 			"\n  create rel <name> <classname1> <classname2>",
 			"\n  delete class <name>",
-			"\n  delete att <classname>",
+			"\n  delete field <classname> <fieldname>",
+			"\n  delete method <classname> <methodname>",
 			"\n  delete rel <name> <classname1> <classname2>",
 			"\n  rename class <name> <newname>",
-			"\n  rename att <classname> <attribute <newname>",
+			"\n  rename field <classname> <fieldname> <newname>",
+			"\n  rename method <classname> <methodname> <newname>",	
 			"\n  list classes",
 			"\n  list relationships",
 			"\n  list all",
@@ -86,7 +89,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[1] + "\n");
 					}
 					break;
-
+					
 				case "create":
 					// Call create class, attribute, or relationship based on length and user input
 					
@@ -94,17 +97,21 @@ public class CommandLine extends HelperMethods {
 						if(commands.length != 3 || !userClasses.createClass(commands[2])) {
 							System.out.println(errorMessage + commandUsage[2] + "\n");
 						}
-					} else if ( commands[1].equals("att")) {
-						if(commands.length != 4 || !userClasses.createAttribute(commands[2], commands[3])) {
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.createField(commands[2], commands[3])) {
 							System.out.println(errorMessage + commandUsage[3] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.createMethod(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[4] + "\n");
 						}
 					} else if (commands[1].equals("rel")) {
 						if(commands.length != 5 || !userClasses.createRelationship(commands[2], commands[3], commands[4])) {
-							System.out.println(errorMessage + commandUsage[4] + "\n");
+							System.out.println(errorMessage + commandUsage[5] + "\n");
 						}
 					}
 					else {
-						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + "\n");
+						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + "\n");
 					}
 					break;
 
@@ -112,33 +119,41 @@ public class CommandLine extends HelperMethods {
 					// Call delete class, attribute, or relationship based on length and user input
 					if (commands[1].equals("class")) {
 						if (commands.length != 3 || !userClasses.deleteClass(commands[2])) {
-							System.out.println(errorMessage + commandUsage[5] + "\n");
-						}
-					} else if (commands[1].equals("att")) {
-						if (commands.length != 4 || !userClasses.deleteAttribute(commands[2], commands[3])) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
+						}
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.deleteField(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[7] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.deleteMethod(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[8] + "\n");
 						}
 					} else if (commands[1].equals("rel")) {
 						if (commands.length != 5 || !userClasses.deleteRelationship(commands[2], commands[3], commands[4])) {
-							System.out.println(errorMessage + commandUsage[7] + "\n");
+							System.out.println(errorMessage + commandUsage[9] + "\n");
 						}
 					} else {
-						System.out.println(errorMessage + commandUsage[5] + commandUsage[6] + commandUsage[7] + "\n");
+						System.out.println(errorMessage + commandUsage[6] + commandUsage[7] + commandUsage[8] + commandUsage[9] + "\n");
 					}
 					break;
-
+					
 				case "rename":
 					// Call rename class or attribute based on length and user input
 					if (commands[1].equals("class")) {
 						if (commands.length != 4 || !userClasses.renameClass(commands[2], commands[3])) {
-							System.out.println(errorMessage + commandUsage[8] + "\n");
+							System.out.println(errorMessage + commandUsage[10] + "\n");
 						}
-					} else if (commands[1].equals("att")) {
-						if (commands.length != 5 || !userClasses.renameAttribute(commands[2], commands[3], commands[4])) {
-							System.out.println(errorMessage + commandUsage[9] + "\n");
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.renameField(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[11] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.renameMethod(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[12] + "\n");
 						}
 					} else {
-						System.out.println(errorMessage + commandUsage[8] + commandUsage[9] + "\n");
+						System.out.println(errorMessage + commandUsage[10] + commandUsage[11] + commandUsage[12] + "\n");
 					}
 					break;
 
@@ -146,7 +161,7 @@ public class CommandLine extends HelperMethods {
 					// Call list class or relationship based on length and user input
 					if (commands[1].equals("classes")) {
 						if (commands.length != 2) {
-							System.out.println(errorMessage + commandUsage[10] + "\n");
+							System.out.println(errorMessage + commandUsage[113] + "\n");
 						} else {
 							System.out.println();
 							listClasses(userClasses);
@@ -154,7 +169,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if (commands[1].equals("relationships")) {
 						if (commands.length != 2) {
-							System.out.println(errorMessage + commandUsage[11] + "\n");
+							System.out.println(errorMessage + commandUsage[14] + "\n");
 						} else {
 							System.out.println();							
 							listRelationships(userClasses);
@@ -162,7 +177,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if (commands[1].equals("all")) {
 						if (commands.length != 2) {
-							System.out.println(errorMessage + commandUsage[12] + "\n");
+							System.out.println(errorMessage + commandUsage[15] + "\n");
 						} else {
 							System.out.println();							
 							listClasses(userClasses);
@@ -171,13 +186,13 @@ public class CommandLine extends HelperMethods {
 							System.out.println();							
 						}
 					} else {
-						System.out.println(errorMessage + commandUsage[10] + commandUsage[11] + commandUsage[12] + "\n");
+						System.out.println(errorMessage + commandUsage[13] + commandUsage[14] + commandUsage[15] + "\n");
 					}
 					break;
 					
 				case "clear":
 					if (commands.length != 1) {
-						System.out.println(errorMessage + commandUsage[13] + "\n");
+						System.out.println(errorMessage + commandUsage[16] + "\n");
 					} else {
 						userClasses.clear();					
 					}
@@ -203,30 +218,36 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[2]
 				+ " - create a class with title <name>"
 				+ commandUsage[3]
-				+ " - create an attribute in <classname> titled <attribute>"
+				+ " - create a field in <classname> titled <fieldname>"
 				+ commandUsage[4]
-				+ " - create a relationship between <classname1> and <classname2> titled <name>\n"
-				
+				+ " - create a method in <classname> titled <methodname>"				
 				+ commandUsage[5]
-				+ " - rename class <name> to <newname>"
-				+ commandUsage[6]
-				+ "- rename attribute <name> to <newname> in class titled <classname>\n"
-				
-				+ commandUsage[7]
-				+ " - delete a class with title <name>"
-				+ commandUsage[8]
-				+ " - delete attribute titled <attribute> in class titled <classname>"
-				+ commandUsage[9]
-				+ " - delete a relationship with title <name>\n"
+				+ " - create a relationship between <classname1> and <classname2> titled <name>\n"
 
+				+ commandUsage[6]
+				+ " - delete a class with title <name>"
+				+ commandUsage[7]
+				+ " - delete field <fieldname> in class titled <classname>"
+				+ commandUsage[8]
+				+ " - delete method <methodname> in class titled <classname>"				
+				+ commandUsage[9]
+				+ " - delete a relationship with title <name> between <classname1> and <classname2>\n"
+				
 				+ commandUsage[10]
-				+ " - List all existing classes"
+				+ " - rename class <name> to <newname>"
 				+ commandUsage[11]
-				+ " - List all existing relationships"
+				+ " - rename field <fieldname> to <newname> in class titled <classname>"
 				+ commandUsage[12]
-				+ " - List all existing classes and relationships\n"
+				+ " - rename method <methodname> to <newname> in class titled <classname>\n"				
 				
 				+ commandUsage[13]
+				+ " - List all existing classes"
+				+ commandUsage[14]
+				+ " - List all existing relationships"
+				+ commandUsage[15]
+				+ " - List all existing classes and relationships\n"
+				
+				+ commandUsage[16]
 				+ " - Clear all classes and relationships\n");
 	}
 }
