@@ -43,5 +43,9 @@ public class RelationshipTest {
     	assertFalse("Differing first classes should result in false", r1.equals(r4));
     	assertFalse("Differing second classes should result in false", r1.equals(r5));
     }
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> 53f0ca5711c2202fdcbd1f3e0c276b8f2f5a9357
