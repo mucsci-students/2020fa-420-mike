@@ -46,7 +46,7 @@ public class ClassesTest {
         classes.createClass("Entity2");
         classes.createRelationship("Linkage", "Entity1", "Entity2");
 
-        classes.clear()
+        classes.clear();
 
         assertTrue("Relationships list is empty after clear is called", classes.getRelationships().isEmpty());
         assertTrue("Entities list is empty after clear is called", classes.getEntities().isEmpty());
@@ -112,7 +112,7 @@ public class ClassesTest {
         assertTrue("Entity with fields and Methods was copied correctly", classes.getEntities().get(0).equals(new_e1copy));
         assertTrue("Fields are the same", classes.getEntities().get(0).getFields().equals(new_e1copy.getFields()));
         assertTrue("Methods are the same", classes.getEntities().get(0).getMethods().equals(new_e1copy.getMethods()));
-        assertFalse("Old e1_copy no longer equal to E1", classes.getEntities().get(0).equals(e1copy))
+        assertFalse("Old e1_copy no longer equal to E1", classes.getEntities().get(0).equals(e1copy));
     }
 
     /** test searchEntity
