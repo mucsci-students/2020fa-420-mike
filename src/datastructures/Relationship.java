@@ -60,10 +60,6 @@ public class Relationship {
 		}
 		return false;
 	}
-<<<<<<< HEAD
 
 }
 
-=======
-}
->>>>>>> 96fe9f418ec7f2bf7b7e82d7702b75a1fdf64485
