@@ -3,8 +3,7 @@ package testcases;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import datastructures.Relationship;
 
@@ -44,4 +43,5 @@ public class RelationshipTest {
     	assertFalse("Differing first classes should result in false", r1.equals(r4));
     	assertFalse("Differing second classes should result in false", r1.equals(r5));
     }
+
 }

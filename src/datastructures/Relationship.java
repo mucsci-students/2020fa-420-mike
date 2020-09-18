@@ -1,4 +1,3 @@
-
 package datastructures;
 
 import java.util.Objects;
@@ -45,12 +44,12 @@ public class Relationship {
 	
 	public void setFirstClass(String newclass1)
 	{
-		name = newclass1;
+		class1 = newclass1;
 	}
 
 	public void setSecondClass(String newclass2)
 	{
-		name = newclass2;
+		class2 = newclass2;
 	}
 	
 	//*********************************************************//
@@ -69,5 +68,5 @@ public class Relationship {
 		}
 		return false;
 	}
-}
 
+}

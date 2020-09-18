@@ -4,7 +4,7 @@ package testcases;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 //import local classes to test
 import datastructures.Classes;
@@ -46,7 +46,7 @@ public class ClassesTest {
         classes.createClass("Entity2");
         classes.createRelationship("Linkage", "Entity1", "Entity2");
 
-        classes.clear()
+        classes.clear();
 
         assertTrue("Relationships list is empty after clear is called", classes.getRelationships().isEmpty());
         assertTrue("Entities list is empty after clear is called", classes.getEntities().isEmpty());
@@ -112,7 +112,7 @@ public class ClassesTest {
         assertTrue("Entity with fields and Methods was copied correctly", classes.getEntities().get(0).equals(new_e1copy));
         assertTrue("Fields are the same", classes.getEntities().get(0).getFields().equals(new_e1copy.getFields()));
         assertTrue("Methods are the same", classes.getEntities().get(0).getMethods().equals(new_e1copy.getMethods()));
-        assertFalse("Old e1_copy no longer equal to E1", classes.getEntities().get(0).equals(e1copy))
+        assertFalse("Old e1_copy no longer equal to E1", classes.getEntities().get(0).equals(e1copy));
     }
 
     /** test searchEntity
@@ -144,6 +144,12 @@ public class ClassesTest {
         assertFalse("False for non-existent class1 name", classes.searchRelationship("r", "fake", "e2"));
         assertFalse("False for non-existent class2 name", classes.searchRelationship("r", "e", "fake"));
         assertFalse("False when pairs are in wrong order", classes.searchRelationship("r", "e2", "e"));
+        
+        classes.renameClass("e", "e1");
+        
+        assertTrue("Found relationship after class1 name was updated", classes.searchRelationship("r", "e1", "e2"));
+        classes.renameClass("e2", "c2");
+        assertTrue("Found relationship after class2 name was updated", classes.searchRelationship("r", "e1", "c2"));
     }
 
     /** test getRelationship
@@ -220,21 +226,22 @@ public class ClassesTest {
         classes.renameClass("E1", "e");
         Entity e = classes.copyEntity("e");
 
-        assertTrue("Class renamed to e", classes.getEntities().contains(e));
-        assertFalse("Class E1 no longer exists", classes.getEntities().contains(e1_copy));
+        assertTrue("Class renamed to e", classes.searchEntity("e"));
+        assertFalse("Class E1 no longer exists", classes.searchEntity("E1"));
         assertTrue("Fields still in tact", e.getFields().equals(e1_copy.getFields()));
         assertTrue("Methods still in tact", e.getMethods().equals(e1_copy.getMethods()));
 
         /* Make sure class names were changed in existing relationships */
-        classes.createRelationship("r1", "e", "E2");
-        classes.renameClass("E2", "e2");
+        assertTrue("Relationship r1, e, E2 created", classes.createRelationship("r1", "e", "E2"));
+        assertTrue("Relationship r1, e, E2 exists", classes.searchRelationship("r1", "e", "E2"));
+        assertTrue("Class E2 renamed to e2", classes.renameClass("E2", "ent2"));
 
-        assertTrue("Class name (2) in relationship was updated", classes.searchRelationship("r1", "e", "e2"));
         assertFalse("Old relationship no longer exists", classes.searchRelationship("r1", "e", "E2"));
+        assertTrue("Class name (2) in relationship was updated", classes.searchRelationship("r1", "e", "ent2"));
 
         classes.renameClass("e", "e1");
-        assertTrue("Class name (1) in relationship was updated", classes.searchRelationship("r1", "e1", "e2"));
-        assertFalse("Old relationship no longer exists", classes.searchRelationship("r1", "e", "e2"));
+        assertTrue("Class name (1) in relationship was updated", classes.searchRelationship("r1", "e1", "ent2"));
+        assertFalse("Old relationship no longer exists", classes.searchRelationship("r1", "e", "ent2"));
     }
 
     /** test the deleteClass method
@@ -250,7 +257,7 @@ public class ClassesTest {
         assertFalse("False when deleting non-existent class", classes.deleteClass("fake"));
 
         classes.deleteClass("e");
-        assertTrue("Class e no longer exists", classes.getEntities().contains(new Entity("e")));
+        assertFalse("Class e no longer exists", classes.searchEntity("e"));
         assertEquals("Entities list size is 0", 0, classes.getEntities().size());
 
         /* Make sure relationships associated with deleted classes are deleted */
@@ -263,7 +270,7 @@ public class ClassesTest {
         classes.createRelationship("r3", "e2", "e3");
 
         classes.deleteClass("e");
-        assertTrue("Class e no longer exists", classes.getEntities().contains(new Entity("e")));
+        assertFalse("Class e no longer exists", classes.searchEntity("e"));
         assertEquals("Entities list size is 2", 2, classes.getEntities().size());
 
         boolean deletedRels = classes.searchRelationship("r1", "e", "e2") && classes.searchRelationship("r2", "e3", "e");

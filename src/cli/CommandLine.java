@@ -13,10 +13,31 @@ public class CommandLine extends HelperMethods {
 
 	public static void commandInterface() {
 		Classes userClasses = new Classes();
+		String[] commandUsage = {
+			"\n  save <name (optional <path>)", 
+			"\n  load <path>",
+			"\n  create class <name>",
+			"\n  create field <classname> <fieldname>",
+			"\n  create method <classname> <methodname>",
+			"\n  create rel <name> <classname1> <classname2>",
+			"\n  delete class <name>",
+			"\n  delete field <classname> <fieldname>",
+			"\n  delete method <classname> <methodname>",
+			"\n  delete rel <name> <classname1> <classname2>",
+			"\n  rename class <name> <newname>",
+			"\n  rename field <classname> <fieldname> <newname>",
+			"\n  rename method <classname> <methodname> <newname>",	
+			"\n  list classes",
+			"\n  list relationships",
+			"\n  list all",
+			"\n  clear"
+		};
+		String errorMessage = "\nError in parsing command. Proper command usage is: ";
+		
 		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
-		System.out.println("To exit the program, type quit");
-		System.out.println("To see all the commands available, type help");
+		System.out.println("To exit the program, type 'quit'.");
+		System.out.println("To see all the commands available, type 'help'.\n");
 
 
 		while(true) {
@@ -31,136 +52,197 @@ public class CommandLine extends HelperMethods {
 			}
 
 			switch(commands[0]) {
+				// Call help
 				case "help":
-					help(); 
+					help(commandUsage); 
 					break;
-
-				case "save":
-					//call save depending on if pathname was specified or not
+				// Call save depending on if pathname was specified or not
+				case "save":				
 					if (commands.length == 2) {
 						try {
 						save(commands[1], System.getProperty("user.dir"), userClasses);
 						}
-						catch (IOException e)
-						{
+						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else if (commands.length == 3) {
 						try {
 						save(commands[1], commands[2], userClasses);
 						}
-						catch (IOException e)
-						{
+						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else {
-						commandError();
+						System.out.println(errorMessage + commandUsage[0] + "\n");
 					}
 					break;
-
+				// Call load given a directory+filename
 				case "load":
 					if (commands.length == 2) {
 						try {
 						load(commands[1], userClasses);
 						}
-						catch (IOException | ParseException e)
-						{
-							System.out.println("Filed to parse directory. Exiting.");
+						catch (IOException | ParseException e) {
+							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else {
-						commandError();
+						System.out.println(errorMessage + commandUsage[1] + "\n");
 					}
 					break;
-
+				// Call create class, attribute, or relationship based on length and user input
 				case "create":
-					// Call create class, attribute, or relationship based on length and user input
-					if (commands.length == 3 && commands[1].equals("class")) {
-						userClasses.createClass(commands[2]);
-					} else if (commands.length == 4 && commands[1].equals("att")) {
-						userClasses.createAttribute(commands[2], commands[3]);
-					} else if (commands.length == 5 && commands[1].equals("rel")) {
-						userClasses.createRelationship(commands[2], commands[3], commands[4]);
+					if (commands[1].equals("class")) {
+						if(commands.length != 3 || !userClasses.createClass(commands[2])) {
+							System.out.println(errorMessage + commandUsage[2] + "\n");
+						}
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.createField(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[3] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.createMethod(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[4] + "\n");
+						}
+					} else if (commands[1].equals("rel")) {
+						if(commands.length != 5 || !userClasses.createRelationship(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[5] + "\n");
+						}
 					}
 					else {
-						commandError();
+						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + "\n");
 					}
 					break;
-
-				case "delete":
-					// Call delete class, attribute, or relationship based on length and user input
-					if (commands.length == 3 && commands[1].equals("class")){
-						userClasses.deleteClass(commands[2]);
-					} else if (commands.length == 4 && commands[1].equals("att")) {
-						userClasses.deleteAttribute(commands[2], commands[3]);
-					} else if (commands.length == 5 && commands[1].equals("rel")) {
-						userClasses.deleteRelationship(commands[2], commands[3], commands[4]);
-					} else {
-						commandError();
-					}
-					break;
-
-				case "rename":
-					// Call rename class or attribute based on length and user input
-					if (commands.length == 4 && commands[1].equals("class")) {
-						userClasses.renameClass(commands[2], commands[3]);
-					} else if (commands.length == 5 && commands[1].equals("att")) {
-						userClasses.renameAttribute(commands[2], commands[3], commands[4]);
-					} else {
-						commandError();
-					}
-					break;
-
-				case "list":
-					// Call list class or relationship based on length and user input
-					if (commands.length == 2) {
-						if (commands[1].equals("classes")) {
-							listClasses(userClasses);	
-						} else if (commands[1].equals("relationships")) {
-							listRelationships(userClasses);
-						} else {
-							commandError();
+				// Call delete class, attribute, or relationship based on length and user input
+				case "delete":	
+					if (commands[1].equals("class")) {
+						if (commands.length != 3 || !userClasses.deleteClass(commands[2])) {
+							System.out.println(errorMessage + commandUsage[6] + "\n");
+						}
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.deleteField(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[7] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.deleteMethod(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[8] + "\n");
+						}
+					} else if (commands[1].equals("rel")) {
+						if (commands.length != 5 || !userClasses.deleteRelationship(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[9] + "\n");
 						}
 					} else {
-						commandError();
+						System.out.println(errorMessage + commandUsage[6] + commandUsage[7] + commandUsage[8] + commandUsage[9] + "\n");
+					}
+					break;
+				// Call rename class or attribute based on length and user input
+				case "rename":		
+					if (commands[1].equals("class")) {
+						if (commands.length != 4 || !userClasses.renameClass(commands[2], commands[3])) {
+							System.out.println(errorMessage + commandUsage[10] + "\n");
+						}
+					} else if ( commands[1].equals("field")) {
+						if(commands.length != 4 || !userClasses.renameField(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[11] + "\n");
+						}
+					} else if ( commands[1].equals("method")) {
+						if(commands.length != 4 || !userClasses.renameMethod(commands[2], commands[3], commands[4])) {
+							System.out.println(errorMessage + commandUsage[12] + "\n");
+						}
+					} else {
+						System.out.println(errorMessage + commandUsage[10] + commandUsage[11] + commandUsage[12] + "\n");
+					}
+					break;
+				// Call list class or relationship based on length and user input
+				case "list":				
+					if (commands[1].equals("classes")) {
+						if (commands.length != 2) {
+							System.out.println(errorMessage + commandUsage[13] + "\n");
+						} else {
+							System.out.println();
+							listClasses(userClasses);
+							System.out.println();							
+						}
+					} else if (commands[1].equals("relationships")) {
+						if (commands.length != 2) {
+							System.out.println(errorMessage + commandUsage[14] + "\n");
+						} else {
+							System.out.println();							
+							listRelationships(userClasses);
+							System.out.println();							
+						}
+					} else if (commands[1].equals("all")) {
+						if (commands.length != 2) {
+							System.out.println(errorMessage + commandUsage[15] + "\n");
+						} else {
+							System.out.println();							
+							listClasses(userClasses);
+							System.out.println();
+							listRelationships(userClasses);
+							System.out.println();							
+						}
+					} else {
+						System.out.println(errorMessage + commandUsage[13] + commandUsage[14] + commandUsage[15] + "\n");
+					}
+					break;
+				// Calls clear 
+				case "clear":
+					if (commands.length != 1) {
+						System.out.println(errorMessage + commandUsage[16] + "\n");
+					} else {
+						userClasses.clear();					
 					}
 					break;
 
 				// Proper command not detected, print an error
 				default:
-					commandError();
+					System.out.println("Invalid command.\n Type help to see a list of all commands.");
 			}	
 		}
 		cmdLine.close();
 	}
 
-	public static void help() {
-		System.out.println("Here is a list of available commands:");
+	public static void help(String[] commandUsage) {
+		System.out.print("\nHere is a list of available commands:");
 
-		System.out.println("save <name> (optional <path>) - Save file to specific path\n"
-				+ "load <path> - Loads a file at a specific path\n\n"
+		System.out.println(
+				  commandUsage[0]
+				+ " - Save file to specific path"
+				+ commandUsage[1]
+				+ " - Loads a file at a specific path\n"
+				
+				+ commandUsage[2]
+				+ " - create a class with title <name>"
+				+ commandUsage[3]
+				+ " - create a field in <classname> titled <fieldname>"
+				+ commandUsage[4]
+				+ " - create a method in <classname> titled <methodname>"				
+				+ commandUsage[5]
+				+ " - create a relationship between <classname1> and <classname2> titled <name>\n"
 
-				+ "create class <name> - create a class with title <name>\n"
-				+ "rename class <name> <newname> - rename class <name> to <newname>\n"
-				+ "delete class <name> - delete a class with title <name>\n\n"
-
-				+ "create rel  <name> <classname1> <classname2> - create a relationship\n"
-				+ "	between <classname1> and <classname2> titled <name>\n"
-				+ "delete rel <name> <classname1> <classname2> - delete a relationship with title <name>\n\n"
-
-				+ "create att <classname> <attribute> - create an attribute in <classname>\n"
-				+ "	titled <attribute>\n"
-				+ "rename att <classname> <attribute> <newname> - rename attribute\n"
-				+ "	<name> to <newname> in class titled <classname>\n"
-				+ "delete att <classname> <attribute> - delete attribute titled\n"
-				+ "	<attribute> in class titled <classname>\n\n"
-
-				+ "list <object> - List all existing classes and their attributes or\n"
-				+ "	all relationships");
+				+ commandUsage[6]
+				+ " - delete a class with title <name>"
+				+ commandUsage[7]
+				+ " - delete field <fieldname> in class titled <classname>"
+				+ commandUsage[8]
+				+ " - delete method <methodname> in class titled <classname>"				
+				+ commandUsage[9]
+				+ " - delete a relationship with title <name> between <classname1> and <classname2>\n"
+				
+				+ commandUsage[10]
+				+ " - rename class <name> to <newname>"
+				+ commandUsage[11]
+				+ " - rename field <fieldname> to <newname> in class titled <classname>"
+				+ commandUsage[12]
+				+ " - rename method <methodname> to <newname> in class titled <classname>\n"				
+				
+				+ commandUsage[13]
+				+ " - List all existing classes"
+				+ commandUsage[14]
+				+ " - List all existing relationships"
+				+ commandUsage[15]
+				+ " - List all existing classes and relationships\n"
+				
+				+ commandUsage[16]
+				+ " - Clear all classes and relationships\n");
 	}
-
-	// Prints an error if the user gives an incorrect or unlisted command.
-	public static void commandError() {
-		System.out.println("Invalid command.\nType help to see command usage.");
-	}
-
 }
