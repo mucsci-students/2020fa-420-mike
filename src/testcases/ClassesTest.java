@@ -458,9 +458,5 @@ public class ClassesTest {
         assertTrue("Classes e and e2 still exist", classes.searchEntity("e") && classes.searchEntity("e2"));
     }
 
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> 96fe9f418ec7f2bf7b7e82d7702b75a1fdf64485
