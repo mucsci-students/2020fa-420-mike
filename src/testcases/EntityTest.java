@@ -150,9 +150,5 @@ public class EntityTest {
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertTrue("a2 method still exists", e.getMethods().contains("a2"));
     }
-<<<<<<< HEAD
   
 }
-=======
-}
->>>>>>> 53f0ca5711c2202fdcbd1f3e0c276b8f2f5a9357
