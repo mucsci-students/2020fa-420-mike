@@ -6,71 +6,60 @@ public class Relationship {
 	private String name;
 	private String class1;
 	private String class2;
-	
+
 	//*********************************************************//
 	// Constructors //
 	//*********************************************************//
-	
-	public Relationship(String newname, String newclass1, String newclass2)
-	{
+
+	public Relationship(String newname, String newclass1, String newclass2) {
 		name = newname;
 		class1 = newclass1;
 		class2 = newclass2;
 	}
-	
+
 	//*********************************************************//
 	// Accessors & Mutators //
 	//*********************************************************//
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return name;
 	}
-	
-	public String getFirstClass()
-	{
+
+	public String getFirstClass() {
 		return class1;
 	}
-	
-	public String getSecondClass()
-	{
+
+	public String getSecondClass() {
 		return class2;
 	}
-	
-	public void setName(String newname)
-	{
+
+	public void setName(String newname) {
 		name = newname;
 	}
-	
-	public void setFirstClass(String newclass1)
-	{
+
+	public void setFirstClass(String newclass1) {
 		class1 = newclass1;
 	}
 
-	public void setSecondClass(String newclass2)
-	{
+	public void setSecondClass(String newclass2) {
 		class2 = newclass2;
 	}
-	
+
 	//*********************************************************//
 	// Equals Function //
 	//*********************************************************//
-	
+
 	public boolean equals(Object obj) {
 		// Instance check
-		if (obj instanceof Relationship)
-		{
+		if (obj instanceof Relationship) {
 			// Equality check
 			Relationship other = (Relationship) obj;
 			return Objects.equals(this.name, other.name)
 					&& Objects.equals(this.class1, other.class1)
-					&& Objects.equals(this.class2, other.class2);	
+					&& Objects.equals(this.class2, other.class2);
 		}
 		return false;
 	}
-<<<<<<< HEAD
 
 }
-=======
-}
->>>>>>> 53f0ca5711c2202fdcbd1f3e0c276b8f2f5a9357
+

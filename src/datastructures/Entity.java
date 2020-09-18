@@ -121,4 +121,6 @@ public class Entity {
 	public boolean deleteMethod(String target) {
 		return methods.remove(target);
 	}
+
 }
+
