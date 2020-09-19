@@ -246,3 +246,4 @@ public class CommandLine extends HelperMethods {
 				+ " - Clear all classes and relationships\n");
 	}
 }
+

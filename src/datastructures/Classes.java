@@ -41,11 +41,12 @@ public class Classes {
     }
 
     public boolean renameClass(String target, String newname) {
-        if (entities.contains(new Entity(newname))) {
-            return false; // Already contains desired name
+        if(searchEntity(newname)) {
+        	return false; // Already contains desired name
         }
 
-        int index = entities.indexOf(new Entity(target));
+        Entity e = copyEntity(target);
+        int index = entities.indexOf(e);
 
         if (index < 0) {
             return false; // Target not found.
@@ -69,7 +70,7 @@ public class Classes {
     public boolean deleteClass(String target) {
         int index = entities.indexOf(new Entity(target));
 
-        if (index > 0) {
+        if (index < 0) {
             // Target not found.
             return false;
         }
@@ -187,10 +188,14 @@ public class Classes {
     // *********************************************************//
 
     public boolean createRelationship(String name, String class1, String class2) {
-
-        for (Relationship r : relationships) {
+        if(!searchEntity(class1) || !searchEntity(class2)) {
+        	//class1 or class2 does not exist
+        	return false;
+        }
+    	
+    	for (Relationship r : relationships) {
             if ((r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
-                    || r.getFirstClass().equals(class2) && r.getSecondClass().equals(class1)) {
+                    || (r.getFirstClass().equals(class2) && r.getSecondClass().equals(class1))) {
                 // There already exists a relationship between those two classes.
                 return false;
             }
@@ -288,3 +293,4 @@ public class Classes {
     }
 
 }
+

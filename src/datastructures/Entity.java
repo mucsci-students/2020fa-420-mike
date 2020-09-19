@@ -52,7 +52,12 @@ public class Entity {
 		{
 			// Equality check
 			Entity other = (Entity) obj;
-			return Objects.equals(this.name, other.name);
+			//check equality for fields, methods, and name
+			boolean equalFields = Objects.equals(this.fields, other.fields);
+			boolean equalMethods = Objects.equals(this.methods, other.methods);
+			boolean equalNames = Objects.equals(this.name, other.name);
+			
+			return equalFields && equalMethods && equalNames;
 		}
 		return false;
 	}
@@ -116,4 +121,6 @@ public class Entity {
 	public boolean deleteMethod(String target) {
 		return methods.remove(target);
 	}
+
 }
+

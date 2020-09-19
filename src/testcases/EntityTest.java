@@ -3,8 +3,7 @@ package testcases;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import datastructures.Entity;
 
@@ -12,8 +11,7 @@ public class EntityTest {
 
     /* test constructor */
     @Test
-    public void initEntity()
-    {
+    public void initEntity() {
         Entity e = new Entity("e");
         assertEquals("Name was set properly", "e", e.getName());
         assertTrue("Fields list was initialized", e.getFields().isEmpty());
@@ -22,8 +20,7 @@ public class EntityTest {
 
     /* test equals */
     @Test
-    public void testEquals()
-    {
+    public void testEquals() {
         Entity e = new Entity("e");
         Entity e2 = new Entity("e2");
         Entity e_copy = new Entity("e");
@@ -66,8 +63,7 @@ public class EntityTest {
 
     /* test createField */
     @Test
-    public void testCreateField()
-    {
+    public void testCreateField() {
         Entity e = new Entity("e");
 
         e.createField("a1");
@@ -78,8 +74,7 @@ public class EntityTest {
 
     /* test renameField */
     @Test
-    public void testRenameField()
-    {
+    public void testRenameField() {
         Entity e = new Entity("e");
         e.createField("a1");
         e.createField("a2");
@@ -94,8 +89,7 @@ public class EntityTest {
 
     /* test deleteField */
     @Test
-    public void testDeleteField()
-    {
+    public void testDeleteField() {
         Entity e = new Entity("e");
         e.createField("a1");
         e.createField("a2");
@@ -110,8 +104,7 @@ public class EntityTest {
 
     /* test createMethod */
     @Test
-    public void testCreateMethod()
-    {
+    public void testCreateMethod() {
         Entity e = new Entity("e");
 
         e.createMethod("a1");
@@ -122,8 +115,7 @@ public class EntityTest {
 
     /* test renameMethod */
     @Test
-    public void testRenameMethod()
-    {
+    public void testRenameMethod() {
         Entity e = new Entity("e");
         e.createMethod("a1");
         e.createMethod("a2");
@@ -138,8 +130,7 @@ public class EntityTest {
 
     /* test deleteMethod */
     @Test
-    public void testDeleteMethod()
-    {
+    public void testDeleteMethod() {
         Entity e = new Entity("e");
         e.createMethod("a1");
         e.createMethod("a2");
@@ -151,5 +142,6 @@ public class EntityTest {
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertTrue("a2 method still exists", e.getMethods().contains("a2"));
     }
-  
+
 }
+
