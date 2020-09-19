@@ -1,10 +1,9 @@
-package cli;
+package mike.cli;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.json.simple.parser.ParseException;
-import datastructures.Classes;
+import mike.datastructures.Classes;
 
 public class CommandLine extends HelperMethods {
 	
@@ -42,7 +41,10 @@ public class CommandLine extends HelperMethods {
 
 		while(true) {
 			System.out.print("Enter a command: ");
-			
+			//redo loop if blank line
+			if(!cmdLine.hasNextLine()){
+				continue;
+			}
 			String line = cmdLine.nextLine();
 			//parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
@@ -82,7 +84,7 @@ public class CommandLine extends HelperMethods {
 						try {
 						load(commands[1], userClasses);
 						}
-						catch (IOException | ParseException e) {
+						catch (Exception e) {
 							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else {
