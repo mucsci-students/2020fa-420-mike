@@ -7,9 +7,9 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 //import local classes to test
-import datastructures.Classes;
-import datastructures.Entity;
-import datastructures.Relationship;
+import mike.datastructures.Classes;
+import mike.datastructures.Entity;
+import mike.datastructures.Relationship;
 
 /** Run tests on Classes Data Structure
  *

@@ -1,4 +1,4 @@
-package datastructures;
+package mike.datastructures;
 
 import java.util.Objects;
 import java.util.ArrayList;
