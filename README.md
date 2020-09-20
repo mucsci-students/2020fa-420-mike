@@ -2,9 +2,9 @@
 
 Team mike's UML Editor is an application that allows the user to add, delete, and edit UML
 classes. Each UML class can hold different fields and methods, which can be added, deleted,
-and renamed. The user can also save files and load other ones to easily save progress and 
-continue to work on it at a later time. The application currently runs only using a Command
-Line Interface.
+and renamed. Relationships between classes may be created and deleted. The user can also 
+save files and load other ones to easily save progress and continue to work on it at a 
+later time. The application currently runs only using a Command Line Interface.
 
 ## Requirements:
    - Java 11
