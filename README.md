@@ -22,12 +22,11 @@ Gradle build builds the application, gradle shadowJar creates a jar file with al
 installed, and java -jar ./build/libs/mike-all.jar runs the application.
 
 ### Developers:
-
-Stefan Gligorevic
-Conor Sosh
-Phil Androwick
-John Hynes
-Ian Reger
+    - Stefan Gligorevic
+    - Conor Sosh
+    - Phil Androwick
+    - John Hynes
+    - Ian Reger
 
 **DISCLAIMER**: 
 This is not a finished product. This is the state of the application after Sprint 1.
