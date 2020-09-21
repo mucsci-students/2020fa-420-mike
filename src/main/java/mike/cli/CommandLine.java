@@ -107,7 +107,7 @@ public class CommandLine extends HelperMethods {
 							break;
 						}
 						if(!userClasses.createField(commands[2], commands[3])){
-							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exists.\n");
+							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");
 						}
 					} else if ( commands[1].equals("method")) {
 						if(commands.length != 4) {
@@ -115,7 +115,7 @@ public class CommandLine extends HelperMethods {
 							break;
 						}
 						if(!userClasses.createMethod(commands[2], commands[3])){
-							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exists.\n");
+							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exist.\n");
 						}
 					} else if (commands[1].equals("rel")) {
 						if(commands.length != 5) {
