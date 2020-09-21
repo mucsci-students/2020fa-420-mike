@@ -68,7 +68,8 @@ public class Classes {
     }
 
     public boolean deleteClass(String target) {
-        int index = entities.indexOf(new Entity(target));
+        Entity e = copyEntity(target);
+        int index = entities.indexOf(e);
 
         if (index < 0) {
             // Target not found.

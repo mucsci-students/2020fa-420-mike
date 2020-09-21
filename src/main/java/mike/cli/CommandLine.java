@@ -94,20 +94,36 @@ public class CommandLine extends HelperMethods {
 				// Call create class, attribute, or relationship based on length and user input
 				case "create":
 					if (commands[1].equals("class")) {
-						if(commands.length != 3 || !userClasses.createClass(commands[2])) {
+						if(commands.length != 3) {
 							System.out.println(errorMessage + commandUsage[2] + "\n");
+							break;
+						}
+						if(!userClasses.createClass(commands[2])){
+							System.out.println("\nCreate class failed. Make sure the class name doesn't already exist.\n");
 						}
 					} else if ( commands[1].equals("field")) {
-						if(commands.length != 4 || !userClasses.createField(commands[2], commands[3])) {
+						if(commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[3] + "\n");
+							break;
+						}
+						if(!userClasses.createField(commands[2], commands[3])){
+							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");
 						}
 					} else if ( commands[1].equals("method")) {
-						if(commands.length != 4 || !userClasses.createMethod(commands[2], commands[3])) {
+						if(commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[4] + "\n");
+							break;
+						}
+						if(!userClasses.createMethod(commands[2], commands[3])){
+							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exist.\n");
 						}
 					} else if (commands[1].equals("rel")) {
-						if(commands.length != 5 || !userClasses.createRelationship(commands[2], commands[3], commands[4])) {
+						if(commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[5] + "\n");
+							break;
+						}
+						if(!userClasses.createRelationship(commands[2], commands[3], commands[4])){
+							System.out.println("\nCreate relationship failed. Make sure the classes exist and that it is not a duplicate.\n");
 						}
 					}
 					else {
@@ -117,20 +133,36 @@ public class CommandLine extends HelperMethods {
 				// Call delete class, attribute, or relationship based on length and user input
 				case "delete":	
 					if (commands[1].equals("class")) {
-						if (commands.length != 3 || !userClasses.deleteClass(commands[2])) {
+						if (commands.length != 3) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
+							break;
+						}
+						if(!userClasses.deleteClass(commands[2])){
+							System.out.println("\nDelete class failed. Make sure the class name exists.\n");
 						}
 					} else if ( commands[1].equals("field")) {
-						if(commands.length != 4 || !userClasses.deleteField(commands[2], commands[3])) {
+						if(commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[7] + "\n");
+							break;
+						}
+						if(!userClasses.deleteField(commands[2], commands[3])){
+							System.out.println("\nDelete field failed. Make sure the field and class name exist.\n");
 						}
 					} else if ( commands[1].equals("method")) {
-						if(commands.length != 4 || !userClasses.deleteMethod(commands[2], commands[3])) {
+						if(commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[8] + "\n");
+							break;
+						}
+						if(!userClasses.deleteMethod(commands[2], commands[3])){
+							System.out.println("\nDelete method failed. Make sure the method and class name exist.\n");
 						}
 					} else if (commands[1].equals("rel")) {
-						if (commands.length != 5 || !userClasses.deleteRelationship(commands[2], commands[3], commands[4])) {
+						if (commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[9] + "\n");
+							break;
+						}
+						if(!userClasses.deleteRelationship(commands[2], commands[3], commands[4])){
+							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");
 						}
 					} else {
 						System.out.println(errorMessage + commandUsage[6] + commandUsage[7] + commandUsage[8] + commandUsage[9] + "\n");
@@ -139,16 +171,28 @@ public class CommandLine extends HelperMethods {
 				// Call rename class or attribute based on length and user input
 				case "rename":		
 					if (commands[1].equals("class")) {
-						if (commands.length != 4 || !userClasses.renameClass(commands[2], commands[3])) {
+						if (commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
+							break;
+						}
+						if(!userClasses.renameClass(commands[2], commands[3])){
+							System.out.println("\nRename class failed. Make sure the class exists and the new class name doesn't exist.\n");
 						}
 					} else if ( commands[1].equals("field")) {
-						if(commands.length != 4 || !userClasses.renameField(commands[2], commands[3], commands[4])) {
+						if(commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[11] + "\n");
+							break;
+						}
+						if(!userClasses.renameField(commands[2], commands[3], commands[4])){
+							System.out.println("\nRename field failed. Make sure the class and field exist and the new field name doesn't exist.\n");
 						}
 					} else if ( commands[1].equals("method")) {
-						if(commands.length != 4 || !userClasses.renameMethod(commands[2], commands[3], commands[4])) {
+						if(commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[12] + "\n");
+							break;
+						}
+						if(!userClasses.renameMethod(commands[2], commands[3], commands[4])){
+							System.out.println("\nRename method failed. Make sure the class and method exist and the new method name doesn't exist.\n");
 						}
 					} else {
 						System.out.println(errorMessage + commandUsage[10] + commandUsage[11] + commandUsage[12] + "\n");
@@ -245,7 +289,9 @@ public class CommandLine extends HelperMethods {
 				+ " - List all existing classes and relationships\n"
 				
 				+ commandUsage[16]
-				+ " - Clear all classes and relationships\n");
+				+ " - Clear all classes and relationships\n"
+
+				+ "  quit - exits the program\n");
 	}
 }
 

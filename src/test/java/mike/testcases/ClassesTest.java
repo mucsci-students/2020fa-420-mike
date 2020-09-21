@@ -260,6 +260,15 @@ public class ClassesTest {
         assertFalse("Class e no longer exists", classes.searchEntity("e"));
         assertEquals("Entities list size is 0", 0, classes.getEntities().size());
 
+        /*Deleting classes that contain fields and methods*/
+        classes.createClass("cla");
+        classes.createField("cla", "f");
+        classes.createMethod("cla", "m");
+
+        assertTrue("Class 'cla' has been deleted", classes.deleteClass("cla"));
+        assertFalse("Class 'cla' no longer exists", classes.searchEntity("cla"));
+        assertEquals("Entities list size is 0", 0, classes.getEntities().size());
+
         /* Make sure relationships associated with deleted classes are deleted */
         classes.createClass("e");
         classes.createClass("e2");
