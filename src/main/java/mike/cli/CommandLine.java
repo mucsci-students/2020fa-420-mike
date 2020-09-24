@@ -1,8 +1,6 @@
 package mike.cli;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 import mike.datastructures.Classes;
@@ -12,10 +10,11 @@ public class CommandLine extends HelperMethods {
 	public CommandLine() {
 	}
 
-	public static void commandInterface() throws IOException {
-		Classes userClasses = new Classes();
+	public static void commandInterface() {
+		datastructures.Classes userClasses = new Classes();
+		boolean prompt = false;
 		String[] commandUsage = {
-			"\n  save <name (optional <path>)", 
+			"\n  save <name>.json (optional <path>)", 
 			"\n  load <path>",
 			"\n  create class <name>",
 			"\n  create field <classname> <fieldname>",
@@ -39,23 +38,30 @@ public class CommandLine extends HelperMethods {
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
 		System.out.println("To exit the program, type 'quit'.");
 		System.out.println("To see all the commands available, type 'help'.\n");
-		
-		BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		System.out.print("Enter a command: ");
-		String cmd;
 
-		while((cmd = systemIn.readLine()) != null) {
-			//redo loop if blank line
-			if(cmd.isEmpty()){
+		while(cmdLine.hasNextLine()) {
+			String line = cmdLine.nextLine();
+			
+			//redo loop if blank line			
+			if(line.isEmpty()){
 				System.out.print("Enter a command: ");
 				continue;
 			}
-
 			//parse command line string into a list of commands by spaces
-			String[] commands = cmd.split(" ");
+			String[] commands = line.split(" ");
 
 			if (commands[0].equals("quit")) {
-				break;
+				if (prompt == true) {
+					System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
+					System.out.println("Type 'yes' to quit, or 'no' to go back.");
+					prompt = savePrompt(prompt, cmdLine);
+				}
+				if (!prompt) {
+					break;
+				}
+				System.out.print("Enter a command: ");
+				continue;
 			}
 
 			switch(commands[0]) {
@@ -68,6 +74,7 @@ public class CommandLine extends HelperMethods {
 					if (commands.length == 2) {
 						try {
 						save(commands[1], System.getProperty("user.dir"), userClasses);
+						prompt = false;
 						}
 						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
@@ -75,6 +82,7 @@ public class CommandLine extends HelperMethods {
 					} else if (commands.length == 3) {
 						try {
 						save(commands[1], commands[2], userClasses);
+						prompt = false;
 						}
 						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
@@ -87,7 +95,15 @@ public class CommandLine extends HelperMethods {
 				case "load":
 					if (commands.length == 2) {
 						try {
-						load(commands[1], userClasses);
+							if (prompt == true) {
+								System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
+								System.out.println("Type 'yes' to continue loading, or 'no' to go back.");
+								prompt = savePrompt(prompt, cmdLine);
+							}
+							if (!prompt) {
+								load(commands[1], userClasses);
+								prompt = false;
+							}
 						}
 						catch (Exception e) {
 							System.out.println("Failed to parse directory. Exiting.");
@@ -99,36 +115,44 @@ public class CommandLine extends HelperMethods {
 				// Call create class, attribute, or relationship based on length and user input
 				case "create":
 					if (commands[1].equals("class")) {
-						if(commands.length != 3) {
+						if (commands.length != 3) {
 							System.out.println(errorMessage + commandUsage[2] + "\n");
 							break;
 						}
-						if(!userClasses.createClass(commands[2])){
-							System.out.println("\nCreate class failed. Make sure the class name doesn't already exist.\n");
+						if (userClasses.createClass(commands[2])) {
+							prompt = true;
+						} else {
+							System.out.println("\nCreate class failed. Make sure the class name doesn't already exist.\n");							
 						}
-					} else if ( commands[1].equals("field")) {
-						if(commands.length != 4) {
+					} else if (commands[1].equals("field")) {
+						if (commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[3] + "\n");
 							break;
 						}
-						if(!userClasses.createField(commands[2], commands[3])){
-							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");
+						if (userClasses.createField(commands[2], commands[3])) {
+							prompt = true;
+						} else {
+							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");							
 						}
-					} else if ( commands[1].equals("method")) {
-						if(commands.length != 4) {
+					} else if (commands[1].equals("method")) {
+						if (commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[4] + "\n");
 							break;
 						}
-						if(!userClasses.createMethod(commands[2], commands[3])){
+						if (userClasses.createMethod(commands[2], commands[3])) {
+							prompt = true;
+						} else {
 							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exist.\n");
 						}
 					} else if (commands[1].equals("rel")) {
-						if(commands.length != 5) {
+						if (commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[5] + "\n");
 							break;
 						}
-						if(!userClasses.createRelationship(commands[2], commands[3], commands[4])){
-							System.out.println("\nCreate relationship failed. Make sure the classes exist and that it is not a duplicate.\n");
+						if (userClasses.createRelationship(commands[2], commands[3], commands[4])) {
+							prompt = true;
+						} else {
+							System.out.println("\nCreate relationship failed. Make sure the classes exist and that it is not a duplicate.\n");							
 						}
 					}
 					else {
@@ -141,33 +165,41 @@ public class CommandLine extends HelperMethods {
 						if (commands.length != 3) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
 							break;
-						}
-						if(!userClasses.deleteClass(commands[2])){
-							System.out.println("\nDelete class failed. Make sure the class name exists.\n");
+						}			
+						if (userClasses.deleteClass(commands[2])) {
+							prompt = true;
+						} else {
+							System.out.println("\nDelete class failed. Make sure the class name exists.\n");							
 						}
 					} else if ( commands[1].equals("field")) {
-						if(commands.length != 4) {
+						if (commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[7] + "\n");
 							break;
 						}
-						if(!userClasses.deleteField(commands[2], commands[3])){
-							System.out.println("\nDelete field failed. Make sure the field and class name exist.\n");
+						if (userClasses.deleteField(commands[2], commands[3])) {
+							prompt = true;
+						} else {
+							System.out.println("\nDelete field failed. Make sure the field and class name exist.\n");							
 						}
 					} else if ( commands[1].equals("method")) {
 						if(commands.length != 4) {
 							System.out.println(errorMessage + commandUsage[8] + "\n");
 							break;
 						}
-						if(!userClasses.deleteMethod(commands[2], commands[3])){
-							System.out.println("\nDelete method failed. Make sure the method and class name exist.\n");
+						if(userClasses.deleteMethod(commands[2], commands[3])) {
+							prompt = true;
+						} else {
+							System.out.println("\nDelete method failed. Make sure the method and class name exist.\n");							
 						}
 					} else if (commands[1].equals("rel")) {
 						if (commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[9] + "\n");
 							break;
 						}
-						if(!userClasses.deleteRelationship(commands[2], commands[3], commands[4])){
-							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");
+						if(userClasses.deleteRelationship(commands[2], commands[3], commands[4])) {
+							prompt = true;
+						} else {
+							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");							
 						}
 					} else {
 						System.out.println(errorMessage + commandUsage[6] + commandUsage[7] + commandUsage[8] + commandUsage[9] + "\n");
@@ -180,7 +212,9 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
 							break;
 						}
-						if(!userClasses.renameClass(commands[2], commands[3])){
+						if(userClasses.renameClass(commands[2], commands[3])) {
+							prompt = true;
+						} else {
 							System.out.println("\nRename class failed. Make sure the class exists and the new class name doesn't exist.\n");
 						}
 					} else if ( commands[1].equals("field")) {
@@ -188,7 +222,9 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[11] + "\n");
 							break;
 						}
-						if(!userClasses.renameField(commands[2], commands[3], commands[4])){
+						if(userClasses.renameField(commands[2], commands[3], commands[4])) {
+							prompt = true;
+						} else {
 							System.out.println("\nRename field failed. Make sure the class and field exist and the new field name doesn't exist.\n");
 						}
 					} else if ( commands[1].equals("method")) {
@@ -196,7 +232,9 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[12] + "\n");
 							break;
 						}
-						if(!userClasses.renameMethod(commands[2], commands[3], commands[4])){
+						if(userClasses.renameMethod(commands[2], commands[3], commands[4])) {
+							prompt = true;
+						} else {
 							System.out.println("\nRename method failed. Make sure the class and method exist and the new method name doesn't exist.\n");
 						}
 					} else {
@@ -239,15 +277,22 @@ public class CommandLine extends HelperMethods {
 				case "clear":
 					if (commands.length != 1) {
 						System.out.println(errorMessage + commandUsage[16] + "\n");
-					} else {
-						userClasses.clear();					
+					} else if (!userClasses.empty()) {
+						System.out.println("\nAre you sure you want to delete everything?");
+						System.out.println("Type 'yes' to delete, or 'no' to go back.");
+						boolean answer = savePrompt(true, cmdLine);
+							
+						if (!answer) {
+							userClasses.clear();
+							prompt = true;	
+						}
 					}
 					break;
 
 				// Proper command not detected, print an error
 				default:
-					System.out.println("Invalid command.\n Type help to see a list of all commands.");
-			}	
+					System.out.println("\nInvalid command.\nType help to see a list of all commands.\n");
+			}
 			System.out.print("Enter a command: ");
 		}
 		cmdLine.close();
@@ -298,6 +343,26 @@ public class CommandLine extends HelperMethods {
 				+ " - Clear all classes and relationships\n"
 
 				+ "  quit - exits the program\n");
+	}
+
+
+	public static boolean savePrompt (boolean prompt, Scanner cmdLine) {
+		while (prompt == true) {		
+			
+			String answer = cmdLine.nextLine();
+			
+			if (answer.equals("yes")) {
+				System.out.println("Proceeding.\n");
+				prompt = false;
+				break;
+			} else if (answer.equals("no")) {
+				System.out.println("Stopping.\n");
+				prompt = true;
+				break;
+			}
+			System.out.println("Invalid command. Type 'yes' to proceed, or 'no' to go back.");
+		}
+		return prompt;
 	}
 }
 

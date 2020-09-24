@@ -91,11 +91,13 @@ public class HelperMethods {
 	// Main save function. Calls saveClasses and saveRelationships
 	public static void save (String filename, String directory, Classes userClasses) throws IOException {
 		File newFile = new File(directory);
+		System.out.println();
+		
 		// If directory given does not exist, put in user.dir
 		if(!newFile.isDirectory())
 		{
 			directory = System.getProperty("user.dir");
-			System.out.println("Directory does not exisit.");
+			System.out.println("Directory does not exist.");
 		}
 
 		JSONObject saveFile = new JSONObject();
@@ -105,7 +107,7 @@ public class HelperMethods {
 		
 		directory += ("\\" + filename);
 		writeFile(saveFile, directory);
-		System.out.println("File saved to:" + directory);
+		System.out.println("File saved to:" + directory +"\n");
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
