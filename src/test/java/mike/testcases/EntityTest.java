@@ -1,11 +1,13 @@
-package testcases;
+package mike.testcases;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
-import datastructures.Entity;
+import mike.datastructures.Entity;
+import mike.datastructures.Field;
+import mike.datastructures.Method;
 
 public class EntityTest {
 
@@ -24,7 +26,6 @@ public class EntityTest {
         Entity e = new Entity("e");
         Entity e2 = new Entity("e2");
         Entity e_copy = new Entity("e");
-        Entity e2_copy = new Entity("e2");
         String s = "";
 
         // Null check
@@ -39,26 +40,6 @@ public class EntityTest {
         // Equality check
         assertTrue("Entities should be equal.", e.equals(e_copy));
         assertFalse("Differing names should result in false", e.equals(e2));
-
-        e.createField("a");
-        e.createField("a2");
-
-        assertFalse("Differing fields results in false", e.equals(e_copy));
-
-        e_copy.createField("a");
-        e_copy.createField("a2");
-
-        assertTrue("Same fields and name (no methods) result in true", e.equals(e_copy));
-
-        e.createMethod("a");
-        e.createMethod("a2");
-
-        assertFalse("Differing methods results in false", e.equals(e_copy));
-
-        e_copy.createMethod("a");
-        e_copy.createMethod("a2");
-
-        assertTrue("Same fields, methods and name result in true", e.equals(e_copy));
     }
 
     /* test createField */
@@ -66,24 +47,26 @@ public class EntityTest {
     public void testCreateField() {
         Entity e = new Entity("e");
 
-        e.createField("a1");
-        assertTrue("Field a1 was created", e.getFields().contains("a1"));
+        e.createField("a1", "int");
+        assertTrue("Field a1 was created", e.searchField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
-        assertFalse("False when duplicating field", e.createField("a1"));
+        assertFalse("False when duplicating field", e.createField("a1", "int"));
     }
 
     /* test renameField */
     @Test
     public void testRenameField() {
         Entity e = new Entity("e");
-        e.createField("a1");
-        e.createField("a2");
+        e.createField("a1", "int");
+        e.createField("a2", "boolean");
 
         assertFalse("False when renaming to already existing field", e.renameField("a1", "a2"));
         assertFalse("False when renaming non-existent field", e.renameField("fake", "a3"));
+
         assertTrue("Renamed a1 to a3", e.renameField("a1", "a3"));
-        assertTrue("a3 field exists", e.getFields().contains("a3"));
-        assertFalse("a1 field no longer exists", e.getFields().contains("a1"));
+        assertTrue("a3 field exists", e.searchField("a3"));
+
+        assertFalse("a1 field no longer exists", e.searchField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
     }
 
@@ -91,15 +74,15 @@ public class EntityTest {
     @Test
     public void testDeleteField() {
         Entity e = new Entity("e");
-        e.createField("a1");
-        e.createField("a2");
+        e.createField("a1", "int");
+        e.createField("a2", "double");
 
         assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
         e.deleteField("a1");
-        assertFalse("a1 field was deleted", e.getFields().contains("a1"));
+        assertFalse("a1 field was deleted", e.searchField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
-        assertTrue("a2 field still exists", e.getFields().contains("a2"));
+        assertTrue("a2 field still exists", e.searchField("a2"));
     }
 
     /* test createMethod */
@@ -107,24 +90,26 @@ public class EntityTest {
     public void testCreateMethod() {
         Entity e = new Entity("e");
 
-        e.createMethod("a1");
-        assertTrue("Method a1 was created", e.getMethods().contains("a1"));
+        e.createMethod("a1", "int");
+        assertTrue("Method a1 was created", e.searchMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
-        assertFalse("False when duplicating method", e.createMethod("a1"));
+        assertFalse("False when duplicating method", e.createMethod("a1", "int"));
     }
 
     /* test renameMethod */
     @Test
     public void testRenameMethod() {
         Entity e = new Entity("e");
-        e.createMethod("a1");
-        e.createMethod("a2");
+        e.createMethod("a1", "int");
+        e.createMethod("a2", "String");
 
         assertFalse("False when renaming to already existing method", e.renameMethod("a1", "a2"));
         assertFalse("False when renaming non-existent method", e.renameMethod("fake", "a3"));
+
         assertTrue("Renamed a1 to a3", e.renameMethod("a1", "a3"));
-        assertTrue("a3 method exists", e.getMethods().contains("a3"));
-        assertFalse("a1 method no longer exists", e.getMethods().contains("a1"));
+        assertTrue("a3 method exists", e.searchMethod("a3"));
+
+        assertFalse("a1 method no longer exists", e.searchMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
     }
 
@@ -132,15 +117,67 @@ public class EntityTest {
     @Test
     public void testDeleteMethod() {
         Entity e = new Entity("e");
-        e.createMethod("a1");
-        e.createMethod("a2");
+        e.createMethod("a1", "int");
+        e.createMethod("a2", "String");
 
         assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
 
         e.deleteMethod("a1");
-        assertFalse("a1 method was deleted", e.getMethods().contains("a1"));
+        assertFalse("a1 method was deleted", e.searchMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
-        assertTrue("a2 method still exists", e.getMethods().contains("a2"));
+        assertTrue("a2 method still exists", e.searchMethod("a2"));
+    }
+
+    /* HELPER FUNCTIONS */
+
+    /* searchField */
+    @Test
+    public void testSearchField()
+    {
+        Entity e = new Entity("e");
+        e.createField("a1", "int");
+
+        assertFalse("False when searching non-existent field", e.searchField("fake"));
+        assertTrue("a1 field found", e.searchField("a1"));
+    }
+
+    /* searchMethod */
+    @Test
+    public void testSearchMethod()
+    {
+        Entity e = new Entity("e");
+        e.createMethod("a1", "int");
+
+        assertFalse("False when searching non-existent method", e.searchMethod("fake"));
+        assertTrue("a1 method found", e.searchMethod("a1"));
+    }
+
+    /* copyField */
+    @Test
+    public void testCopyField()
+    {
+        Entity e = new Entity("e");
+        e.createField("a1", "int");
+
+        assertEquals("Null when copying non-existent field", null, e.copyField("fake"));
+
+        Field f = e.copyField("a1");
+        assertTrue("Field names are equal", f.getName().equals("a1"));
+        assertTrue("Types are equal", f.getType().equals("int"));
+    }
+
+    /* copyMethod */
+    @Test
+    public void testCopyMethod()
+    {
+        Entity e = new Entity("e");
+        e.createMethod("a1", "int");
+
+        assertEquals("Null when copying non-existent method", null, e.copyMethod("fake"));
+
+        Method m = e.copyMethod("a1");
+        assertTrue("Method names are equal", m.getName().equals("a1"));
+        assertTrue("Types are equal", m.getType().equals("int"));
     }
 
 }

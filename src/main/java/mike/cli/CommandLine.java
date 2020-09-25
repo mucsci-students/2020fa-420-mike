@@ -164,6 +164,7 @@ public class CommandLine extends HelperMethods {
 					} else if (commands[1].equals("param")) {
 						if (commands.length != 6) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
+							break;
 						} 
 						if (userClasses.createParameter(commands[2], commands[3], commands[5], commands[4])) {
 							prompt = true;
@@ -224,7 +225,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if (commands[1].equals("param")) {
 						if (commands.length != 5) {
-							System.out.println(errorMessage); /* TODO Edit errorMessage array to include parameters and garbage. */
+							System.out.println(errorMessage + commands[11] + "\n");
 							break;
 						}
 						if (userClasses.deleteParameter(commands[2], commands[3], commands[4])) {
@@ -245,7 +246,7 @@ public class CommandLine extends HelperMethods {
 					}
 					if (commands[1].equals("class")) {
 						if (commands.length != 4) {
-							System.out.println(errorMessage + commandUsage[11] + "\n");
+							System.out.println(errorMessage + commandUsage[12] + "\n");
 							break;
 						}
 						if(userClasses.renameClass(commands[2], commands[3])) {
@@ -255,7 +256,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if ( commands[1].equals("field")) {
 						if(commands.length != 5) {
-							System.out.println(errorMessage + commandUsage[12] + "\n");
+							System.out.println(errorMessage + commandUsage[13] + "\n");
 							break;
 						}
 						if(userClasses.renameField(commands[2], commands[3], commands[4])) {
@@ -265,7 +266,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if ( commands[1].equals("method")) {
 						if(commands.length != 5) {
-							System.out.println(errorMessage + commandUsage[13] + "\n");
+							System.out.println(errorMessage + commandUsage[14] + "\n");
 							break;
 						}
 						if(userClasses.renameMethod(commands[2], commands[3], commands[4])) {
@@ -275,7 +276,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if (commands[1].equals("param")) {
 						if (commands.length != 6) {
-							System.out.println(errorMessage + commandUsage[14] + "\n");
+							System.out.println(errorMessage + commandUsage[15] + "\n");
 							break;
 						}
 						if(userClasses.renameParameter(commands[2], commands[3], commands[4], commands[5])) {
