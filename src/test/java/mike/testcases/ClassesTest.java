@@ -1,4 +1,4 @@
-package testcases;
+package mike.testcases;
 
 //import junit methods
 import static org.junit.Assert.assertEquals;
@@ -103,10 +103,10 @@ public class ClassesTest {
         assertTrue("Two entities with no fields/methods are equal after copyEntity call", classes.getEntities().get(0).equals(e1copy));
 
         //add attributes to entity
-        classes.createField("E1", "att1");
-        classes.createField("E1", "att2");
-        classes.createMethod("E1", "m1");
-        classes.createMethod("E1", "m2");
+        classes.createField("E1", "att1", "int");
+        classes.createField("E1", "att2", "int");
+        classes.createMethod("E1", "m1", "int");
+        classes.createMethod("E1", "m2", "int");
 
         Entity new_e1copy = classes.copyEntity("E1");
         assertTrue("Entity with fields and Methods was copied correctly", classes.getEntities().get(0).equals(new_e1copy));
@@ -186,16 +186,16 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("E1");
-        assertTrue("Entities list size is 1", classes.getEntities().size() == 1);
-        assertTrue("Entities list contains E1", classes.getEntities().contains(new Entity("E1")));
+        assertEquals("Entities list size is 1", 1, classes.getEntities().size());
+        assertTrue("Entities list contains E1", classes.searchEntity("E1"));
 
         assertFalse("createClass returned false after called with name of existing class", classes.createClass("E1"));
 
         classes.createClass("E2");
         classes.createClass("E3");
-        assertTrue("Entities list size is 3", classes.getEntities().size() == 3);
-        assertTrue("Entities list contains E2", classes.getEntities().contains(new Entity("E2")));
-        assertTrue("Entities list contains E3", classes.getEntities().contains(new Entity("E3")));
+        assertEquals("Entities list size is 3", 3, classes.getEntities().size());
+        assertTrue("Entities list contains E2", classes.searchEntity("E2"));
+        assertTrue("Entities list contains E3", classes.searchEntity("E3"));
     }
 
     /** test the renameClass method
@@ -211,16 +211,16 @@ public class ClassesTest {
         assertFalse("renameClass returned false after called with name of non-existing class", classes.renameClass("Non-exist", "e"));
 
         classes.renameClass("E1", "E2");
-        assertTrue("Entities list contains E2", classes.getEntities().contains(new Entity("E2")));
-        assertFalse("Entities list does not contain E1", classes.getEntities().contains(new Entity("E1")));
+        assertTrue("Entities list contains E2", classes.searchEntity("E2"));
+        assertFalse("Entities list does not contain E1", classes.searchEntity("E1"));
 
         classes.createClass("E1");
-        assertTrue("Entities list contains E1", classes.getEntities().contains(new Entity("E1")));
+        assertTrue("Entities list contains E1", classes.searchEntity("E1"));
 
         assertFalse("renameClass returned false after renaming to already existing class", classes.renameClass("E1", "E2"));
 
-        classes.createField("E1", "f");
-        classes.createMethod("E1", "m");
+        classes.createField("E1", "f", "int");
+        classes.createMethod("E1", "m", "int");
 
         Entity e1_copy = classes.copyEntity("E1");
         classes.renameClass("E1", "e");
@@ -262,8 +262,8 @@ public class ClassesTest {
 
         /*Deleting classes that contain fields and methods*/
         classes.createClass("cla");
-        classes.createField("cla", "f");
-        classes.createMethod("cla", "m");
+        classes.createField("cla", "f", "int");
+        classes.createMethod("cla", "m", "int");
 
         assertTrue("Class 'cla' has been deleted", classes.deleteClass("cla"));
         assertFalse("Class 'cla' no longer exists", classes.searchEntity("cla"));
@@ -302,13 +302,13 @@ public class ClassesTest {
         Classes classes = new Classes();
         classes.createClass("e");
 
-        assertFalse("False when creating field for non-existent class", classes.createField("fake", "a"));
+        assertFalse("False when creating field for non-existent class", classes.createField("fake", "a", "int"));
 
-        assertTrue("Added field 'a' for class 'e'", classes.createField("e", "a"));
-        assertTrue("e's field list contains 'a'", classes.getEntities().get(0).getFields().contains("a"));
+        assertTrue("Added field 'a' for class 'e'", classes.createField("e", "a", "int"));
+        assertTrue("e's field list contains 'a'", classes.getEntities().get(0).searchField("a"));
         assertEquals("e's field list size is 1", 1, classes.getEntities().get(0).getFields().size());
 
-        assertFalse("False when creating field that already exists", classes.createField("e", "a"));
+        assertFalse("False when creating field that already exists", classes.createField("e", "a", "int"));
         assertEquals("e's field list size is still 1", 1, classes.getEntities().get(0).getFields().size());
     }
 
@@ -320,16 +320,16 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("e");
-        classes.createField("e", "a");
-        classes.createField("e", "a2");
+        classes.createField("e", "a", "int");
+        classes.createField("e", "a2", "int");
 
         assertFalse("False when renaming Field from non-existent class", classes.renameField("fake", "a", "aa"));
         assertFalse("False when renaming non-existent Field", classes.renameField("e", "fake", "aa"));
         assertFalse("False when renaming Field to an existing Field name", classes.renameField("e", "a", "a2"));
 
         assertTrue("Field 'a' renamed to 'aa'", classes.renameField("e", "a", "aa"));
-        assertTrue("Field list contains 'aa'", classes.getEntities().get(0).getFields().contains("aa"));
-        assertFalse("Field list no longer contains 'a'", classes.getEntities().get(0).getFields().contains("a"));
+        assertTrue("Field list contains 'aa'", classes.getEntities().get(0).searchField("aa"));
+        assertFalse("Field list no longer contains 'a'", classes.getEntities().get(0).searchField("a"));
         assertEquals("Field list size is still 2", 2, classes.getEntities().get(0).getFields().size());
     }
 
@@ -341,14 +341,14 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("e");
-        classes.createField("e", "a");
-        classes.createField("e", "a2");
+        classes.createField("e", "a", "int");
+        classes.createField("e", "a2", "int");
 
         assertFalse("False when deleting Field from non-existent class", classes.deleteField("fake", "a"));
         assertFalse("False when deleting non-existent Field", classes.deleteField("e", "fake"));
 
         assertTrue("Deleted Field 'a'", classes.deleteField("e", "a"));
-        assertFalse("Field list no longer contains 'a'", classes.getEntities().get(0).getFields().contains("a"));
+        assertFalse("Field list no longer contains 'a'", classes.getEntities().get(0).searchField("a"));
         assertEquals("Field list size is 1", 1, classes.getEntities().get(0).getFields().size());
     }
 
@@ -361,13 +361,13 @@ public class ClassesTest {
         Classes classes = new Classes();
         classes.createClass("e");
 
-        assertFalse("False when creating method for non-existent class", classes.createMethod("fake", "a"));
+        assertFalse("False when creating method for non-existent class", classes.createMethod("fake", "a", "int"));
 
-        assertTrue("Added method 'a' for class 'e'", classes.createMethod("e", "a"));
-        assertTrue("e's methods list contains 'a'", classes.getEntities().get(0).getMethods().contains("a"));
+        assertTrue("Added method 'a' for class 'e'", classes.createMethod("e", "a", "int"));
+        assertTrue("e's methods list contains 'a'", classes.getEntities().get(0).searchMethod("a"));
         assertEquals("e's method list size is 1", 1, classes.getEntities().get(0).getMethods().size());
 
-        assertFalse("False when creating method that already exists", classes.createMethod("e", "a"));
+        assertFalse("False when creating method that already exists", classes.createMethod("e", "a", "int"));
         assertEquals("e's method list size is still 1", 1, classes.getEntities().get(0).getMethods().size());
     }
 
@@ -379,16 +379,16 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("e");
-        classes.createMethod("e", "a");
-        classes.createMethod("e", "a2");
+        classes.createMethod("e", "a", "int");
+        classes.createMethod("e", "a2", "int");
 
         assertFalse("False when renaming method from non-existent class", classes.renameMethod("fake", "a", "aa"));
         assertFalse("False when renaming non-existent method", classes.renameMethod("e", "fake", "aa"));
         assertFalse("False when renaming method to an existing method name", classes.renameMethod("e", "a", "a2"));
 
         assertTrue("Method 'a' renamed to 'aa'", classes.renameMethod("e", "a", "aa"));
-        assertTrue("Methods list contains 'aa'", classes.getEntities().get(0).getMethods().contains("aa"));
-        assertFalse("Methods list no longer contains 'a'", classes.getEntities().get(0).getMethods().contains("a"));
+        assertTrue("Methods list contains 'aa'", classes.getEntities().get(0).searchMethod("aa"));
+        assertFalse("Methods list no longer contains 'a'", classes.getEntities().get(0).searchMethod("a"));
         assertEquals("Methods list size is still 2", 2, classes.getEntities().get(0).getMethods().size());
     }
 
@@ -400,14 +400,14 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("e");
-        classes.createMethod("e", "a");
-        classes.createMethod("e", "a2");
+        classes.createMethod("e", "a", "int");
+        classes.createMethod("e", "a2", "int");
 
         assertFalse("False when deleting Method from non-existent method", classes.deleteMethod("fake", "a"));
         assertFalse("False when deleting non-existent method", classes.deleteMethod("e", "fake"));
 
         assertTrue("Deleted method 'a'", classes.deleteMethod("e", "a"));
-        assertFalse("Methods list no longer contains 'a'", classes.getEntities().get(0).getMethods().contains("a"));
+        assertFalse("Methods list no longer contains 'a'", classes.getEntities().get(0).searchMethod("a"));
         assertEquals("Methods list size is 1", 1, classes.getEntities().get(0).getMethods().size());
     }
 
@@ -442,8 +442,9 @@ public class ClassesTest {
 
         assertFalse("False when creating another relationship between pairs that already have a relationship", classes.createRelationship("r-dup", "e", "e2"));
         assertFalse("Relationship 'r-dup' was not created", classes.searchRelationship("r-dup", "e", "e2"));
-        assertFalse("False when creating relationship with pair flipped", classes.createRelationship("r2", "e2", "e"));
-        assertFalse("Relationship 'r2' was not created", classes.searchRelationship("r2", "e2", "e"));
+
+        assertTrue("Created relationship with pair flipped", classes.createRelationship("r2", "e2", "e"));
+        assertTrue("Relationship 'r2' was created", classes.searchRelationship("r2", "e2", "e"));
     }
 
     /** test deleteRelationship

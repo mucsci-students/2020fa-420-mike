@@ -96,14 +96,14 @@ public class Classes {
     // Field Functions //
     // *********************************************************//
 
-    public boolean createField(String targetclass, String field) {
+    public boolean createField(String targetclass, String field, String type) {
         Entity e;
         for (int index = 0; index < entities.size(); ++index) {
             e = entities.get(index);
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createField(field);
+                return e.createField(field, type);
             }
         }
         // Target not found.
@@ -142,14 +142,14 @@ public class Classes {
     // Method Functions //
     // *********************************************************//
 
-    public boolean createMethod(String targetclass, String method) {
+    public boolean createMethod(String targetclass, String method, String type) {
         Entity e;
         for (int index = 0; index < entities.size(); ++index) {
             e = entities.get(index);
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createMethod(method);
+                return e.createMethod(method, type);
             }
         }
         // Target not found.
@@ -195,9 +195,8 @@ public class Classes {
         }
     	
     	for (Relationship r : relationships) {
-            if ((r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
-                    || (r.getFirstClass().equals(class2) && r.getSecondClass().equals(class1))) {
-                // There already exists a relationship between those two classes.
+            if (r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2)) {
+                // There already exists a relationship between those two classes in this direction.
                 return false;
             }
         }
@@ -207,6 +206,52 @@ public class Classes {
     public boolean deleteRelationship(String name, String class1, String class2) {
         Relationship r = new Relationship(name, class1, class2);
         return relationships.remove(r);
+    }
+
+    // *********************************************************//
+    // Parameter Functions //
+    // *********************************************************//
+
+    public boolean createParameter(String className, String method, String name, String type){
+        Entity e;
+        for (int index = 0; index < entities.size(); ++index) {
+            e = entities.get(index);
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.createParameter(method, name, type);
+            }
+        }
+        // Target not found.
+        return false;
+    }
+
+    public boolean renameParameter(String className, String method, String name, String newname){
+        Entity e;
+        for (int index = 0; index < entities.size(); ++index) {
+            e = entities.get(index);
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.renameParameter(method, name, newname);
+            }
+        }
+        // Target not found.
+        return false;
+    }
+
+    public boolean deleteParameter(String className, String method, String name){
+        Entity e;
+        for (int index = 0; index < entities.size(); ++index) {
+            e = entities.get(index);
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.deleteParameter(method, name);
+            }
+        }
+        // Target not found.
+        return false;
     }
 
     // *********************************************************//
@@ -248,17 +293,7 @@ public class Classes {
         {
             if(e.getName().equals(name))
             {
-                Entity ret = new Entity(name);
-                //loop through attributes
-                for (String s : e.getMethods())
-                {
-                    ret.createMethod(s);
-                }
-                for (String s : e.getFields())
-                {
-                    ret.createField(s);
-                }
-                return ret;
+                return e;
             }
         }
         return null;
