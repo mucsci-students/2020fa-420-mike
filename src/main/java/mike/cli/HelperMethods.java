@@ -9,9 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import mike.datastructures.Classes;
-import mike.datastructures.Entity;
-import mike.datastructures.Relationship;
+import mike.datastructures.*;
 
 import java.util.ArrayList;
 	
@@ -55,18 +53,36 @@ public class HelperMethods {
 	    	// Extract name of class, add to loadFile
 	    	String className = (String) objList.get(x).get("className");
 	    	userClasses.createClass(className);
-	        	
+	        
 	    	// Extract all fields of associated class, add to loadFile
-	    	ArrayList<String> classFields = (ArrayList<String>) objList.get(x).get("fields");
+	    	JSONArray classFields = (JSONArray) objList.get(x).get("fields");
 	    	for(int y = 0; y < classFields.size(); ++y) {
-	    		userClasses.createField(className, classFields.get(y));
+	    		JSONObject field =  (JSONObject) classFields.get(y);
+	    		String fieldName = field.get("fieldName").toString();
+	    		String fieldType = field.get("fieldType").toString();
+	    		
+	    		userClasses.createField(className, fieldName, fieldType);
 	    	}
 	    	
 	    	// Extract all methods of associated class, add to loadFile
-	    	ArrayList<String> classMethods = (ArrayList<String>) objList.get(x).get("methods");
+	    	JSONArray classMethods = (JSONArray) objList.get(x).get("methods");
 	    	for(int y = 0; y < classMethods.size(); ++y) {
-	    		userClasses.createMethod(className, classMethods.get(y));
+	    		JSONObject method =  (JSONObject) classMethods.get(y);
+	    		String methodName = method.get("methodName").toString();
+	    		String methodType = method.get("methodType").toString();
+	    		
+	    		userClasses.createMethod(className, methodName, methodType);
+	    		
+	    		JSONArray methodParam = (JSONArray) method.get("Parameters");
+	    		for(int z = 0; z < methodParam.size(); ++z) {
+	    			JSONObject param =  (JSONObject) methodParam.get(z);
+	    			String paramName = param.get("paramName").toString();
+	    			String paramType = param.get("paramType").toString();
+	    			
+	    			userClasses.createParameter(className, methodName, paramName, paramType);
+	    		}
 	    	}
+	    	
 	    }
 	}
 		
@@ -91,13 +107,11 @@ public class HelperMethods {
 	// Main save function. Calls saveClasses and saveRelationships
 	public static void save (String filename, String directory, Classes userClasses) throws IOException {
 		File newFile = new File(directory);
-		System.out.println();
-		
 		// If directory given does not exist, put in user.dir
 		if(!newFile.isDirectory())
 		{
 			directory = System.getProperty("user.dir");
-			System.out.println("Directory does not exist.");
+			System.out.println("Directory does not exisit.");
 		}
 
 		JSONObject saveFile = new JSONObject();
@@ -107,7 +121,7 @@ public class HelperMethods {
 		
 		directory += ("\\" + filename);
 		writeFile(saveFile, directory);
-		System.out.println("File saved to:" + directory +"\n");
+		System.out.println("File saved to:" + directory);
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
@@ -122,17 +136,33 @@ public class HelperMethods {
 			
 			// Create an array of fields for the class
 			JSONArray fields = new JSONArray();
-			for(String field : entity.getFields()) 
+			for(Field field : entity.getFields()) 
 			{
-				fields.add(field);
+				JSONObject oneField = new JSONObject();
+				oneField.put("fieldType", field.getType());
+				oneField.put("fieldName", field.getName());
+				fields.add(oneField);
 			}
 			singleClass.put("fields", fields);
 			
 			// Create an array of methods for the class
 			JSONArray methods = new JSONArray();
-			for(String method : entity.getMethods()) 
+			for(Method method : entity.getMethods()) 
 			{
-				methods.add(method);
+				JSONObject oneMethod = new JSONObject();
+				oneMethod.put("methodType", method.getType());
+				oneMethod.put("methodName", method.getName());
+				
+				JSONArray parameters = new JSONArray();
+				for(Parameter param : method.getParameters()) 
+				{
+					JSONObject oneParam = new JSONObject();
+					oneParam.put("paramType", param.getType());
+					oneParam.put("paramName", param.getName());
+					parameters.add(oneParam);
+				}
+				oneMethod.put("Parameters", parameters);
+				methods.add(oneMethod);
 			}
 			singleClass.put("methods", methods);
 			
@@ -184,13 +214,15 @@ public class HelperMethods {
 		for(Entity curEntity : userClasses.getEntities())
 		{			
 			System.out.println("	" + curEntity.getName() + ":");
-			System.out.print("		fields: [ ");
+			System.out.print("		fields:  [ ");
 				
 			//Prints out all of the fields
-			for(int x = 0; x < curEntity.getFields().size(); x++)
+			ArrayList<Field> fields = curEntity.getFields();
+			for(int x = 0; x < fields.size(); x++)
 			{
-				System.out.print(curEntity.getFields().get(x));
-				if(x != curEntity.getFields().size()-1)
+				
+				System.out.print("(" + fields.get(x).getType() + ") " + fields.get(x).getName());
+				if(x != fields.size()-1)
 				{
 					System.out.print(", ");
 				}
@@ -201,10 +233,25 @@ public class HelperMethods {
 			System.out.print("		methods: [ ");
 			for(int x = 0; x < curEntity.getMethods().size(); x++)
 			{
-				System.out.print(curEntity.getMethods().get(x));
+				Method curMethod = curEntity.getMethods().get(x);
+				System.out.print("(" + curMethod.getType() + ") " + curMethod.getName() + " -- {");
+				
+				// Loop through parameters of method
+				ArrayList<Parameter> parameters = curMethod.getParameters();
+				for (Parameter p : parameters) 
+				{
+					System.out.print("(" + p.getType() + ") " + p.getName());
+					// Print comma if not last parameter
+					if(!p.equals(parameters.get(parameters.size() - 1))) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("}");
+
+				// Print comma if not last method
 				if(x != curEntity.getMethods().size()-1)
 				{
-					System.out.print(", ");
+					System.out.print(",\n			   ");
 				}
 			}
 			System.out.println(" ]");

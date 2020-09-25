@@ -7,9 +7,9 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 //import local classes to test
-import mike.datastructures.Classes;
-import mike.datastructures.Entity;
-import mike.datastructures.Relationship;
+import datastructures.Classes;
+import datastructures.Entity;
+import datastructures.Relationship;
 
 /** Run tests on Classes Data Structure
  *
@@ -258,15 +258,6 @@ public class ClassesTest {
 
         classes.deleteClass("e");
         assertFalse("Class e no longer exists", classes.searchEntity("e"));
-        assertEquals("Entities list size is 0", 0, classes.getEntities().size());
-
-        /*Deleting classes that contain fields and methods*/
-        classes.createClass("cla");
-        classes.createField("cla", "f");
-        classes.createMethod("cla", "m");
-
-        assertTrue("Class 'cla' has been deleted", classes.deleteClass("cla"));
-        assertFalse("Class 'cla' no longer exists", classes.searchEntity("cla"));
         assertEquals("Entities list size is 0", 0, classes.getEntities().size());
 
         /* Make sure relationships associated with deleted classes are deleted */
