@@ -11,7 +11,7 @@ public class CommandLine extends HelperMethods {
 	}
 
 	public static void commandInterface() {
-		datastructures.Classes userClasses = new Classes();
+		Classes userClasses = new Classes();
 		boolean prompt = false;
 		String[] commandUsage = {
 			"\n  save <name>.json (optional <path>)", 
