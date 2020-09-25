@@ -1,3 +1,5 @@
+package mike;
+
 import mike.cli.CommandLine;
 
 public class main {
