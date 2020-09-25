@@ -111,7 +111,7 @@ public class HelperMethods {
 		if(!newFile.isDirectory())
 		{
 			directory = System.getProperty("user.dir");
-			System.out.println("Directory does not exisit.");
+			System.out.println("Directory does not exist.");
 		}
 
 		JSONObject saveFile = new JSONObject();
