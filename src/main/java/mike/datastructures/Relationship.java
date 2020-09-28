@@ -3,15 +3,22 @@ package mike.datastructures;
 import java.util.Objects;
 
 public class Relationship {
-	private String name;
+	private Type name;
 	private String class1;
 	private String class2;
+	
+	public enum Type {
+		AGGREGATION,
+		ASSOCIATION,
+		COMPOSITION,
+		INHERITANCE
+	};
 
 	//*********************************************************//
 	// Constructors //
 	//*********************************************************//
 
-	public Relationship(String newname, String newclass1, String newclass2) {
+	public Relationship(Type newname, String newclass1, String newclass2) {
 		name = newname;
 		class1 = newclass1;
 		class2 = newclass2;
@@ -21,7 +28,7 @@ public class Relationship {
 	// Accessors & Mutators //
 	//*********************************************************//
 
-	public String getName() {
+	public Type getName() {
 		return name;
 	}
 
@@ -33,7 +40,7 @@ public class Relationship {
 		return class2;
 	}
 
-	public void setName(String newname) {
+	public void setName(Type newname) {
 		name = newname;
 	}
 

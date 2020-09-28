@@ -2,6 +2,8 @@ package mike.datastructures;
 
 import java.util.ArrayList;
 
+import mike.datastructures.Relationship.Type;
+
 public class Classes {
     private static ArrayList<Entity> entities;
     private static ArrayList<Relationship> relationships;
@@ -188,7 +190,7 @@ public class Classes {
     // Relationship Functions //
     // *********************************************************//
 
-    public boolean createRelationship(String name, String class1, String class2) {
+    public boolean createRelationship(Type name, String class1, String class2) {
         if(!searchEntity(class1) || !searchEntity(class2)) {
         	//class1 or class2 does not exist
         	return false;
@@ -203,7 +205,7 @@ public class Classes {
         return relationships.add(new Relationship(name, class1, class2));
     }
 
-    public boolean deleteRelationship(String name, String class1, String class2) {
+    public boolean deleteRelationship(Type name, String class1, String class2) {
         Relationship r = new Relationship(name, class1, class2);
         return relationships.remove(r);
     }

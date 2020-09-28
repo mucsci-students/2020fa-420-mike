@@ -1,9 +1,10 @@
-package mike.cli;
+package cli;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import mike.datastructures.Classes;
+import datastructures.Classes;
+import datastructures.Relationship.Type;
 
 public class CommandLine extends HelperMethods {
 	
@@ -19,12 +20,12 @@ public class CommandLine extends HelperMethods {
 			"\n  create class <name>",
 			"\n  create field <class name> <field type> <field name>",
 			"\n  create method <class name> <method type> <method name>",
-			"\n  create rel <name> <class name1> <class name2>",
+			"\n  create rel <type> <class name1> <class name2>",
 			"\n  create param <class name> <method> <parameter type> <parameter name>",
 			"\n  delete class <name>",
 			"\n  delete field <class name> <field name>",
 			"\n  delete method <class name> <method name>",
-			"\n  delete rel <name> <class name1> <class name2>",
+			"\n  delete rel <type> <class name1> <class name2>",
 			"\n  delete param <class name> <method name>, <parameter name>",
 			"\n  rename class <name> <newname>",
 			"\n  rename field <class name> <field name> <newname>",
@@ -156,10 +157,10 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[5] + "\n");
 							break;
 						}
-						if (userClasses.createRelationship(commands[2], commands[3], commands[4])) {
+						if (userClasses.createRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
 							prompt = true;
 						} else {
-							System.out.println("\nCreate relationship failed. Make sure the classes exist and that it is not a duplicate.\n");							
+							System.out.println("\nCreate relationship failed. Make sure the classes exist, the relationship type is valid, and that it is not a duplicate.\n");							
 						}
 					} else if (commands[1].equals("param")) {
 						if (commands.length != 6) {
@@ -218,7 +219,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
 							break;
 						}
-						if(userClasses.deleteRelationship(commands[2], commands[3], commands[4])) {
+						if(userClasses.deleteRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");							
@@ -350,7 +351,7 @@ public class CommandLine extends HelperMethods {
 		cmdLine.close();
 	}
 
-	public static void help(String[] commandUsage) {
+	private static void help(String[] commandUsage) {
 		System.out.print("\nHere is a list of available commands:");
 
 		System.out.println(
@@ -366,7 +367,7 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[4]
 				+ " - create a method in <class name> with type <method type> titled <method name>"				
 				+ commandUsage[5]
-				+ " - create a relationship between <class name1> and <class name2> titled <name>"
+				+ " - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Association, Composition, Inheritance)"
 				+ commandUsage[6]
 				+ " - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>\n"
 
@@ -377,9 +378,9 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[9]
 				+ " - delete method <method name> in class titled <class name>"				
 				+ commandUsage[10]
-				+ " - delete a relationship with title <name> between <class name1> and <class name2>"
+				+ " - delete a relationship with type <type> (Aggregation, Association, Composition, Inheritance) between <class name1> and <class name2>"
 				+ commandUsage[11]
-				+ " - delete a parameter in <class name> for <method name> titled <parameter name>\n"
+				+ " - delete a parameter in <class name> for <method name> with  <parameter name>\n"
 				
 				+ commandUsage[12]
 				+ " - rename class <name> to <new name>"
@@ -403,7 +404,7 @@ public class CommandLine extends HelperMethods {
 				+ "  quit - exits the program\n");
 	}
 
-	public static boolean savePrompt (boolean prompt, Scanner cmdLine) {
+	private static boolean savePrompt (boolean prompt, Scanner cmdLine) {
 		while (prompt == true) {		
 			
 			String answer = cmdLine.nextLine();
@@ -420,6 +421,21 @@ public class CommandLine extends HelperMethods {
 			System.out.println("Invalid command. Type 'yes' to proceed, or 'no' to go back.");
 		}
 		return prompt;
+	}
+
+	private static Type checkEnum (String command) {
+		switch(command){
+		case "ASSOCIATION":
+			return Type.ASSOCIATION;
+		case "AGGREGATION":
+			return Type.AGGREGATION;
+		case "COMPOSITION":
+			return Type.COMPOSITION;
+		case "INHERITANCE":
+			return Type.INHERITANCE;
+		default:
+			return null;
+		}
 	}
 }
 

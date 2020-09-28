@@ -1,4 +1,4 @@
-package mike.cli;
+package cli;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import mike.datastructures.*;
+import datastructures.*;
+import datastructures.Relationship.Type;
 
 import java.util.ArrayList;
 	
@@ -100,7 +101,7 @@ public class HelperMethods {
 	        String relationName = (String) objList.get(x).get("relationName");
 	        String classOne = (String) objList.get(x).get("ClassOne");
 	        String classTwo = (String) objList.get(x).get("ClassTwo");
-	        userClasses.createRelationship(relationName, classOne, classTwo);
+	        userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
 	    }	
 	}	
 
@@ -183,7 +184,7 @@ public class HelperMethods {
 			// Create JSONObject for a single relationship
 			JSONObject relationObj = new JSONObject();
 			
-			relationObj.put("relationName", relation.getName());
+			relationObj.put("relationName", relation.getName().toString());
 			relationObj.put("ClassOne", relation.getFirstClass());
 			relationObj.put("ClassTwo", relation.getSecondClass());
 			
@@ -207,6 +208,21 @@ public class HelperMethods {
 		myWriter.close();
 	}
 
+	private static Type checkEnum (String command) {
+		switch(command){
+		case "ASSOCIATION":
+			return Type.ASSOCIATION;
+		case "AGGREGATION":
+			return Type.AGGREGATION;
+		case "COMPOSITION":
+			return Type.COMPOSITION;
+		case "INHERITANCE":
+			return Type.INHERITANCE;
+		default:
+			return null;
+		}
+	}
+	
 	// Lists all of the classes and their respective attributes
 	public static void listClasses(Classes userClasses)
 	{
@@ -267,5 +283,6 @@ public class HelperMethods {
 			System.out.println("   -- " + relation.getName() + ": " + relation.getFirstClass() + "--" + relation.getSecondClass());
 		}
 	} 
+
 }
 
