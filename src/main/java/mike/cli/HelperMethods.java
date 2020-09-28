@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import datastructures.*;
-import datastructures.Relationship.Type;
+import mike.datastructures.*;
+import mike.datastructures.Relationship.Type;
 
 import java.util.ArrayList;
 	
