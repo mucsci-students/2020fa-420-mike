@@ -1,10 +1,10 @@
-package cli;
+package mike.cli;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import datastructures.Classes;
-import datastructures.Relationship.Type;
+import mike.datastructures.Classes;
+import mike.datastructures.Relationship.Type;
 
 public class CommandLine extends HelperMethods {
 	
