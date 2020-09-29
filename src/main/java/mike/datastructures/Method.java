@@ -33,7 +33,7 @@ public class Method extends Formal{
             p = parameters.get(index);
             // If target found.
             if (p.getName().equals(name)) {
-                //rename method.
+                //rename parameter.
                 p.setName(newname);
                 return true;
             }

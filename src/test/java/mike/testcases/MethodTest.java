@@ -67,7 +67,7 @@ public class MethodTest {
         assertFalse("False when renaming non-existent parameter", m.renameParameter("fake", "param"));
         assertFalse("False when renaming to existing parameter", m.renameParameter("p", "p2"));
 
-        assertTrue("p renamed to p1", m.renameParameter("m", "m1"));
+        assertTrue("p renamed to p1", m.renameParameter("p", "p1"));
         assertTrue("Parameters list contains p1", m.searchParameter("p1"));
         assertFalse("Parameters list no longer contains p", m.searchParameter("p"));
     }

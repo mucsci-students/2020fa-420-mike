@@ -1,6 +1,7 @@
 package mike.datastructures;
 
 import java.util.ArrayList;
+import mike.datastructures.Relationship.Type;
 
 public class Classes {
     private static ArrayList<Entity> entities;
@@ -188,7 +189,11 @@ public class Classes {
     // Relationship Functions //
     // *********************************************************//
 
-    public boolean createRelationship(String name, String class1, String class2) {
+    public boolean createRelationship(Type name, String class1, String class2) {
+        if(name == null){
+            return false;
+        }
+
         if(!searchEntity(class1) || !searchEntity(class2)) {
         	//class1 or class2 does not exist
         	return false;
@@ -203,7 +208,7 @@ public class Classes {
         return relationships.add(new Relationship(name, class1, class2));
     }
 
-    public boolean deleteRelationship(String name, String class1, String class2) {
+    public boolean deleteRelationship(Type name, String class1, String class2) {
         Relationship r = new Relationship(name, class1, class2);
         return relationships.remove(r);
     }
@@ -303,11 +308,11 @@ public class Classes {
     // Relationship Helper Functions (for testing mainly) //
     // *********************************************************//
 
-    public boolean searchRelationship(String name, String class1, String class2)
+    public boolean searchRelationship(Type name, String class1, String class2)
     {
         for (Relationship r : relationships)
         {
-            if(r.getName().equals(name) && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
+            if(r.getName() == name && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
             {
                 return true;
             }
@@ -316,7 +321,7 @@ public class Classes {
     }
 
     //return relationship or null if not found
-    public Relationship getRelationship(String name, String class1, String class2)
+    public Relationship getRelationship(Type name, String class1, String class2)
     {
         for (Relationship r : relationships)
         {
