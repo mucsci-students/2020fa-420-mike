@@ -51,7 +51,7 @@ public class MethodTest {
         m.createParameter("p", "int");
 
         assertEquals("Parameters list size is 1", 1, m.getParameters().size());
-        assertTrue("Parameters list contains p", m.searchParameter("p"));
+        assertTrue("Parameters list contains p", m.containsParameter("p"));
 
         assertFalse("False when creating duplicate", m.createParameter("p", "String"));
     }
@@ -67,9 +67,9 @@ public class MethodTest {
         assertFalse("False when renaming non-existent parameter", m.renameParameter("fake", "param"));
         assertFalse("False when renaming to existing parameter", m.renameParameter("p", "p2"));
 
-        assertTrue("p renamed to p1", m.renameParameter("m", "m1"));
-        assertTrue("Parameters list contains p1", m.searchParameter("p1"));
-        assertFalse("Parameters list no longer contains p", m.searchParameter("p"));
+        assertTrue("p renamed to p1", m.renameParameter("p", "p1"));
+        assertTrue("Parameters list contains p1", m.containsParameter("p1"));
+        assertFalse("Parameters list no longer contains p", m.containsParameter("p"));
     }
 
     /* test deleteParameter */
@@ -81,21 +81,21 @@ public class MethodTest {
 
         assertFalse("False when deleting non-existent parameter", m.deleteParameter("fake"));
         assertTrue("p deleted", m.deleteParameter("p"));
-        assertFalse("parameters list no longer contains p", m.searchParameter("p"));
+        assertFalse("parameters list no longer contains p", m.containsParameter("p"));
         assertEquals("Parameters list size is 0", 0, m.getParameters().size());
     }
 
     /* HELPER METHODS */
 
-    /* test searchParameter */
+    /* test containsParameter */
     @Test
-    public void testSearchParameter()
+    public void testContainsParameter()
     {
         Method m = new Method("m", "int");
         m.createParameter("p", "int");
 
-        assertTrue("p found", m.searchParameter("p"));
-        assertFalse("non-existing parameter not found", m.searchParameter("fake"));
+        assertTrue("p found", m.containsParameter("p"));
+        assertFalse("non-existing parameter not found", m.containsParameter("fake"));
     }
 
     /* test copyParameter */

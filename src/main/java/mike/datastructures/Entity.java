@@ -63,20 +63,19 @@ public class Entity {
 	//*********************************************************//
 	
 	public boolean createField(String name, String type) {
-		if(searchField(name)){
+		if(containsField(name)){
 			return false; //already contains field
 		}
 		return fields.add(new Field(name, type));
 	}
 	
 	public boolean renameField(String target, String newfield) {
-		if(searchField(newfield)){
+		if(containsField(newfield)){
 			//new field already exists
 			return false;
 		}
-		Field f;
-		for (int index = 0; index < fields.size(); ++index) {
-			f = fields.get(index);
+
+		for (Field f : fields) {
 			// If target found.
 			if (f.getName().equals(target)) {
 				//rename the target field.
@@ -89,7 +88,7 @@ public class Entity {
 	}
 	
 	public boolean deleteField(String target) {
-		return fields.remove(copyField(target));
+		return fields.remove(new Field(target, "int"));
 	}
 	
 	//*********************************************************//
@@ -97,20 +96,19 @@ public class Entity {
 	//*********************************************************//
 	
 	public boolean createMethod(String method, String type) {
-		if(searchMethod(method)){
+		if(containsMethod(method)){
 			return false; //already contains method
 		}
 		return methods.add(new Method(method, type));
 	}	
 
 	public boolean renameMethod(String target, String newmethod) {
-		if(searchMethod(newmethod)){
+		if(containsMethod(newmethod)){
 			//new method already exists
 			return false;
 		}
-		Method m;
-		for (int index = 0; index < methods.size(); ++index) {
-			m = methods.get(index);
+
+		for (Method m : methods) {
 			// If target found.
 			if (m.getName().equals(target)) {
 				//rename method.
@@ -123,7 +121,7 @@ public class Entity {
 	}
 	
 	public boolean deleteMethod(String target) {
-		return methods.remove(copyMethod(target));
+		return methods.remove(new Method(target, "int"));
 	}
 
 	//*********************************************************//
@@ -131,9 +129,7 @@ public class Entity {
 	//*********************************************************//
 
 	public boolean createParameter(String method, String name, String type){
-		Method m;
-		for (int index = 0; index < methods.size(); ++index) {
-			m = methods.get(index);
+		for (Method m : methods) {
 			// If target found.
 			if (m.getName().equals(method)) {
 				// Try to create the parameter.
@@ -145,9 +141,7 @@ public class Entity {
 	}
 
 	public boolean renameParameter(String method, String name, String newname){
-		Method m;
-		for (int index = 0; index < methods.size(); ++index) {
-			m = methods.get(index);
+		for (Method m : methods) {
 			// If target found.
 			if (m.getName().equals(method)) {
 				//try to rename parameter.
@@ -159,9 +153,7 @@ public class Entity {
 	}
 
 	public boolean deleteParameter(String method, String name){
-		Method m;
-		for (int index = 0; index < methods.size(); ++index) {
-			m = methods.get(index);
+		for (Method m : methods) {
 			// If target found.
 			if (m.getName().equals(method)) {
 				//try to delete parameter.
@@ -175,7 +167,7 @@ public class Entity {
 	/* helper/member functions */
 
 	/* search if a field already exists */
-	public boolean searchField(String name){
+	public boolean containsField(String name){
 		for(Field f : fields){
 			if(f.getName().equals(name)){
 				return true; //found field
@@ -195,7 +187,7 @@ public class Entity {
 	}
 
 	/* search if a method already exists */
-	public boolean searchMethod(String name){
+	public boolean containsMethod(String name){
 		for(Method m : methods){
 			if(m.getName().equals(name)){
 				return true; //found method

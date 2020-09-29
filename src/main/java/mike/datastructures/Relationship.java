@@ -6,13 +6,13 @@ public class Relationship {
 	private Type name;
 	private String class1;
 	private String class2;
-	
+
 	public enum Type {
+		COMPOSITION,
 		AGGREGATION,
 		ASSOCIATION,
-		COMPOSITION,
 		INHERITANCE
-	};
+	}
 
 	//*********************************************************//
 	// Constructors //

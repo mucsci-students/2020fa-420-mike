@@ -48,7 +48,7 @@ public class EntityTest {
         Entity e = new Entity("e");
 
         e.createField("a1", "int");
-        assertTrue("Field a1 was created", e.searchField("a1"));
+        assertTrue("Field a1 was created", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertFalse("False when duplicating field", e.createField("a1", "int"));
     }
@@ -64,9 +64,9 @@ public class EntityTest {
         assertFalse("False when renaming non-existent field", e.renameField("fake", "a3"));
 
         assertTrue("Renamed a1 to a3", e.renameField("a1", "a3"));
-        assertTrue("a3 field exists", e.searchField("a3"));
+        assertTrue("a3 field exists", e.containsField("a3"));
 
-        assertFalse("a1 field no longer exists", e.searchField("a1"));
+        assertFalse("a1 field no longer exists", e.containsField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
     }
 
@@ -80,9 +80,9 @@ public class EntityTest {
         assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
         e.deleteField("a1");
-        assertFalse("a1 field was deleted", e.searchField("a1"));
+        assertFalse("a1 field was deleted", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
-        assertTrue("a2 field still exists", e.searchField("a2"));
+        assertTrue("a2 field still exists", e.containsField("a2"));
     }
 
     /* test createMethod */
@@ -91,7 +91,7 @@ public class EntityTest {
         Entity e = new Entity("e");
 
         e.createMethod("a1", "int");
-        assertTrue("Method a1 was created", e.searchMethod("a1"));
+        assertTrue("Method a1 was created", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertFalse("False when duplicating method", e.createMethod("a1", "int"));
     }
@@ -107,9 +107,9 @@ public class EntityTest {
         assertFalse("False when renaming non-existent method", e.renameMethod("fake", "a3"));
 
         assertTrue("Renamed a1 to a3", e.renameMethod("a1", "a3"));
-        assertTrue("a3 method exists", e.searchMethod("a3"));
+        assertTrue("a3 method exists", e.containsMethod("a3"));
 
-        assertFalse("a1 method no longer exists", e.searchMethod("a1"));
+        assertFalse("a1 method no longer exists", e.containsMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
     }
 
@@ -123,33 +123,33 @@ public class EntityTest {
         assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
 
         e.deleteMethod("a1");
-        assertFalse("a1 method was deleted", e.searchMethod("a1"));
+        assertFalse("a1 method was deleted", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
-        assertTrue("a2 method still exists", e.searchMethod("a2"));
+        assertTrue("a2 method still exists", e.containsMethod("a2"));
     }
 
     /* HELPER FUNCTIONS */
 
-    /* searchField */
+    /* containsField */
     @Test
-    public void testSearchField()
+    public void testContainsField()
     {
         Entity e = new Entity("e");
         e.createField("a1", "int");
 
-        assertFalse("False when searching non-existent field", e.searchField("fake"));
-        assertTrue("a1 field found", e.searchField("a1"));
+        assertFalse("False when searching non-existent field", e.containsField("fake"));
+        assertTrue("a1 field found", e.containsField("a1"));
     }
 
-    /* searchMethod */
+    /* containsMethod */
     @Test
-    public void testSearchMethod()
+    public void testContainsMethod()
     {
         Entity e = new Entity("e");
         e.createMethod("a1", "int");
 
-        assertFalse("False when searching non-existent method", e.searchMethod("fake"));
-        assertTrue("a1 method found", e.searchMethod("a1"));
+        assertFalse("False when searching non-existent method", e.containsMethod("fake"));
+        assertTrue("a1 method found", e.containsMethod("a1"));
     }
 
     /* copyField */

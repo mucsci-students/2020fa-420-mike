@@ -17,23 +17,22 @@ public class Method extends Formal{
     /* CREATE, RENAME, DELETE parameter methods */
 
     public boolean createParameter(String name, String type){
-        if(searchParameter(name)){
+        if(containsParameter(name)){
             return false; //parameter already exists
         }
         return parameters.add(new Parameter(name, type));
     }
 
     public boolean renameParameter(String name, String newname){
-        if(searchParameter(newname)) {
+        if(containsParameter(newname)) {
             //parameter with new name already exists
             return false;
         }
-        Parameter p;
-        for (int index = 0; index < parameters.size(); ++index) {
-            p = parameters.get(index);
+
+        for (Parameter p : parameters) {
             // If target found.
             if (p.getName().equals(name)) {
-                //rename method.
+                //rename parameter.
                 p.setName(newname);
                 return true;
             }
@@ -43,11 +42,11 @@ public class Method extends Formal{
     }
 
     public boolean deleteParameter(String name){
-        return parameters.remove(copyParameter(name));
+        return parameters.remove(new Parameter(name, "int"));
     }
 
     /* helper functions */
-    public boolean searchParameter(String name){
+    public boolean containsParameter(String name){
         for (Parameter p : parameters){
             if(p.getName().equals(name)){
                 return true;
