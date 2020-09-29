@@ -42,12 +42,11 @@ public class Classes {
     }
 
     public boolean renameClass(String target, String newname) {
-        if(searchEntity(newname)) {
+        if(containsEntity(newname)) {
         	return false; // Already contains desired name
         }
 
-        Entity e = copyEntity(target);
-        int index = entities.indexOf(e);
+        int index = entities.indexOf(new Entity(target));
 
         if (index < 0) {
             return false; // Target not found.
@@ -69,8 +68,7 @@ public class Classes {
     }
 
     public boolean deleteClass(String target) {
-        Entity e = copyEntity(target);
-        int index = entities.indexOf(e);
+        int index = entities.indexOf(new Entity(target));
 
         if (index < 0) {
             // Target not found.
@@ -98,9 +96,7 @@ public class Classes {
     // *********************************************************//
 
     public boolean createField(String targetclass, String field, String type) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
@@ -112,9 +108,7 @@ public class Classes {
     }
 
     public boolean renameField(String targetclass, String targetfield, String newfield) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -126,9 +120,7 @@ public class Classes {
     }
 
     public boolean deleteField(String targetclass, String targetfield) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -144,9 +136,7 @@ public class Classes {
     // *********************************************************//
 
     public boolean createMethod(String targetclass, String method, String type) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
@@ -158,9 +148,7 @@ public class Classes {
     }
 
     public boolean renameMethod(String targetclass, String targetmethod, String newmethod) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -172,9 +160,7 @@ public class Classes {
     }
 
     public boolean deleteMethod(String targetclass, String targetmethod) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -194,7 +180,7 @@ public class Classes {
             return false;
         }
 
-        if(!searchEntity(class1) || !searchEntity(class2)) {
+        if(!containsEntity(class1) || !containsEntity(class2)) {
         	//class1 or class2 does not exist
         	return false;
         }
@@ -218,9 +204,7 @@ public class Classes {
     // *********************************************************//
 
     public boolean createParameter(String className, String method, String name, String type){
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(className)) {
                 // Try to rename the target attribute.
@@ -232,9 +216,7 @@ public class Classes {
     }
 
     public boolean renameParameter(String className, String method, String name, String newname){
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(className)) {
                 // Try to rename the target attribute.
@@ -246,9 +228,7 @@ public class Classes {
     }
 
     public boolean deleteParameter(String className, String method, String name){
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(className)) {
                 // Try to rename the target attribute.
@@ -278,7 +258,7 @@ public class Classes {
 
     /* Entity functions */
 
-    public boolean searchEntity(String name)
+    public boolean containsEntity(String name)
     {
         for (Entity e : entities)
         {
@@ -308,7 +288,7 @@ public class Classes {
     // Relationship Helper Functions (for testing mainly) //
     // *********************************************************//
 
-    public boolean searchRelationship(Type name, String class1, String class2)
+    public boolean containsRelationship(Type name, String class1, String class2)
     {
         for (Relationship r : relationships)
         {
@@ -325,7 +305,7 @@ public class Classes {
     {
         for (Relationship r : relationships)
         {
-            if(r.getName().equals(name) && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
+            if(r.getName() == name && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
             {
                 return r;
             }
