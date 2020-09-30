@@ -98,7 +98,7 @@ public class HelperMethods {
 	        objList.add((JSONObject) entity);
 	            
 	        // Extract name of relationship and classes, add to loadFile
-	        Type relationName = (Type) objList.get(x).get("relationName");
+	        String relationName = (String) objList.get(x).get("relationName");
 	        String classOne = (String) objList.get(x).get("ClassOne");
 	        String classTwo = (String) objList.get(x).get("ClassTwo");
 	        userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
