@@ -12,6 +12,7 @@ public class CommandLine extends HelperMethods {
 	}
 
 	public static void commandInterface() {
+    // Initialize variables
 		Classes userClasses = new Classes();
 		boolean prompt = false;
 		String[] commandUsage = {
@@ -47,12 +48,12 @@ public class CommandLine extends HelperMethods {
 		while(cmdLine.hasNextLine()) {
 			String line = cmdLine.nextLine();
 			
-			//redo loop if blank line			
+			//Redo loop if blank line			
 			if(line.isEmpty()){
 				System.out.print("Enter a command: ");
 				continue;
 			}
-			//parse command line string into a list of commands by spaces
+			//Parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
 
 			if (commands[0].equals("quit")) {
@@ -116,7 +117,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[1] + "\n");
 					}
 					break;
-				// Call create class, attribute, or relationship based on length and user input
+				// Call create class, field, method, or relationship based on length and user input
 				case "create":
 					if (commands.length < 3) {
 						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + commandUsage [6] + "\n");
@@ -160,7 +161,7 @@ public class CommandLine extends HelperMethods {
 						if (userClasses.createRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
 							prompt = true;
 						} else {
-							System.out.println("\nCreate relationship failed. Make sure the classes exist, the relationship type is valid, and that it is not a duplicate.\n");
+							System.out.println("\nCreate relationship failed. Make sure the classes exist, the relationship type is valid, and that it is not a duplicate.\n");							
 						}
 					} else if (commands[1].equals("param")) {
 						if (commands.length != 6) {
@@ -177,7 +178,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + commandUsage [6] + "\n");
 					}
 					break;
-				// Call delete class, attribute, or relationship based on length and user input
+				// Call delete class, field, method, or relationship based on length and user input
 				case "delete":
 					if (commands.length < 3)
 					{
@@ -239,7 +240,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[7] + commandUsage[8] + commandUsage[9] + commandUsage[10] + commandUsage[11] + "\n");
 					}
 					break;
-				// Call rename class or attribute based on length and user input
+				// Call rename class, field, or method depending on user input and length
 				case "rename":
 					if (commands.length < 4) {
 						System.out.println(errorMessage + commandUsage[12] + commandUsage[13] + commandUsage[14] + commandUsage[15] + "\n");
@@ -337,7 +338,7 @@ public class CommandLine extends HelperMethods {
 							
 						if (!answer) {
 							userClasses.clear();
-							prompt = true;
+							prompt = true;	
 						}
 					}
 					break;
@@ -351,7 +352,8 @@ public class CommandLine extends HelperMethods {
 		cmdLine.close();
 	}
 
-	public static void help(String[] commandUsage) {
+  // Prints out how to use all the commands in the CLI
+	private static void help(String[] commandUsage) {
 		System.out.print("\nHere is a list of available commands:");
 
 		System.out.println(
@@ -367,8 +369,7 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[4]
 				+ " - create a method in <class name> with type <method type> titled <method name>"				
 				+ commandUsage[5]
-				+ " - create a relationship between <class name1> and <class name2> with the type <type>\n"
-				+ " - acceptable types are: Associate, Aggregate, Composition, and Inheritance"
+				+ " - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Association, Composition, Inheritance)"
 				+ commandUsage[6]
 				+ " - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>\n"
 
@@ -379,9 +380,9 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[9]
 				+ " - delete method <method name> in class titled <class name>"				
 				+ commandUsage[10]
-				+ " - delete a relationship with title <name> between <class name1> and <class name2>"
+				+ " - delete a relationship with type <type> (Aggregation, Association, Composition, Inheritance) between <class name1> and <class name2>"
 				+ commandUsage[11]
-				+ " - delete a parameter in <class name> for <method name> titled <parameter name>\n"
+				+ " - delete a parameter in <class name> for <method name> with  <parameter name>\n"
 				
 				+ commandUsage[12]
 				+ " - rename class <name> to <new name>"
@@ -405,6 +406,9 @@ public class CommandLine extends HelperMethods {
 				+ "  quit - exits the program\n");
 	}
 
+  // Gets user input to set save prompt flag.
+  // False if they wish to continue
+  // True if they want to return
 	private static boolean savePrompt (boolean prompt, Scanner cmdLine) {
 		while (prompt == true) {		
 			
@@ -424,7 +428,7 @@ public class CommandLine extends HelperMethods {
 		return prompt;
 	}
 
-	//Return enum type that user requested, null if invalid
+	// Return enum type that user requested, null if invalid
 	private static Type checkEnum (String command) {
 		switch(command){
 			case "ASSOCIATION":
@@ -439,6 +443,3 @@ public class CommandLine extends HelperMethods {
 				return null;
 		}
 	}
-
-}
-
