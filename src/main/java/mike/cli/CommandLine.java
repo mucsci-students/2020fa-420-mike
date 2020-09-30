@@ -12,6 +12,7 @@ public class CommandLine extends HelperMethods {
 	}
 
 	public static void commandInterface() {
+    // Initialize variables
 		Classes userClasses = new Classes();
 		boolean prompt = false;
 		String[] commandUsage = {
@@ -47,12 +48,12 @@ public class CommandLine extends HelperMethods {
 		while(cmdLine.hasNextLine()) {
 			String line = cmdLine.nextLine();
 			
-			//redo loop if blank line			
+			//Redo loop if blank line			
 			if(line.isEmpty()){
 				System.out.print("Enter a command: ");
 				continue;
 			}
-			//parse command line string into a list of commands by spaces
+			//Parse command line string into a list of commands by spaces
 			String[] commands = line.split(" ");
 
 			if (commands[0].equals("quit")) {
@@ -116,7 +117,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[1] + "\n");
 					}
 					break;
-				// Call create class, attribute, or relationship based on length and user input
+				// Call create class, field, method, or relationship based on length and user input
 				case "create":
 					if (commands.length < 3) {
 						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + commandUsage [6] + "\n");
@@ -177,7 +178,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage  + commandUsage[2]  + commandUsage[3]  + commandUsage[4] + commandUsage[5] + commandUsage [6] + "\n");
 					}
 					break;
-				// Call delete class, attribute, or relationship based on length and user input
+				// Call delete class, field, method, or relationship based on length and user input
 				case "delete":
 					if (commands.length < 3)
 					{
@@ -239,7 +240,7 @@ public class CommandLine extends HelperMethods {
 						System.out.println(errorMessage + commandUsage[7] + commandUsage[8] + commandUsage[9] + commandUsage[10] + commandUsage[11] + "\n");
 					}
 					break;
-				// Call rename class or attribute based on length and user input
+				// Call rename class, field, or method depending on user input and length
 				case "rename":
 					if (commands.length < 4) {
 						System.out.println(errorMessage + commandUsage[12] + commandUsage[13] + commandUsage[14] + commandUsage[15] + "\n");
@@ -351,6 +352,7 @@ public class CommandLine extends HelperMethods {
 		cmdLine.close();
 	}
 
+  // Prints out how to use all the commands in the CLI
 	private static void help(String[] commandUsage) {
 		System.out.print("\nHere is a list of available commands:");
 
@@ -404,6 +406,9 @@ public class CommandLine extends HelperMethods {
 				+ "  quit - exits the program\n");
 	}
 
+  // Gets user input to set save prompt flag.
+  // False if they wish to continue
+  // True if they want to return
 	private static boolean savePrompt (boolean prompt, Scanner cmdLine) {
 		while (prompt == true) {		
 			
@@ -423,19 +428,18 @@ public class CommandLine extends HelperMethods {
 		return prompt;
 	}
 
+	// Return enum type that user requested, null if invalid
 	private static Type checkEnum (String command) {
 		switch(command){
-		case "ASSOCIATION":
-			return Type.ASSOCIATION;
-		case "AGGREGATION":
-			return Type.AGGREGATION;
-		case "COMPOSITION":
-			return Type.COMPOSITION;
-		case "INHERITANCE":
-			return Type.INHERITANCE;
-		default:
-			return null;
+			case "ASSOCIATION":
+				return Type.ASSOCIATION;
+			case "AGGREGATION":
+				return Type.AGGREGATION;
+			case "COMPOSITION":
+				return Type.COMPOSITION;
+			case "INHERITANCE":
+				return Type.INHERITANCE;
+			default:
+				return null;
 		}
 	}
-}
-
