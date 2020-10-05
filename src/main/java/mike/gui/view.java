@@ -12,6 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import cli.HelperMethods;
 import datastructures.*;
@@ -20,7 +23,9 @@ public class view extends HelperMethods {
 	public static JPanel centerPanel = new JPanel();
 	static int x_pressed = 0;
 	static int y_pressed = 0;
-
+	static HashMap<String, JLabel> entityLabels = new HashMap<String, JLabel>();
+	
+	
 	public static void guiInterface() {
 		Classes classes = new Classes();
 
@@ -47,14 +52,12 @@ public class view extends HelperMethods {
 
 		// Creating the middle panel
 		centerPanel.setBackground(Color.WHITE);
-
+		
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-		JPanel entity = new JPanel();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		centerPanel.setLayout(gridbag);
-		centerPanel.add(entity, c);
-
+		
 		// Adding all panels onto frame
 		frame.getContentPane().add(BorderLayout.CENTER, centerPanel);
 		frame.getContentPane().add(BorderLayout.WEST, treeView);
@@ -65,7 +68,7 @@ public class view extends HelperMethods {
 		controller.saveListener(save);
 		controller.saveAsListener(saveAs);
 		controller.loadListener(load);
-		controller.treeListener(tree, frame);
+		controller.treeListener(tree, frame, entityLabels, centerPanel);
 	}
 
 	private static JTree createTree() {
@@ -100,7 +103,7 @@ public class view extends HelperMethods {
 		return new JTree(top);
 	}
 
-	public static void showClass(Entity e) { 		
+	public static JLabel showClass(Entity e) { 		
  		String html = "<html>";
  		html += e.getName() + "<br/>";
  			
@@ -127,13 +130,14 @@ public class view extends HelperMethods {
  		html += "</html>";
  		
 		JLabel newview = new JLabel(html);
-		
         newview.setBackground(Color.LIGHT_GRAY);
         newview.setOpaque(true);
         Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
         Border margin = new EmptyBorder(6, 6, 6, 6);
         newview.setBorder(new CompoundBorder(border, margin));
+        
         centerPanel.add(newview);
+        entityLabels.put(e.getName(), newview);
         
 		newview.addMouseListener(new MouseAdapter()
         {
@@ -157,8 +161,10 @@ public class view extends HelperMethods {
                 }
             }
         });
-        
+
         centerPanel.validate();
         centerPanel.repaint();
+        
+        return newview;
  	}
 }
