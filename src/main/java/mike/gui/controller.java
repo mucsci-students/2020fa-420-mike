@@ -8,12 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import mike.cli.HelperMethods;
+import cli.HelperMethods;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
+import GUI.view;
 
 public class Controller extends HelperMethods{
 
@@ -72,15 +75,15 @@ public class Controller extends HelperMethods{
 	}
 	
 	// Listen to any function calls
-	public void treeListener(JTree tree, JFrame frame) {
+	public void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 		    public void valueChanged(TreeSelectionEvent e) {
-		        functionCalled(tree, userClasses, frame);
+		        functionCalled(tree, userClasses, frame, entityLabels, centerPanel);
 		    }
 		});
 	}
 	
-	public static void functionCalled(JTree tree, Classes test, JFrame frame) {
+	public static void functionCalled(JTree tree, Classes test, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         
         /* if nothing is selected */ 
@@ -98,10 +101,22 @@ public class Controller extends HelperMethods{
     	JComboBox<String> list = new JComboBox<>(entityStrings);
     	
         /* React to the node selection. */
-        if (node.toString() == "Create Class") {		        	
-        	String className = (String) JOptionPane.showInputDialog(frame, "Enter a class name:", "Create Class", JOptionPane.PLAIN_MESSAGE);
-        	test.createClass(className);
-        	view.showClass(userClasses.copyEntity(className));
+        if (node.toString() == "Create Class") {
+        	JTextField name = new JTextField(20);
+        	
+        	// Create a panel containing a drop-down box and text field
+        	JPanel inputFields = new JPanel();
+        	inputFields.add(new JLabel("Enter a Class name: "));
+        	inputFields.add(name);
+        	
+        	// Ask for input with inputFields
+            int result = JOptionPane.showConfirmDialog(null, inputFields, 
+                    "Create Class", JOptionPane.OK_CANCEL_OPTION);
+        	
+        	if(result == 0) {
+        		test.createClass(name.getText());
+        		view.showClass(userClasses.copyEntity(name.getText()));  
+        	}
         }
         else if (node.toString() == "Rename Class"){
         	JTextField rename = new JTextField(20);
@@ -110,7 +125,7 @@ public class Controller extends HelperMethods{
         	JPanel inputFields = new JPanel();
         	inputFields.add(new JLabel("Choose a Class: "));
         	inputFields.add(list);
-        	enterInput("RenameClass: ", inputFields, rename);	
+        	enterInput("Rename Class: ", inputFields, rename);	
         	
         	// Ask for input with inputFields
             int result = JOptionPane.showConfirmDialog(null, inputFields, 
@@ -118,7 +133,11 @@ public class Controller extends HelperMethods{
         
         	if (result == 0) {
         		test.renameClass(list.getSelectedItem().toString(), rename.getText());
+        		JLabel classObj = entityLabels.remove(list.getSelectedItem());
+            	classObj.setText(rename.getText());
+            	entityLabels.put(rename.getText(), classObj);	
         	}
+        	
         }
         else if (node.toString() == "Delete Class"){
         	// Create a panel containing a drop-down box
@@ -131,6 +150,10 @@ public class Controller extends HelperMethods{
         
         	if (result == 0) {
         		test.deleteClass(list.getSelectedItem().toString());
+        		JLabel classObj = entityLabels.get(list.getSelectedItem());
+        		centerPanel.remove(classObj);
+        		centerPanel.validate();
+        		centerPanel.repaint();
         	}	
         }
         else if (node.toString() == "Create Relationship" || node.toString() == "Delete Relationship"){
