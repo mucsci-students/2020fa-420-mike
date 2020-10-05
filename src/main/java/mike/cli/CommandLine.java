@@ -369,7 +369,7 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[4]
 				+ " - create a method in <class name> with type <method type> titled <method name>"				
 				+ commandUsage[5]
-				+ " - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Association, Composition, Inheritance)"
+				+ " - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance)"
 				+ commandUsage[6]
 				+ " - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>\n"
 
@@ -380,7 +380,7 @@ public class CommandLine extends HelperMethods {
 				+ commandUsage[9]
 				+ " - delete method <method name> in class titled <class name>"				
 				+ commandUsage[10]
-				+ " - delete a relationship with type <type> (Aggregation, Association, Composition, Inheritance) between <class name1> and <class name2>"
+				+ " - delete a relationship with type <type> (Aggregation, Realization, Composition, Inheritance) between <class name1> and <class name2>"
 				+ commandUsage[11]
 				+ " - delete a parameter in <class name> for <method name> with  <parameter name>\n"
 				
@@ -431,8 +431,8 @@ public class CommandLine extends HelperMethods {
 	// Return enum type that user requested, null if invalid
 	private static Type checkEnum (String command) {
 		switch(command){
-			case "ASSOCIATION":
-				return Type.ASSOCIATION;
+			case "REALIZATION":
+				return Type.REALIZATION;
 			case "AGGREGATION":
 				return Type.AGGREGATION;
 			case "COMPOSITION":
