@@ -10,7 +10,7 @@ public class Relationship {
 	public enum Type {
 		COMPOSITION,
 		AGGREGATION,
-		ASSOCIATION,
+		REALIZATION,
 		INHERITANCE
 	}
 
