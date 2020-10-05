@@ -434,7 +434,7 @@ public class ClassesTest {
 
         assertFalse("False when creating relationship between non-existent classes (1)", classes.createRelationship(Type.REALIZATION, "fake1", "e2"));
         assertFalse("False when creating relationship between non-existent classes (2)", classes.createRelationship(Type.REALIZATION, "e", "fake"));
-
+      
         classes.createRelationship(Type.INHERITANCE, "e", "e2");
         assertTrue("Relationship created", classes.containsRelationship(Type.INHERITANCE,"e", "e2"));
         assertEquals("Relationship list size is 1", 1, classes.getRelationships().size());
@@ -468,6 +468,7 @@ public class ClassesTest {
 
         classes.deleteRelationship(Type.REALIZATION, "e", "e2");
         assertFalse("Relationship 'r' was deleted", classes.containsRelationship(Type.REALIZATION, "e", "e2"));
+
         assertTrue("Relationships list is empty", classes.getRelationships().isEmpty());
         assertTrue("Classes e and e2 still exist", classes.containsEntity("e") && classes.containsEntity("e2"));
     }
