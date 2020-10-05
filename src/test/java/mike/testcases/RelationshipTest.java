@@ -12,9 +12,9 @@ public class RelationshipTest {
 
 	@Test
 	public void testConstructor() {
-		Relationship r = new Relationship(Type.ASSOCIATION, "B", "C");
+		Relationship r = new Relationship(Type.REALIZATION, "B", "C");
 
-		assertEquals("Relationship name should be set properly.", Type.ASSOCIATION, r.getName());
+		assertEquals("Relationship name should be set properly.", Type.REALIZATION, r.getName());
 		assertEquals("First class name should be set properly.", "B", r.getFirstClass());
 		assertEquals("Second class name should be set properly.", "C", r.getSecondClass());
 	}
@@ -22,11 +22,11 @@ public class RelationshipTest {
 
 	@Test
 	public void testEquals() {
-		Relationship r1 = new Relationship(Type.ASSOCIATION, "B", "C");
-		Relationship r2 = new Relationship(Type.ASSOCIATION, "B", "C");
+		Relationship r1 = new Relationship(Type.REALIZATION, "B", "C");
+		Relationship r2 = new Relationship(Type.REALIZATION, "B", "C");
 		Relationship r3 = new Relationship(Type.INHERITANCE, "B", "C");
-		Relationship r4 = new Relationship(Type.ASSOCIATION, "D", "C");
-		Relationship r5 = new Relationship(Type.ASSOCIATION, "B", "D");
+		Relationship r4 = new Relationship(Type.REALIZATION, "D", "C");
+		Relationship r5 = new Relationship(Type.REALIZATION, "B", "D");
 		String s = "";
 
 		// Null check

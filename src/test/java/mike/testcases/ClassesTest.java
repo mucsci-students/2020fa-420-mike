@@ -237,16 +237,16 @@ public class ClassesTest {
 
         /* Make sure class names were changed in existing relationships */
 
-        assertTrue("Relationship r1, e, E2 created", classes.createRelationship(Type.ASSOCIATION, "e", "E2"));
-        assertTrue("Relationship r1, e, E2 exists", classes.containsRelationship(Type.ASSOCIATION, "e", "E2"));
+        assertTrue("Relationship r1, e, E2 created", classes.createRelationship(Type.REALIZATION, "e", "E2"));
+        assertTrue("Relationship r1, e, E2 exists", classes.containsRelationship(Type.REALIZATION, "e", "E2"));
         assertTrue("Class E2 renamed to e2", classes.renameClass("E2", "ent2"));
 
-        assertFalse("Old relationship no longer exists", classes.containsRelationship(Type.ASSOCIATION, "e", "E2"));
-        assertTrue("Class name (2) in relationship was updated", classes.containsRelationship(Type.ASSOCIATION, "e", "ent2"));
+        assertFalse("Old relationship no longer exists", classes.containsRelationship(Type.REALIZATION, "e", "E2"));
+        assertTrue("Class name (2) in relationship was updated", classes.containsRelationship(Type.REALIZATION, "e", "ent2"));
 
         classes.renameClass("e", "e1");
-        assertTrue("Class name (1) in relationship was updated", classes.containsRelationship(Type.ASSOCIATION, "e1", "ent2"));
-        assertFalse("Old relationship no longer exists", classes.containsRelationship(Type.ASSOCIATION, "e", "ent2"));
+        assertTrue("Class name (1) in relationship was updated", classes.containsRelationship(Type.REALIZATION, "e1", "ent2"));
+        assertFalse("Old relationship no longer exists", classes.containsRelationship(Type.REALIZATION, "e", "ent2"));
 
     }
 
@@ -432,8 +432,8 @@ public class ClassesTest {
         classes.createClass("e");
         classes.createClass("e2");
 
-        assertFalse("False when creating relationship between non-existent classes (1)", classes.createRelationship(Type.ASSOCIATION, "fake1", "e2"));
-        assertFalse("False when creating relationship between non-existent classes (2)", classes.createRelationship(Type.ASSOCIATION, "e", "fake"));
+        assertFalse("False when creating relationship between non-existent classes (1)", classes.createRelationship(Type.REALIZATION, "fake1", "e2"));
+        assertFalse("False when creating relationship between non-existent classes (2)", classes.createRelationship(Type.REALIZATION, "e", "fake"));
 
         classes.createRelationship(Type.INHERITANCE, "e", "e2");
         assertTrue("Relationship created", classes.containsRelationship(Type.INHERITANCE,"e", "e2"));
@@ -446,8 +446,8 @@ public class ClassesTest {
         classes.createRelationship(Type.INHERITANCE, "e", "e3");
         assertTrue("Relationship with existing type but different pair created", classes.containsRelationship(Type.INHERITANCE,"e", "e3"));
 
-        assertFalse("False when creating another relationship between pairs that already have a relationship", classes.createRelationship(Type.ASSOCIATION, "e", "e2"));
-        assertFalse("Relationship 'r-dup' was not created", classes.containsRelationship(Type.ASSOCIATION, "e", "e2"));
+        assertFalse("False when creating another relationship between pairs that already have a relationship", classes.createRelationship(Type.REALIZATION, "e", "e2"));
+        assertFalse("Relationship 'r-dup' was not created", classes.containsRelationship(Type.REALIZATION, "e", "e2"));
 
         assertTrue("Created relationship with pair flipped", classes.createRelationship(Type.INHERITANCE, "e2", "e"));
         assertTrue("Relationship type INHERITANCE between e2 and e was created", classes.containsRelationship(Type.INHERITANCE, "e2", "e"));
@@ -460,14 +460,14 @@ public class ClassesTest {
         Classes classes = new Classes();
         classes.createClass("e");
         classes.createClass("e2");
-        classes.createRelationship(Type.ASSOCIATION, "e", "e2");
+        classes.createRelationship(Type.REALIZATION, "e", "e2");
 
         assertFalse("False when deleting non-existent relationship (type)", classes.deleteRelationship(Type.AGGREGATION, "e", "e2"));
-        assertFalse("False when deleting non-existent relationship (class1)", classes.deleteRelationship(Type.ASSOCIATION, "fake", "e2"));
-        assertFalse("False when deleting non-existent relationship (class2)", classes.deleteRelationship(Type.ASSOCIATION, "e", "fake"));
+        assertFalse("False when deleting non-existent relationship (class1)", classes.deleteRelationship(Type.REALIZATION, "fake", "e2"));
+        assertFalse("False when deleting non-existent relationship (class2)", classes.deleteRelationship(Type.REALIZATION, "e", "fake"));
 
-        classes.deleteRelationship(Type.ASSOCIATION, "e", "e2");
-        assertFalse("Relationship 'r' was deleted", classes.containsRelationship(Type.ASSOCIATION, "e", "e2"));
+        classes.deleteRelationship(Type.REALIZATION, "e", "e2");
+        assertFalse("Relationship 'r' was deleted", classes.containsRelationship(Type.REALIZATION, "e", "e2"));
         assertTrue("Relationships list is empty", classes.getRelationships().isEmpty());
         assertTrue("Classes e and e2 still exist", classes.containsEntity("e") && classes.containsEntity("e2"));
     }
