@@ -98,10 +98,10 @@ public class HelperMethods {
 	        objList.add((JSONObject) entity);
 	            
 	        // Extract name of relationship and classes, add to loadFile
-	        Type relationName = (Type) objList.get(x).get("relationName");
+	        String relationName = (String) objList.get(x).get("relationName");
 	        String classOne = (String) objList.get(x).get("ClassOne");
 	        String classTwo = (String) objList.get(x).get("ClassTwo");
-	        userClasses.createRelationship(relationName, classOne, classTwo);
+	        userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
 	    }	
 	}	
 
@@ -184,7 +184,7 @@ public class HelperMethods {
 			// Create JSONObject for a single relationship
 			JSONObject relationObj = new JSONObject();
 			
-			relationObj.put("relationName", relation.getName());
+			relationObj.put("relationName", relation.getName().toString());
 			relationObj.put("ClassOne", relation.getFirstClass());
 			relationObj.put("ClassTwo", relation.getSecondClass());
 			
@@ -208,6 +208,21 @@ public class HelperMethods {
 		myWriter.close();
 	}
 
+	private static Type checkEnum (String command) {
+		switch(command){
+		case "REALIZATION":
+			return Type.REALIZATION;
+		case "AGGREGATION":
+			return Type.AGGREGATION;
+		case "COMPOSITION":
+			return Type.COMPOSITION;
+		case "INHERITANCE":
+			return Type.INHERITANCE;
+		default:
+			return null;
+		}
+	}
+	
 	// Lists all of the classes and their respective attributes
 	public static void listClasses(Classes userClasses)
 	{
@@ -268,5 +283,6 @@ public class HelperMethods {
 			System.out.println("   -- " + relation.getName() + ": " + relation.getFirstClass() + "--" + relation.getSecondClass());
 		}
 	} 
+
 }
 
