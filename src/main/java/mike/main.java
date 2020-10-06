@@ -1,7 +1,7 @@
 package mike;
 
 import mike.cli.CommandLine;
-import mike.gui.view;
+import mike.gui.View;
 
 public class main {
 
