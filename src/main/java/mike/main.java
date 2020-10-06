@@ -1,7 +1,7 @@
 package mike;
 
 import mike.cli.CommandLine;
-import mike.gui.view;
+import mike.gui.View;
 
 public class main {
 
@@ -9,7 +9,7 @@ public class main {
 		if (args.length == 1 && args[0].equals("cli")) {
 			CommandLine.commandInterface();
 		} else if (args.length == 0) {
-			view.guiInterface();
+			View.guiInterface();
 		} else {
 			System.out.println(
 					"Invalid input. Enter 'cli' for the command line interface, or enter nothing for the gui.");

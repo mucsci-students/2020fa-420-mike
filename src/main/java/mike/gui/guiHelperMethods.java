@@ -22,13 +22,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import datastructures.Classes;
-import datastructures.Entity;
-import datastructures.Field;
-import datastructures.Method;
-import datastructures.Parameter;
-import datastructures.Relationship;
-import datastructures.Relationship.Type;
+import mike.datastructures.Classes;
+import mike.datastructures.Entity;
+import mike.datastructures.Field;
+import mike.datastructures.Method;
+import mike.datastructures.Parameter;
+import mike.datastructures.Relationship;
+import mike.datastructures.Relationship.Type;
 
 @SuppressWarnings("unchecked")
 public class guiHelperMethods {
