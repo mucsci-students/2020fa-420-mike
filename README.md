@@ -16,7 +16,8 @@ later time. The application currently runs only using a Command Line Interface.
 2. Type these commands in the command prompt:
    - gradle build
    - gradle shadowJar
-   - java -jar ./build/libs/mike-all.jar
+   - java -jar ./build/libs/mike-all.jar (launches using the gui)
+   - java -jar ./build/libs/mike-all.jar cli (launches using a command line interface)
 
 Gradle build builds the application, gradle shadowJar creates a jar file with all of the dependencies
 installed, and java -jar ./build/libs/mike-all.jar runs the application.
@@ -29,4 +30,4 @@ installed, and java -jar ./build/libs/mike-all.jar runs the application.
     - Ian Reger
 
 **DISCLAIMER**: 
-This is not a finished product. This is the state of the application after Sprint 1.
+This is not a finished product. This is the state of the application after Sprint 2.
