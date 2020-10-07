@@ -131,6 +131,10 @@ public class Controller extends guiHelperMethods {
 							break;
 					default : throw new RuntimeException("Unknown button pressed");
 				}
+				for(Entity curEntity : entities) {
+					JLabel curLabel = entityLabels.get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
+				}
 			}
 		});
 	}
