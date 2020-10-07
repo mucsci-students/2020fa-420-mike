@@ -1,6 +1,5 @@
 package mike.gui;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -14,14 +13,12 @@ import java.util.HashMap;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 
-import mike.gui.guiHelperMethods;
-
 public class Controller extends guiHelperMethods {
 
 	private static Classes classes;
 
 	public Controller (Classes classes){
-		this.classes = classes;
+		Controller.classes = classes;
 	}
    
 	// Listen to any function calls
