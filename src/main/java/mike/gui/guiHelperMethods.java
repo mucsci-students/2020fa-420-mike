@@ -32,6 +32,7 @@ import mike.datastructures.Relationship.Type;
 
 @SuppressWarnings("unchecked")
 public class guiHelperMethods {
+
 	public static void createClass(Classes classes) {
 		JTextField name = new JTextField(20);
 
@@ -250,7 +251,7 @@ public class guiHelperMethods {
 		JComboBox<String> methodList = findStuff(classes, finaleList.getSelectedItem().toString(), "Method", false);
 		JTextField type = new JTextField(20);
 		JTextField name = new JTextField(20);
-		
+
 		// Create a panel containing a drop-down box and text field
 		JPanel inputFields2 = new JPanel();
 		inputFields2.add(new JLabel("Choose a Method: "));
@@ -603,6 +604,7 @@ public class guiHelperMethods {
 		}
 
 		JSONObject saveFile = new JSONObject();
+
 		saveFile = saveClasses(saveFile, userClasses);
 		saveFile = saveRelationships(saveFile, userClasses);
 
@@ -707,6 +709,7 @@ public class guiHelperMethods {
 				}
 			}
 			System.out.println(" ]");
+
 			// Prints out all of the methods
 			System.out.print("		methods: [ ");
 			for (int x = 0; x < curEntity.getMethods().size(); x++) {
@@ -732,6 +735,7 @@ public class guiHelperMethods {
 			System.out.println(" ]");
 		}
 	}
+
 	// Lists all of the relationships and the classes they are pointing to
 	public static void listRelationships(Classes userClasses) {
 		System.out.println("Relationships:");

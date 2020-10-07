@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -100,16 +101,17 @@ public class View extends HelperMethods {
 		return new JTree(top);
 	}
 
-	public static JLabel showClass(Entity e) {
-		JLabel newview = new JLabel(entityToHTML(e));
+	public static JLabel showClass(Entity entity) {
+		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
-
+		
+		entityLabels.put(entity.getName(), newview);
+		
 		centerPanel.add(newview);
-		entityLabels.put(e.getName(), newview);
 
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
@@ -128,25 +130,30 @@ public class View extends HelperMethods {
 				if (e.getSource() == newview) {
 					JComponent jc = (JComponent) e.getSource();
 					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
+					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
+					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
 				}
 			}
 		});
-
+		
 		centerPanel.validate();
-
+		
 		return newview;
 	}
 
 	public static void updateClass(String oldname, Entity e) {
 		JLabel classObj = entityLabels.remove(oldname);
+		centerPanel.remove(classObj);
 		classObj.setText(entityToHTML(e));
 		entityLabels.put(e.getName(), classObj);
+		centerPanel.add(classObj);
+		centerPanel.validate();
 	}
 
 	public static void deleteClass(String name) {
 		centerPanel.remove(entityLabels.get(name));
 		entityLabels.remove(name);
-		centerPanel.repaint();
+		centerPanel.repaint();			
 	}
 
 	public static String entityToHTML(Entity e) {

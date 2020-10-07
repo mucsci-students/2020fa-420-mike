@@ -13,6 +13,7 @@ import java.util.HashMap;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 
+
 public class Controller extends guiHelperMethods {
 
 	private static Classes classes;
@@ -126,6 +127,11 @@ public class Controller extends guiHelperMethods {
 							System.out.println();
 							break;
 					default : throw new RuntimeException("Unknown button pressed");
+				}
+				
+				for(Entity curEntity : entities) {
+					JLabel curLabel = entityLabels.get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 				}
 			}
 		});
