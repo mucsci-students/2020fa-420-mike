@@ -19,6 +19,7 @@ public class Controller extends guiHelperMethods {
 
 	private static Classes classes = new Classes();
 	private static View view;
+	private static String file = null;
 	
 	public Controller (View.InterfaceType viewtype){
 		view = new View(viewtype);
@@ -39,7 +40,7 @@ public class Controller extends guiHelperMethods {
 		  }
 		});
 	}
-
+	
 	public static void saveAsListener(JButton saveAs) {
 		saveAs.addActionListener(new ActionListener()
 		{
@@ -56,7 +57,7 @@ public class Controller extends guiHelperMethods {
 	}
 
 	// Listen to any function calls
-	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
+	public void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -64,7 +65,7 @@ public class Controller extends guiHelperMethods {
 			  try {
 				  JTextField directory = new JTextField(40);
 				  
-				  // Create a panel containing a text field
+				  // Create a panel containing a drop-down box and text field
 				  JPanel inputFields = new JPanel();
 				  inputFields.add(new JLabel("Enter a Directory (optional): "));
 				  inputFields.add(directory);
@@ -77,11 +78,13 @@ public class Controller extends guiHelperMethods {
 					  centerPanel.removeAll();
 					  centerPanel.repaint();
 					  load(directory.getText(), classes);
-				  }  
+					  String[] x = directory.getText().split("/");
+					  file = x[x.length-1];
+				  }
+				  
 			  }  catch (Exception e1) {
 				  e1.printStackTrace();
 			  }
-			  
 			  for(Entity curEntity : classes.getEntities()) {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
