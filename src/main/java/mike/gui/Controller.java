@@ -83,25 +83,44 @@ public class Controller extends guiHelperMethods {
 			  directoryPath = directory.getText() + "\\" + fileName.getText();
 		  }  catch (IOException e1) {
 			  e1.printStackTrace();
+    }
+  }
+  
+	// Listen to any function calls
+	public void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
+		load.addActionListener(new ActionListener()
+		{
+		  public void actionPerformed(ActionEvent e)
+		  {
+			  try {
+				  JTextField directory = new JTextField(40);
+				  
+				  // Create a panel containing a drop-down box and text field
+				  JPanel inputFields = new JPanel();
+				  inputFields.add(new JLabel("Enter a Directory (optional): "));
+				  inputFields.add(directory);
+				  
+				  // Ask for input with inputFields
+				  int result = JOptionPane.showConfirmDialog(null, inputFields, "Load", JOptionPane.OK_CANCEL_OPTION);
+
+				  if (result == 0) {
+					  classes.empty();
+					  centerPanel.removeAll();
+					  centerPanel.repaint();
+					  load(directory.getText(), classes);
+					  String[] x = directory.getText().split("/");
+					  directoryPath = x[x.length-1];
+				  }
+				  
+			  }  catch (Exception e1) {
+				  e1.printStackTrace();
+			  }
+			  for(Entity curEntity : classes.getEntities()) {
+					JLabel curLabel = entityLabels.get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
+				}
 		  }
 	}
-	
-	// Listen to any function calls
-		public static void loadListener(JButton load) {
-			load.addActionListener(new ActionListener()
-			{
-			  public void actionPerformed(ActionEvent e)
-			  {
-				  String directory = System.getProperty("user.dir");
-				  try {
-					  directory += "\\uml.json";
-					   load(directory, classes);
-				  }  catch (Exception e1) {
-					  e1.printStackTrace();
-				  }
-			  }
-			});
-		}
 	
 	// Listen to any function calls
 	public static void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {

@@ -574,6 +574,13 @@ public class guiHelperMethods {
 						GUI.updateClass(className, userClasses.copyEntity(className));
 					}
 				}
+				
+				// Extract name of class, add to loadFile
+				Entity e = userClasses.getEntities().get(x);
+				Long location = (Long) objList.get(x).get("xPosition");
+				e.setXLocation(Math.toIntExact(location));
+				location = (Long) objList.get(x).get("yPostion");
+				e.setYLocation(Math.toIntExact(location));
 			}
 		}
 
