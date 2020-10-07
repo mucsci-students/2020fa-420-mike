@@ -32,7 +32,6 @@ import mike.datastructures.Relationship.Type;
 
 @SuppressWarnings("unchecked")
 public class guiHelperMethods {
-
 	public static void createClass(Classes classes) {
 		JTextField name = new JTextField(20);
 
@@ -604,7 +603,6 @@ public class guiHelperMethods {
 		}
 
 		JSONObject saveFile = new JSONObject();
-
 		saveFile = saveClasses(saveFile, userClasses);
 		saveFile = saveRelationships(saveFile, userClasses);
 
@@ -709,7 +707,6 @@ public class guiHelperMethods {
 				}
 			}
 			System.out.println(" ]");
-
 			// Prints out all of the methods
 			System.out.print("		methods: [ ");
 			for (int x = 0; x < curEntity.getMethods().size(); x++) {
