@@ -210,8 +210,8 @@ public class HelperMethods {
 
 	private static Type checkEnum (String command) {
 		switch(command){
-		case "ASSOCIATION":
-			return Type.ASSOCIATION;
+		case "REALIZATION":
+			return Type.REALIZATION;
 		case "AGGREGATION":
 			return Type.AGGREGATION;
 		case "COMPOSITION":

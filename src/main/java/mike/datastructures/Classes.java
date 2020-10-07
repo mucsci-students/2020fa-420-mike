@@ -33,6 +33,9 @@ public class Classes {
     // *********************************************************//
 
     public boolean createClass(String name) {
+        if(name == null){
+            return false;
+        }
         Entity e = new Entity(name);
         if (entities.contains(e)) {
             // Duplicate found.
