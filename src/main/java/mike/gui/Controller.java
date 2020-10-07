@@ -1,6 +1,5 @@
 package mike.gui;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -40,7 +39,7 @@ public class Controller extends guiHelperMethods {
 		  }
 		});
 	}
-	
+
 	public static void saveAsListener(JButton saveAs) {
 		saveAs.addActionListener(new ActionListener()
 		{
@@ -57,18 +56,36 @@ public class Controller extends guiHelperMethods {
 	}
 
 	// Listen to any function calls
-	public static void loadListener(JButton load) {
+	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  String directory = System.getProperty("user.dir");
 			  try {
-				  directory += "\\uml.json";
-				   load(directory, classes);
+				  JTextField directory = new JTextField(40);
+				  
+				  // Create a panel containing a text field
+				  JPanel inputFields = new JPanel();
+				  inputFields.add(new JLabel("Enter a Directory (optional): "));
+				  inputFields.add(directory);
+				  
+				  // Ask for input with inputFields
+				  int result = JOptionPane.showConfirmDialog(null, inputFields, "Load", JOptionPane.OK_CANCEL_OPTION);
+
+				  if (result == 0) {
+					  classes.empty();
+					  centerPanel.removeAll();
+					  centerPanel.repaint();
+					  load(directory.getText(), classes);
+				  }  
 			  }  catch (Exception e1) {
 				  e1.printStackTrace();
 			  }
+			  
+			  for(Entity curEntity : classes.getEntities()) {
+					JLabel curLabel = entityLabels.get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
+				}
 		  }
 		});
 	}

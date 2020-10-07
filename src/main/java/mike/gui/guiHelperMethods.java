@@ -22,6 +22,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import gui.View;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
@@ -528,51 +529,60 @@ public class guiHelperMethods {
 	}
 
 	// Takes all of the information from the classes in the JSON file,
-	// and inserts them to the currently running program
-	private static void loadClasses(Classes userClasses, JSONObject javaObj, JSONArray list,
+		// and inserts them to the currently running program
+		private static void loadClasses(Classes userClasses, JSONObject javaObj, JSONArray list,
 			ArrayList<JSONObject> objList) {
-		// Add class names and attributes from JSONArray list to loadFile
-		for (int x = 0; x < list.size(); ++x) {
+			// Add class names and attributes from JSONArray list to loadFile
+			for (int x = 0; x < list.size(); ++x) {
 
-			// Get class from JSONArray list, add to ArrayList objList (type conversions)
-			Object entity = list.get(x);
-			objList.add((JSONObject) entity);
+				// Get class from JSONArray list, add to ArrayList objList (type conversions)
+				Object entity = list.get(x);
+				objList.add((JSONObject) entity);
 
-			// Extract name of class, add to loadFile
-			String className = (String) objList.get(x).get("className");
-			userClasses.createClass(className);
+				// Extract name of class, add to loadFile
+				String className = (String) objList.get(x).get("className");
+				userClasses.createClass(className);
+				GUI.showClass(userClasses.copyEntity(className));
+				
+				// Extract all fields of associated class, add to loadFile
+				JSONArray classFields = (JSONArray) objList.get(x).get("fields");
+				for (int y = 0; y < classFields.size(); ++y) {
+					JSONObject field = (JSONObject) classFields.get(y);
+					String fieldName = field.get("fieldName").toString();
+					String fieldType = field.get("fieldType").toString();
 
-			// Extract all fields of associated class, add to loadFile
-			JSONArray classFields = (JSONArray) objList.get(x).get("fields");
-			for (int y = 0; y < classFields.size(); ++y) {
-				JSONObject field = (JSONObject) classFields.get(y);
-				String fieldName = field.get("fieldName").toString();
-				String fieldType = field.get("fieldType").toString();
-
-				userClasses.createField(className, fieldName, fieldType);
-			}
-
-			// Extract all methods of associated class, add to loadFile
-			JSONArray classMethods = (JSONArray) objList.get(x).get("methods");
-			for (int y = 0; y < classMethods.size(); ++y) {
-				JSONObject method = (JSONObject) classMethods.get(y);
-				String methodName = method.get("methodName").toString();
-				String methodType = method.get("methodType").toString();
-
-				userClasses.createMethod(className, methodName, methodType);
-
-				JSONArray methodParam = (JSONArray) method.get("Parameters");
-				for (int z = 0; z < methodParam.size(); ++z) {
-					JSONObject param = (JSONObject) methodParam.get(z);
-					String paramName = param.get("paramName").toString();
-					String paramType = param.get("paramType").toString();
-
-					userClasses.createParameter(className, methodName, paramName, paramType);
+					userClasses.createField(className, fieldName, fieldType);
+					GUI.updateClass(className, userClasses.copyEntity(className));
 				}
-			}
 
+				// Extract all methods of associated class, add to loadFile
+				JSONArray classMethods = (JSONArray) objList.get(x).get("methods");
+				for (int y = 0; y < classMethods.size(); ++y) {
+					JSONObject method = (JSONObject) classMethods.get(y);
+					String methodName = method.get("methodName").toString();
+					String methodType = method.get("methodType").toString();
+
+					userClasses.createMethod(className, methodName, methodType);
+					GUI.updateClass(className, userClasses.copyEntity(className));
+					JSONArray methodParam = (JSONArray) method.get("Parameters");
+					for (int z = 0; z < methodParam.size(); ++z) {
+						JSONObject param = (JSONObject) methodParam.get(z);
+						String paramName = param.get("paramName").toString();
+						String paramType = param.get("paramType").toString();
+
+						userClasses.createParameter(className, methodName, paramName, paramType);
+						GUI.updateClass(className, userClasses.copyEntity(className));
+					}
+				}
+				
+				// Extract name of class, add to loadFile
+				Entity e = userClasses.getEntities().get(x);
+				Long location = (Long) objList.get(x).get("xPosition");
+				e.setXLocation(Math.toIntExact(location));
+				location = (Long) objList.get(x).get("yPostion");
+				e.setYLocation(Math.toIntExact(location));
+			}
 		}
-	}
 
 	// Takes all of the information from the relationships in the JSON file,
 	// and inserts them into the currently running program
