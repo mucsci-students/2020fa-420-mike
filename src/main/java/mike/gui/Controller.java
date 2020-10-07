@@ -19,7 +19,7 @@ public class Controller extends guiHelperMethods {
 
 	private static Classes classes = new Classes();
 	private static View view;
-	private static String file = null;
+	private static String directoryPath = null;
 	
 	public Controller (View.InterfaceType viewtype){
 		view = new View(viewtype);
@@ -31,9 +31,15 @@ public class Controller extends guiHelperMethods {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  String directory = System.getProperty("user.dir");
 			  try {
-				  save("uml.json", directory, classes);
+				  if(directoryPath == null){
+					  saveWithInput();
+				  }
+				  else{
+					  String[] x = directoryPath.split("\\");
+					  String file = x[x.length-1];
+					  save(file, directoryPath, classes);
+				  }
 			  }  catch (IOException e1) {
 				  e1.printStackTrace();
 			  }
@@ -55,7 +61,31 @@ public class Controller extends guiHelperMethods {
 		  }
 		});
 	}
+	
+	private static void saveWithInput() {
+		try {	
+			  JTextField fileName = new JTextField(20);
+			  JTextField directory = new JTextField(40);
+			  
+			  // Create a panel containing a drop-down box and text field
+			  JPanel inputFields = new JPanel();
+		 	  inputFields.add(new JLabel("Enter a File name: "));
+			  inputFields.add(fileName);
+			  inputFields.add(new JLabel("Enter a Directory (optional): "));
+			  inputFields.add(directory);
+			  
+			  // Ask for input with inputFields
+			  int result = JOptionPane.showConfirmDialog(null, inputFields, "Save As", JOptionPane.OK_CANCEL_OPTION);
 
+			  if (result == 0) {
+				  save(fileName.getText(), directory.getText(), classes);
+			  }
+			  directoryPath = directory.getText() + "\\" + fileName.getText();
+		  }  catch (IOException e1) {
+			  e1.printStackTrace();
+    }
+  }
+  
 	// Listen to any function calls
 	public void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		load.addActionListener(new ActionListener()
@@ -79,7 +109,7 @@ public class Controller extends guiHelperMethods {
 					  centerPanel.repaint();
 					  load(directory.getText(), classes);
 					  String[] x = directory.getText().split("/");
-					  file = x[x.length-1];
+					  directoryPath = x[x.length-1];
 				  }
 				  
 			  }  catch (Exception e1) {
@@ -90,7 +120,6 @@ public class Controller extends guiHelperMethods {
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 				}
 		  }
-		});
 	}
 	
 	// Listen to any function calls

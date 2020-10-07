@@ -624,50 +624,53 @@ public class guiHelperMethods {
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
-	private static JSONObject saveClasses(JSONObject saveFile, Classes userClasses) {
-		JSONArray allClasses = new JSONArray();
+		private static JSONObject saveClasses(JSONObject saveFile, Classes userClasses) {
+			JSONArray allClasses = new JSONArray();
 
-		for (Entity entity : userClasses.getEntities()) {
-			JSONObject singleClass = new JSONObject();
+			for (Entity entity : userClasses.getEntities()) {
+				JSONObject singleClass = new JSONObject();
 
-			singleClass.put("className", entity.getName());
+				singleClass.put("className", entity.getName());
 
-			// Create an array of fields for the class
-			JSONArray fields = new JSONArray();
-			for (Field field : entity.getFields()) {
-				JSONObject oneField = new JSONObject();
-				oneField.put("fieldType", field.getType());
-				oneField.put("fieldName", field.getName());
-				fields.add(oneField);
-			}
-			singleClass.put("fields", fields);
-
-			// Create an array of methods for the class
-			JSONArray methods = new JSONArray();
-			for (Method method : entity.getMethods()) {
-				JSONObject oneMethod = new JSONObject();
-				oneMethod.put("methodType", method.getType());
-				oneMethod.put("methodName", method.getName());
-
-				JSONArray parameters = new JSONArray();
-				for (Parameter param : method.getParameters()) {
-					JSONObject oneParam = new JSONObject();
-					oneParam.put("paramType", param.getType());
-					oneParam.put("paramName", param.getName());
-					parameters.add(oneParam);
+				// Create an array of fields for the class
+				JSONArray fields = new JSONArray();
+				for (Field field : entity.getFields()) {
+					JSONObject oneField = new JSONObject();
+					oneField.put("fieldType", field.getType());
+					oneField.put("fieldName", field.getName());
+					fields.add(oneField);
 				}
-				oneMethod.put("Parameters", parameters);
-				methods.add(oneMethod);
+				singleClass.put("fields", fields);
+
+				// Create an array of methods for the class
+				JSONArray methods = new JSONArray();
+				for (Method method : entity.getMethods()) {
+					JSONObject oneMethod = new JSONObject();
+					oneMethod.put("methodType", method.getType());
+					oneMethod.put("methodName", method.getName());
+
+					JSONArray parameters = new JSONArray();
+					for (Parameter param : method.getParameters()) {
+						JSONObject oneParam = new JSONObject();
+						oneParam.put("paramType", param.getType());
+						oneParam.put("paramName", param.getName());
+						parameters.add(oneParam);
+					}
+					oneMethod.put("Parameters", parameters);
+					methods.add(oneMethod);
+				}
+				singleClass.put("methods", methods);
+				
+				singleClass.put("xPosition", entity.getXLocation());
+				singleClass.put("yPostion", entity.getYLocation());
+				
+				// Add class with it's name and attributes to the JSONArray allClasses
+				allClasses.add(singleClass);
 			}
-			singleClass.put("methods", methods);
+			saveFile.put("Classes", allClasses);
 
-			// Add class with it's name and attributes to the JSONArray allClasses
-			allClasses.add(singleClass);
+			return saveFile;
 		}
-		saveFile.put("Classes", allClasses);
-
-		return saveFile;
-	}
 
 	// Creates a JSONObject for the relationships and saves it to the saveFile
 	private static JSONObject saveRelationships(JSONObject saveFile, Classes userClasses) {
