@@ -113,8 +113,8 @@ public class GUI implements ViewInterface {
 		return new JTree(top);
 	}
 
-	public static JLabel showClass(Entity e) {
-		JLabel newview = new JLabel(entityToHTML(e));
+	public static JLabel showClass(Entity entity) {
+		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
@@ -122,7 +122,7 @@ public class GUI implements ViewInterface {
 		newview.setBorder(new CompoundBorder(border, margin));
 
 		centerPanel.add(newview);
-		entityLabels.put(e.getName(), newview);
+		entityLabels.put(entity.getName(), newview);
 
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
