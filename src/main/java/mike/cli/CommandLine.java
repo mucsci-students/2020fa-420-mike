@@ -5,15 +5,13 @@ import java.util.Scanner;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Relationship.Type;
+import mike.gui.ViewInterface;
 
-public class CommandLine extends HelperMethods {
+public class CommandLine extends HelperMethods implements ViewInterface {
+	private static Classes classes = new Classes();
 	
 	public CommandLine() {
-	}
-
-	public static void commandInterface() {
     // Initialize variables
-		Classes userClasses = new Classes();
 		boolean prompt = false;
 		String[] commandUsage = {
 			"\n  save <name>.json (optional <path>)", 
@@ -78,7 +76,7 @@ public class CommandLine extends HelperMethods {
 				case "save":				
 					if (commands.length == 2) {
 						try {
-						save(commands[1], System.getProperty("user.dir"), userClasses);
+						save(commands[1], System.getProperty("user.dir"), classes);
 						prompt = false;
 						}
 						catch (IOException e) {
@@ -86,7 +84,7 @@ public class CommandLine extends HelperMethods {
 						}
 					} else if (commands.length == 3) {
 						try {
-						save(commands[1], commands[2], userClasses);
+						save(commands[1], commands[2], classes);
 						prompt = false;
 						}
 						catch (IOException e) {
@@ -106,7 +104,7 @@ public class CommandLine extends HelperMethods {
 								prompt = savePrompt(prompt, cmdLine);
 							}
 							if (!prompt) {
-								load(commands[1], userClasses);
+								load(commands[1], classes);
 								prompt = false;
 							}
 						}
@@ -128,7 +126,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[2] + "\n");
 							break;
 						}
-						if (userClasses.createClass(commands[2])) {
+						if (classes.createClass(commands[2])) {
 							prompt = true;
 						} else {
 							System.out.println("\nCreate class failed. Make sure the class name doesn't already exist.\n");							
@@ -138,7 +136,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[3] + "\n");
 							break;
 						}
-						if (userClasses.createField(commands[2], commands[4], commands[3])) {
+						if (classes.createField(commands[2], commands[4], commands[3])) {
 							prompt = true;
 						} else {
 							System.out.println("\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");							
@@ -148,7 +146,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[4] + "\n");
 							break;
 						}
-						if (userClasses.createMethod(commands[2], commands[4], commands[3])) {
+						if (classes.createMethod(commands[2], commands[4], commands[3])) {
 							prompt = true;
 						} else {
 							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exist.\n");
@@ -158,7 +156,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[5] + "\n");
 							break;
 						}
-						if (userClasses.createRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
+						if (classes.createRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nCreate relationship failed. Make sure the classes exist, the relationship type is valid, and that it is not a duplicate.\n");							
@@ -168,7 +166,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
 							break;
 						} 
-						if (userClasses.createParameter(commands[2], commands[3], commands[5], commands[4])) {
+						if (classes.createParameter(commands[2], commands[3], commands[5], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nCreate parameter failed. Make sure the class exists, method exists, and the parameter does NOT exist.\n");
@@ -190,7 +188,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[7] + "\n");
 							break;
 						}			
-						if (userClasses.deleteClass(commands[2])) {
+						if (classes.deleteClass(commands[2])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete class failed. Make sure the class name exists.\n");							
@@ -200,7 +198,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[8] + "\n");
 							break;
 						}
-						if (userClasses.deleteField(commands[2], commands[3])) {
+						if (classes.deleteField(commands[2], commands[3])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete field failed. Make sure the field and class name exist.\n");							
@@ -210,7 +208,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[9] + "\n");
 							break;
 						}
-						if(userClasses.deleteMethod(commands[2], commands[3])) {
+						if(classes.deleteMethod(commands[2], commands[3])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete method failed. Make sure the method and class name exist.\n");							
@@ -220,7 +218,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
 							break;
 						}
-						if(userClasses.deleteRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
+						if(classes.deleteRelationship(checkEnum(commands[2].toUpperCase()), commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");							
@@ -230,7 +228,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commands[11] + "\n");
 							break;
 						}
-						if (userClasses.deleteParameter(commands[2], commands[3], commands[4])) {
+						if (classes.deleteParameter(commands[2], commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nDelete parameter failed. Make sure the class, method, and parameter all exist.\n");
@@ -251,7 +249,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[12] + "\n");
 							break;
 						}
-						if(userClasses.renameClass(commands[2], commands[3])) {
+						if(classes.renameClass(commands[2], commands[3])) {
 							prompt = true;
 						} else {
 							System.out.println("\nRename class failed. Make sure the class exists and the new class name doesn't exist.\n");
@@ -261,7 +259,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[13] + "\n");
 							break;
 						}
-						if(userClasses.renameField(commands[2], commands[3], commands[4])) {
+						if(classes.renameField(commands[2], commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nRename field failed. Make sure the class and field exist and the new field name doesn't exist.\n");
@@ -271,7 +269,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[14] + "\n");
 							break;
 						}
-						if(userClasses.renameMethod(commands[2], commands[3], commands[4])) {
+						if(classes.renameMethod(commands[2], commands[3], commands[4])) {
 							prompt = true;
 						} else {
 							System.out.println("\nRename method failed. Make sure the class and method exist and the new method name doesn't exist.\n");
@@ -281,7 +279,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[15] + "\n");
 							break;
 						}
-						if(userClasses.renameParameter(commands[2], commands[3], commands[4], commands[5])) {
+						if(classes.renameParameter(commands[2], commands[3], commands[4], commands[5])) {
 							prompt = true;
 						} else {
 							System.out.println("\nRename parameter failed. Make sure the class, method, and parameter all exist and the new parameter name does not exist.");
@@ -302,7 +300,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[16] + "\n");
 						} else {
 							System.out.println();
-							listClasses(userClasses);
+							listClasses(classes);
 							System.out.println();							
 						}
 					} else if (commands[1].equals("relationships")) {
@@ -310,7 +308,7 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[17] + "\n");
 						} else {
 							System.out.println();							
-							listRelationships(userClasses);
+							listRelationships(classes);
 							System.out.println();							
 						}
 					} else if (commands[1].equals("all")) {
@@ -318,9 +316,9 @@ public class CommandLine extends HelperMethods {
 							System.out.println(errorMessage + commandUsage[18] + "\n");
 						} else {
 							System.out.println();							
-							listClasses(userClasses);
+							listClasses(classes);
 							System.out.println();
-							listRelationships(userClasses);
+							listRelationships(classes);
 							System.out.println();							
 						}
 					} else {
@@ -331,13 +329,13 @@ public class CommandLine extends HelperMethods {
 				case "clear":
 					if (commands.length != 1) {
 						System.out.println(errorMessage + commandUsage[19] + "\n");
-					} else if (!userClasses.empty()) {
+					} else if (!classes.empty()) {
 						System.out.println("\nAre you sure you want to delete everything?");
 						System.out.println("Type 'yes' to delete, or 'no' to go back.");
 						boolean answer = savePrompt(true, cmdLine);
 							
 						if (!answer) {
-							userClasses.clear();
+							classes.clear();
 							prompt = true;	
 						}
 					}
