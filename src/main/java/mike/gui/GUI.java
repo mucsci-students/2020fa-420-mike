@@ -77,7 +77,7 @@ public class GUI implements ViewInterface {
 
 		Controller.saveListener(save);
 		Controller.saveAsListener(saveAs);
-		Controller.loadListener(load);
+		Controller.loadListener(load, entityLabels, centerPanel);
 		Controller.treeListener(tree, frame, entityLabels, centerPanel);
 	}
 
