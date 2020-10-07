@@ -141,6 +141,8 @@ public class GUI implements ViewInterface {
 				if (e.getSource() == newview) {
 					JComponent jc = (JComponent) e.getSource();
 					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
+					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
+					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
 				}
 			}
 		});
@@ -152,8 +154,11 @@ public class GUI implements ViewInterface {
 
 	public static void updateClass(String oldname, Entity e) {
 		JLabel classObj = entityLabels.remove(oldname);
+		centerPanel.remove(classObj);
 		classObj.setText(entityToHTML(e));
 		entityLabels.put(e.getName(), classObj);
+		centerPanel.add(classObj);
+		centerPanel.validate();
 	}
 
 	public static void deleteClass(String name) {

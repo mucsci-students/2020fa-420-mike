@@ -133,8 +133,7 @@ public class Controller extends guiHelperMethods {
 				}
 				for(Entity curEntity : entities) {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
-					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
-				}
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());	
 			}
 		});
 	}

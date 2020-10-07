@@ -23,5 +23,4 @@ public class View {
 			viewinterface = new CommandLine();
 		}
 	}
-  
 }
