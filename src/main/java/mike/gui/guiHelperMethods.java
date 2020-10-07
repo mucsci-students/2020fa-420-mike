@@ -250,7 +250,7 @@ public class guiHelperMethods {
 		JComboBox<String> methodList = findStuff(classes, finaleList.getSelectedItem().toString(), "Method", false);
 		JTextField type = new JTextField(20);
 		JTextField name = new JTextField(20);
-		
+
 		// Create a panel containing a drop-down box and text field
 		JPanel inputFields2 = new JPanel();
 		inputFields2.add(new JLabel("Choose a Method: "));
@@ -732,6 +732,7 @@ public class guiHelperMethods {
 			System.out.println(" ]");
 		}
 	}
+
 	// Lists all of the relationships and the classes they are pointing to
 	public static void listRelationships(Classes userClasses) {
 		System.out.println("Relationships:");
