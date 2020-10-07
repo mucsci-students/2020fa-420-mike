@@ -32,6 +32,7 @@ import mike.datastructures.Relationship.Type;
 
 @SuppressWarnings("unchecked")
 public class guiHelperMethods {
+
 	public static void createClass(Classes classes) {
 		JTextField name = new JTextField(20);
 
@@ -45,7 +46,7 @@ public class guiHelperMethods {
 
 		if (result == 0) {
 			classes.createClass(name.getText());
-			View.showClass(classes.copyEntity(name.getText()));
+			GUI.showClass(classes.copyEntity(name.getText()));
 		}
 	}
 
@@ -64,7 +65,7 @@ public class guiHelperMethods {
 		if (result == 0) {
 			String oldname = list.getSelectedItem().toString();
 			classes.renameClass(oldname, rename.getText());
-			View.updateClass(oldname, classes.copyEntity(rename.getText()));
+			GUI.updateClass(oldname, classes.copyEntity(rename.getText()));
 		}
 	}
 
@@ -79,7 +80,7 @@ public class guiHelperMethods {
 		if (result == 0) {
 			String name = list.getSelectedItem().toString();
 			classes.deleteClass(name);
-			View.deleteClass(name);
+			GUI.deleteClass(name);
 		}
 	}
 
@@ -173,7 +174,7 @@ public class guiHelperMethods {
 			} else {
 				classes.createMethod(entityname, name.getText(), type.getText());
 			}
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -206,7 +207,7 @@ public class guiHelperMethods {
 				classes.renameMethod(entityname, List2.getSelectedItem().toString(), rename.getText());
 			}
 
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -236,7 +237,7 @@ public class guiHelperMethods {
 			} else {
 				classes.deleteMethod(entityname, List2.getSelectedItem().toString());
 			}
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -266,7 +267,7 @@ public class guiHelperMethods {
 			String entityname = list.getSelectedItem().toString();
 			classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText());
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -324,7 +325,7 @@ public class guiHelperMethods {
 			String entityname = list.getSelectedItem().toString();
 			classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString(), name.getText());
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -380,7 +381,7 @@ public class guiHelperMethods {
 			String entityname = list.getSelectedItem().toString();
 			classes.deleteParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString());
-			View.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -603,6 +604,7 @@ public class guiHelperMethods {
 		}
 
 		JSONObject saveFile = new JSONObject();
+
 		saveFile = saveClasses(saveFile, userClasses);
 		saveFile = saveRelationships(saveFile, userClasses);
 
@@ -707,6 +709,7 @@ public class guiHelperMethods {
 				}
 			}
 			System.out.println(" ]");
+
 			// Prints out all of the methods
 			System.out.print("		methods: [ ");
 			for (int x = 0; x < curEntity.getMethods().size(); x++) {

@@ -1,5 +1,6 @@
 package mike.gui;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -13,16 +14,19 @@ import java.util.HashMap;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 
+import mike.gui.guiHelperMethods;
+
 public class Controller extends guiHelperMethods {
 
-	private static Classes classes;
-
-	public Controller (Classes classes){
-		Controller.classes = classes;
+	private static Classes classes = new Classes();
+	private static View view;
+	
+	public Controller (View.InterfaceType viewtype){
+		view = new View(viewtype);
 	}
-   
+	
 	// Listen to any function calls
-	public void saveListener(JButton save) {
+	public static void saveListener(JButton save) {
 		save.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -37,7 +41,7 @@ public class Controller extends guiHelperMethods {
 		});
 	}
 	
-	public void saveAsListener(JButton saveAs) {
+	public static void saveAsListener(JButton saveAs) {
 		saveAs.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -53,7 +57,7 @@ public class Controller extends guiHelperMethods {
 	}
 
 	// Listen to any function calls
-	public void loadListener(JButton load) {
+	public static void loadListener(JButton load) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -70,7 +74,7 @@ public class Controller extends guiHelperMethods {
 	}
 	
 	// Listen to any function calls
-	public void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
+	public static void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -129,8 +133,8 @@ public class Controller extends guiHelperMethods {
 				}
 				for(Entity curEntity : entities) {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
-					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
-				}
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
+				}	
 			}
 		});
 	}
