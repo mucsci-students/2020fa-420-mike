@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -504,12 +506,12 @@ public class guiHelperMethods {
 	}
 
 	// Main load function. Calls loadClasses and loadRelationships
-	public static void load(String userPath, Classes userClasses)
+	public static void load(Path userPath, Classes userClasses)
 			throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
 		userClasses.clear();
-
-		File directory = new File(userPath);
+		
+		File directory = new File(userPath.toString());
 
 		// Parse the JSON file and get an array of the classes
 		Object obj = new JSONParser().parse(new FileReader(directory));
@@ -605,22 +607,13 @@ public class guiHelperMethods {
 	}
 
 	// Main save function. Calls saveClasses and saveRelationships
-	public static void save(String filename, String directory, Classes userClasses) throws IOException {
-		File newFile = new File(directory);
-		// If directory given does not exist, put in user.dir
-		if (!newFile.isDirectory()) {
-			directory = System.getProperty("user.dir");
-			System.out.println("Directory does not exist.");
-		}
-
+	public static void save(Path directory, Classes userClasses) throws IOException {
 		JSONObject saveFile = new JSONObject();
 
 		saveFile = saveClasses(saveFile, userClasses);
 		saveFile = saveRelationships(saveFile, userClasses);
 
-		directory += ("\\" + filename);
 		writeFile(saveFile, directory);
-		System.out.println("File saved to:" + directory);
 	}
 
 	// Creates a JSONObject for the classes and saves it to the saveFile
@@ -694,10 +687,10 @@ public class guiHelperMethods {
 	}
 
 	// Creates a file if it does not exist and writes saveFile to the file
-	private static void writeFile(JSONObject saveFile, String directory) throws IOException {
-		File fileDirectory = new File(directory);
+	private static void writeFile(JSONObject saveFile, Path directory) throws IOException {
+		File fileDirectory = new File(directory.toString());
 		fileDirectory.createNewFile();
-
+		
 		// Converts JSONObject and adds it to file
 		String fullJSONString = saveFile.toString();
 		FileWriter myWriter = new FileWriter(fileDirectory);
