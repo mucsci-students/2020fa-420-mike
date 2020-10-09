@@ -1,6 +1,8 @@
 package mike.cli;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 import mike.datastructures.Classes;
@@ -76,16 +78,20 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 				case "save":				
 					if (commands.length == 2) {
 						try {
-						save(commands[1], System.getProperty("user.dir"), classes);
-						prompt = false;
+							Path path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);
+							save(path, classes);
+							System.out.println("File saved at: " + path.toString());
+							prompt = false;
 						}
 						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
 						}
 					} else if (commands.length == 3) {
 						try {
-						save(commands[1], commands[2], classes);
-						prompt = false;
+							Path path = Paths.get(commands[2] + "\\" + commands[1]);
+							save(path, classes);
+							System.out.println("File saved at: " + path.toString());
+							prompt = false;
 						}
 						catch (IOException e) {
 							System.out.println("Failed to parse directory. Exiting.");
@@ -104,7 +110,8 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 								prompt = savePrompt(prompt, cmdLine);
 							}
 							if (!prompt) {
-								load(commands[1], classes);
+								Path path = Paths.get(commands[1]);
+								load(path, classes);
 								prompt = false;
 							}
 						}
