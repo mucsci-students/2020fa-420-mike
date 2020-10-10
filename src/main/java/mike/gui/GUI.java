@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,9 +77,9 @@ public class GUI implements ViewInterface {
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 		frame.setVisible(true);
 
-		Controller.saveListener(save);
-		Controller.saveAsListener(saveAs);
-		Controller.loadListener(load);
+		Controller.saveListener(save, frame);
+		Controller.saveAsListener(saveAs, frame);
+		Controller.loadListener(load, entityLabels, centerPanel);
 		Controller.treeListener(tree, frame, entityLabels, centerPanel);
 	}
 
@@ -191,7 +193,7 @@ public class GUI implements ViewInterface {
 				if (parameters.size() > 1) {
 					html += parameters.get(0).getType() + " " + parameters.get(0).getName();
 					for (int i = 1; i < parameters.size(); ++i) {
-						html += ", " + parameters.get(i).getType() + " " + parameters.get(0).getName();
+						html += ", " + parameters.get(i).getType() + " " + parameters.get(i).getName();
 					}
 				}
 				html += ")<br/>";

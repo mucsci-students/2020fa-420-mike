@@ -1,13 +1,19 @@
 package mike.gui;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,20 +26,28 @@ public class Controller extends guiHelperMethods {
 
 	private static Classes classes = new Classes();
 	private static View view;
+	//private static String directoryPath = System.getProperty("user.dir");
+
+	private static Path path = null;
 	
 	public Controller (View.InterfaceType viewtype){
 		view = new View(viewtype);
 	}
+		
 	
 	// Listen to any function calls
-	public static void saveListener(JButton save) {
+	public static void saveListener(JButton save, JFrame frame) {
 		save.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  String directory = System.getProperty("user.dir");
 			  try {
-				  save("uml.json", directory, classes);
+				  if(path == null){
+					  saveWithInput(frame);
+				  }
+				  else{
+					  save(path, classes);
+				  }
 			  }  catch (IOException e1) {
 				  e1.printStackTrace();
 			  }
@@ -41,33 +55,94 @@ public class Controller extends guiHelperMethods {
 		});
 	}
 	
-	public static void saveAsListener(JButton saveAs) {
+	public static void saveAsListener(JButton saveAs, JFrame frame) {
 		saveAs.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  String directory = System.getProperty("user.dir");
-			  try {	
-				  save("uml.json", directory, classes);
-			  }  catch (IOException e1) {
-				  e1.printStackTrace();
-			  }
+			  saveWithInput(frame);
 		  }
 		});
 	}
-
+	
+	private static void saveWithInput(JFrame frame) {
+		try {	
+			  JTextField fileName = new JTextField(20);
+			  JTextField directory = new JTextField(40);
+			  
+			  // Create a panel containing a drop-down box and text field
+			  JPanel inputFields = new JPanel();
+		 	  inputFields.add(new JLabel("Enter a File name: "));
+			  inputFields.add(fileName);
+			  inputFields.add(new JLabel("Enter a Directory (optional): "));
+			  inputFields.add(directory);
+			  
+			  // Ask for input with inputFields
+			  int result = JOptionPane.showConfirmDialog(null, inputFields, "Save As", JOptionPane.OK_CANCEL_OPTION);
+			  if (result == 0) {
+				  File file = new File(directory.getText() + "\\" + fileName.getText());
+				  if(file.isDirectory() && file.isAbsolute()){
+					  path = Paths.get(file.toString());
+				  } else {
+					  path = Paths.get(System.getProperty("user.dir") + directory.getText() + "\\" + fileName.getText());
+					  file = new File(path.getParent().toString());
+					  if(!file.isDirectory()){  
+						  JOptionPane.showMessageDialog(frame, "Directory does not exist.  File saved to uml directory.");
+					  }
+				  }
+				      
+				  save(path, classes);
+			  }
+			 
+			  //file. = fileName.getText();
+		  }  catch (IOException e1) {
+			  e1.printStackTrace();
+    }
+  }
+  
+	
 	// Listen to any function calls
-	public static void loadListener(JButton load) {
+	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  String directory = System.getProperty("user.dir");
 			  try {
-				  directory += "\\uml.json";
-				   load(directory, classes);
+				  JTextField directory = new JTextField(40);
+				  
+				  // Create a panel containing a drop-down box and text field
+				  JPanel inputFields = new JPanel();
+				  inputFields.add(new JLabel("Enter a Directory: "));
+				  inputFields.add(directory);
+				  
+				  // Ask for input with inputFields
+				  int result = JOptionPane.showConfirmDialog(null, inputFields, "Load", JOptionPane.OK_CANCEL_OPTION);
+
+				  if (result == 0) {
+					  classes.empty();
+					  centerPanel.removeAll();
+					  centerPanel.repaint();
+					  
+					  File file = new File(directory.getText());
+					  if(file.isAbsolute()){
+						  path = Paths.get(directory.getText());
+					  }
+					  else {
+						  path = Paths.get(System.getProperty("user.dir") + "\\" + directory.getText());  
+					  }
+					  
+					  load(path, classes);
+					  
+					  centerPanel.validate();
+				  }
+				 
+				  
 			  }  catch (Exception e1) {
 				  e1.printStackTrace();
+			  }
+			  for(Entity curEntity : classes.getEntities()) {
+					JLabel curLabel = entityLabels.get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 			  }
 		  }
 		});
@@ -134,8 +209,9 @@ public class Controller extends guiHelperMethods {
 				for(Entity curEntity : entities) {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
-				}	
+				}
 			}
 		});
 	}
+
 }
