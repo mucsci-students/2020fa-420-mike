@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,12 +25,10 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Parameter;
-import mike.gui.View.InterfaceType;
 
 public class GUI implements ViewInterface {
 	// Global Variables
@@ -79,8 +75,9 @@ public class GUI implements ViewInterface {
 
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
-		Controller.loadListener(load, entityLabels, centerPanel);
+		Controller.loadListener(load, entityLabels, centerPanel, frame);
 		Controller.treeListener(tree, frame, entityLabels, centerPanel);
+		Controller.exitListener(frame);
 	}
 
 	private static JTree createTree() {

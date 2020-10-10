@@ -1,9 +1,6 @@
 package mike.gui;
 
-import mike.cli.HelperMethods;
-import mike.datastructures.*;
 import mike.cli.*;
-import mike.gui.ViewInterface;
 
 public class View {
 
