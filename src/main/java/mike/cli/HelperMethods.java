@@ -13,7 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 import mike.datastructures.*;
-import mike.datastructures.Relationship.Type;
+import mike.cli.CommandLine;
 import mike.gui.GUI;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class HelperMethods {
 					Entity e = userClasses.getEntities().get(x);
 					Long location = (Long) objList.get(x).get("xPosition");
 					e.setXLocation(Math.toIntExact(location));
-					location = (Long) objList.get(x).get("yPostion");
+					location = (Long) objList.get(x).get("yPosition");
 					e.setYLocation(Math.toIntExact(location));
 				}
 			}
@@ -115,10 +115,10 @@ public class HelperMethods {
 				objList.add((JSONObject) entity);
 
 				// Extract name of relationship and classes, add to loadFile
-				Type relationName = (Type) objList.get(x).get("relationName");
+				String relationName = (String) objList.get(x).get("relationName");
 				String classOne = (String) objList.get(x).get("ClassOne");
 				String classTwo = (String) objList.get(x).get("ClassTwo");
-				userClasses.createRelationship(relationName, classOne, classTwo);
+				userClasses.createRelationship(CommandLine.checkEnum(relationName.toUpperCase()), classOne, classTwo);
 			}
 		}
 
@@ -171,7 +171,7 @@ public class HelperMethods {
 					singleClass.put("methods", methods);
 					
 					singleClass.put("xPosition", entity.getXLocation());
-					singleClass.put("yPostion", entity.getYLocation());
+					singleClass.put("yPosition", entity.getYLocation());
 					
 					// Add class with it's name and attributes to the JSONArray allClasses
 					allClasses.add(singleClass);
@@ -189,7 +189,7 @@ public class HelperMethods {
 				// Create JSONObject for a single relationship
 				JSONObject relationObj = new JSONObject();
 
-				relationObj.put("relationName", relation.getName());
+				relationObj.put("relationName", relation.getName().toString());
 				relationObj.put("ClassOne", relation.getFirstClass());
 				relationObj.put("ClassTwo", relation.getSecondClass());
 
