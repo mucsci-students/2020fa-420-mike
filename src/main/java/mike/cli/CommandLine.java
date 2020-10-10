@@ -1,5 +1,6 @@
 package mike.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,7 +79,14 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 				case "save":				
 					if (commands.length == 2) {
 						try {
-							Path path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);
+							File file = new File(commands[1]);
+							Path path;
+							if(file.isAbsolute()){
+								path = Paths.get(commands[1]);
+							}
+							else {
+								path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
+							}
 							save(path, classes);
 							System.out.println("File saved at: " + path.toString());
 							prompt = false;
@@ -88,7 +96,14 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						}
 					} else if (commands.length == 3) {
 						try {
-							Path path = Paths.get(commands[2] + "\\" + commands[1]);
+							File file = new File(commands[2] + "\\" + commands[1]);
+							Path path;
+							if(file.isAbsolute()){
+								path = Paths.get(commands[2] + "\\" + commands[1]);
+							}
+							else {
+								path = Paths.get(System.getProperty("user.dir") + "\\" + commands[2] + "\\" + commands[1]);  
+							}
 							save(path, classes);
 							System.out.println("File saved at: " + path.toString());
 							prompt = false;
@@ -110,7 +125,15 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 								prompt = savePrompt(prompt, cmdLine);
 							}
 							if (!prompt) {
-								Path path = Paths.get(commands[1]);
+								File file = new File(commands[1]);
+								Path path;
+								if(file.isAbsolute()){
+									path = Paths.get(commands[1]);
+								}
+								else {
+									path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
+								}
+								
 								load(path, classes);
 								prompt = false;
 							}
