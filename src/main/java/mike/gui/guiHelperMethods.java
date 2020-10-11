@@ -420,7 +420,7 @@ public class guiHelperMethods extends HelperMethods {
 		JPanel inputFields3 = new JPanel();
 		inputFields3.add(new JLabel("Choose a Parameter:"));
 		inputFields3.add(parameterList);
-		enterInput("Enter a Parameter name: ", inputFields2, name);
+		enterInput("Enter a Parameter name: ", inputFields3, name);
 
 		// Ask for input with inputFields
 		int result3 = JOptionPane.showConfirmDialog(null, inputFields3, "Rename Parameter",
