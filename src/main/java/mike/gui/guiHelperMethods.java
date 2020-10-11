@@ -153,13 +153,6 @@ public class guiHelperMethods extends HelperMethods {
 				listTwo.removeItem(currRelationship.getSecondClass());
 		    }
 		}
-		            
-		// Remove the selected class from listTwo
-		for(int x = 0; x < numClasses; ++x){
-			if((list.getItemAt(x).toString()).equals(selectedClass)) {
-				listTwo.removeItem(list.getSelectedItem());
-			}
-		}
 					
 		// Check if creating a relationship is valid
 		if(listTwo.getItemCount() == 0) {
