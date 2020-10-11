@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
+import mike.gui.guiHelperMethods;
 
 public class Controller extends guiHelperMethods {
 
@@ -251,14 +252,14 @@ public class Controller extends guiHelperMethods {
 				/* React to the node selection. */
 				switch(node.toString()) {
 					case "Create Class" : createClass(classes); break;
-					case "Rename Class" : renameClass(classes, list); break;
-					case "Delete Class" : deleteClass(classes, list); break;
-					case "Create Relationship" : createOrDeleteRelation(classes, list, node.toString(), entityStrings); break;
-					case "Delete Relationship" : createOrDeleteRelation(classes, list, node.toString(), entityStrings); break;
-					case "Create Field" : createFieldsOrMethods(classes, list, "Field"); break;
+					case "Rename Class" : renameClass(classes, entityStrings, frame); break;
+					case "Delete Class" : deleteClass(classes, entityStrings, frame); break;
+					case "Create Relationship" : createRelation(classes,  entityStrings, frame); break;
+					case "Delete Relationship" : deleteRelation(classes, entityStrings, frame); break;
+					case "Create Field" : createFieldsOrMethods(classes, entityStrings, "Field", frame); break;
 					case "Rename Field" : renameFieldsOrMethods(classes, list, frame, "Field"); break;
 					case "Delete Field" : deleteFieldsOrMethods(classes, list, frame, "Field"); break;
-					case "Create Method" : createFieldsOrMethods(classes, list, "Method"); break;
+					case "Create Method" : createFieldsOrMethods(classes, entityStrings, "Method", frame); break;
 					case "Rename Method" : renameFieldsOrMethods(classes, list, frame, "Method"); break;
 					case "Delete Method" : deleteFieldsOrMethods(classes, list, frame, "Method"); break;
 					case "Create Parameter" : createParameter(classes, list, frame); break;

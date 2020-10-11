@@ -16,9 +16,9 @@ import mike.cli.HelperMethods;
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
+import mike.datastructures.Relationship;
 import mike.datastructures.Relationship.Type;
 
-//@SuppressWarnings("unchecked")
 public class guiHelperMethods extends HelperMethods {
 
 	public static void createClass(Classes classes) {
@@ -38,10 +38,16 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
-	public static void renameClass(Classes classes, JComboBox<String> list) {
+	public static void renameClass(Classes classes, String[] entityStrings, JFrame frame) {
+		if(entityStrings.length == 0) {
+			JOptionPane.showMessageDialog(frame, "There are no classes to rename.");
+			return;
+		}
+		// Create drop-down box of all classes, and a text box to rename the class
+		JComboBox<String> list = new JComboBox<>(entityStrings);
 		JTextField rename = new JTextField(20);
 
-		// Create a panel containing a drop-down box and text field
+		// Create a panel to display drop-down and text box
 		JPanel inputFields = new JPanel();
 		inputFields.add(new JLabel("Choose a Class: "));
 		inputFields.add(list);
@@ -57,8 +63,16 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
-	public static void deleteClass(Classes classes, JComboBox<String> list) {
-		// Create a panel containing a drop-down box
+	public static void deleteClass(Classes classes, String[] entityStrings, JFrame frame) {
+		if(entityStrings.length == 0) {
+			JOptionPane.showMessageDialog(frame, "There are no classes to delete.");
+			return;
+		}
+		
+		// Create drop-down box of all classes
+		JComboBox<String> list = new JComboBox<>(entityStrings);
+		
+		// Create a panel to display drop-down box
 		JPanel inputFields = new JPanel();
 		inputFields.add(list);
 
@@ -71,9 +85,16 @@ public class guiHelperMethods extends HelperMethods {
 			GUI.deleteClass(name);
 		}
 	}
-
-	public static void createOrDeleteRelation(Classes classes, JComboBox<String> list, String function,
-			String[] entityStrings) {
+	
+	public static void createRelation(Classes classes, String[] entityStrings, JFrame frame) {
+		if (classes.getEntities().size() < 2) {
+			JOptionPane.showMessageDialog(frame,  "There are not enough classes to create a relationship.");
+			return;
+		}
+		
+		// Create drop-down box of all the classes
+		JComboBox<String> list = new JComboBox<>(entityStrings);
+		// Create the radio buttons for selecting a relationship	
 		JRadioButton composition = new JRadioButton("Composition");
 		composition.setActionCommand("a");
 		composition.setSelected(true);
@@ -87,38 +108,72 @@ public class guiHelperMethods extends HelperMethods {
 		JRadioButton inheritance = new JRadioButton("Inheritance");
 		inheritance.setActionCommand("d");
 
-		// Group the radio buttons.
+		// Group the radio buttons (Only one of these may be selected at a time)
 		ButtonGroup group = new ButtonGroup();
 		group.add(composition);
 		group.add(aggregation);
 		group.add(realization);
 		group.add(inheritance);
 
-		// Create a panel containing a drop-down box
+		// Create a panel to display type selection and drop-down of all classes
 		JPanel inputFields = new JPanel();
+		
+		// Construct visual components of the first menu of creating a relationship.
+		//	Contains radio buttons of relationship type, and the list of all classes
 		inputFields.add(new JLabel("Choose the Relationship Type: "));
 		inputFields.add(composition);
 		inputFields.add(aggregation);
 		inputFields.add(realization);
 		inputFields.add(inheritance);
+				
 		inputFields.add(Box.createHorizontalStrut(15)); // a spacer
-
 		inputFields.add(new JLabel("Choose a Class 1: "));
 		inputFields.add(list);
-		inputFields.add(Box.createHorizontalStrut(15)); // a spacer
-		JComboBox<String> list2 = new JComboBox<>(entityStrings);
-		inputFields.add(new JLabel("Choose a Class 2: "));
-		inputFields.add(list2);
-
-		// Ask for input with inputFields
-		int result = -1;
-		if (function.equals("Create Relationship")) {
-			result = JOptionPane.showConfirmDialog(null, inputFields, "Create Relationship",
-					JOptionPane.OK_CANCEL_OPTION);
-		} else if (function.equals("Delete Relationship")) {
-			result = JOptionPane.showConfirmDialog(null, inputFields, "Delete Relationship",
-					JOptionPane.OK_CANCEL_OPTION);
+					
+		// User confirmation for relationship type and class one
+		int selection = JOptionPane.showConfirmDialog(null, inputFields, "Create Relationship",
+				JOptionPane.OK_CANCEL_OPTION);
+		if(selection != 0) {
+			return;
 		}
+					
+		inputFields.removeAll();
+			
+		JComboBox<String>listTwo = new JComboBox<>(entityStrings);
+		ArrayList<Relationship> allRelationships = classes.getRelationships();
+		String selectedClass = list.getSelectedItem().toString();
+		int numClasses = listTwo.getItemCount();
+					
+		// Remove classes from listTwo based on existing relationships
+		// Find all relationships that have use the selected class as class 1...
+		for (int x = 0; x < allRelationships.size(); ++x) {
+			if (selectedClass.equals(allRelationships.get(x).getFirstClass())) {
+				Relationship currRelationship = allRelationships.get(x);
+		    	// ... and remove the second class of of those relationships from the drop-down box of listTwo
+				listTwo.removeItem(currRelationship.getSecondClass());
+		    }
+		}
+		            
+		// Remove the selected class from listTwo
+		for(int x = 0; x < numClasses; ++x){
+			if((list.getItemAt(x).toString()).equals(selectedClass)) {
+				listTwo.removeItem(list.getSelectedItem());
+			}
+		}
+					
+		// Check if creating a relationship is valid
+		if(listTwo.getItemCount() == 0) {
+			JOptionPane.showMessageDialog(frame, "There are no possible relationships to create with this class.");
+			return;
+		}
+					
+		// Add display selection for class 2
+		inputFields.add(new JLabel("Choose a Class 2: "));
+		inputFields.add(listTwo);
+		
+		// Actually display the stuff
+		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Relationship", 
+				JOptionPane.OK_CANCEL_OPTION);
 
 		Type name;
 		if (composition.isSelected()) {
@@ -132,15 +187,66 @@ public class guiHelperMethods extends HelperMethods {
 		}
 
 		if (result == 0) {
-			if (function.equals("Create Relationship")) {
-				classes.createRelationship(name, list.getSelectedItem().toString(), list2.getSelectedItem().toString());
-			} else {
-				classes.deleteRelationship(name, list.getSelectedItem().toString(), list2.getSelectedItem().toString());
+			classes.createRelationship(name, list.getSelectedItem().toString(), listTwo.getSelectedItem().toString());
+		}
+	}
+	
+	public static void deleteRelation(Classes classes, String[] entityStrings, JFrame frame) {
+		if (classes.getRelationships().size() == 0) {
+			JOptionPane.showMessageDialog(frame,  "There are no relationships to delete.");
+			return;
+		}
+		// Create a panel containing a drop-down box to select the first class of the relationship
+		JPanel inputFields = new JPanel();
+		// Used to select second class of relationship
+		ArrayList<Relationship> allRelationships = classes.getRelationships();
+		
+		inputFields.add(new JLabel("Choose a Relationship: "));
+		
+		// Create String array holding all existing relationships
+		//	Use a common string between class one and class two for easier parsing
+		String[] relationStrings = new String[allRelationships.size()];
+		for(int x = 0; x < allRelationships.size(); ++x) {
+			relationStrings[x] = allRelationships.get(x).getFirstClass() + "--" + allRelationships.get(x).getSecondClass();
+		}
+		
+		// Add String array to combo box for user selection
+		JComboBox<String> listTwo = new JComboBox<>(relationStrings);
+		inputFields.add(listTwo);
+		inputFields.add(Box.createHorizontalStrut(15)); // a spacer
+		
+		int result = JOptionPane.showConfirmDialog(null, inputFields, "Delete Relationship",
+				JOptionPane.OK_CANCEL_OPTION);
+		
+		if (result == 0) {
+			// Parse user selected relationship into its two classes
+			String[] deleteRelation = listTwo.getSelectedItem().toString().split("--");
+			String class1 = deleteRelation[0];
+			String class2 = deleteRelation[1];
+			Type targetType = null;
+			
+			// Find type of relationship between those classes
+			for(Relationship currRelation : classes.getRelationships()) {
+				if (class1.equals(currRelation.getFirstClass()) && class2.equals(currRelation.getSecondClass())) {
+					targetType = currRelation.getName();
+				}
 			}
+			classes.deleteRelationship(targetType, class1, class2);
 		}
 	}
 
-	public static void createFieldsOrMethods(Classes classes, JComboBox<String> list, String attribute) {
+	// Fields and methods were combined into one function due to striking similarity
+	//	in the underlying implementation.
+	public static void createFieldsOrMethods(Classes classes, String[] entityStrings, String attribute, JFrame frame) {
+		if(classes.getEntities().size() == 0) {
+			JOptionPane.showMessageDialog(frame, "There are no classes to create a " + attribute);
+			return;
+		}
+		
+		// Create drop-down box containing the list of all classes
+		JComboBox<String> list = new JComboBox<>(entityStrings);
+		
+		// Create text boxes for taking user input
 		JTextField type = new JTextField(20);
 		JTextField name = new JTextField(20);
 
@@ -155,6 +261,7 @@ public class guiHelperMethods extends HelperMethods {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
+		// Perform the proper creation
 		if (result == 0) {
 			String entityname = list.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
@@ -166,14 +273,18 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
+	// Fields and methods were combined into one function due to striking similarity
+	//	in the underlying implementation.
 	public static void renameFieldsOrMethods(Classes classes, JComboBox<String> list, JFrame frame, String attribute) {
+		
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
 				"Rename " + attribute);
 		if (finaleList == null) {
 			return;
 		}
-		// Create Drop-down box of existing classes
+		
+		// Create drop-down box of existing classes
 		JComboBox<String> List2 = findStuff(classes, finaleList.getSelectedItem().toString(), attribute, false);
 		JTextField rename = new JTextField(20);
 
@@ -187,6 +298,7 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Rename " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
+		// Perform the proper renaming
 		if (result2 == 0) {
 			String entityname = list.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
@@ -199,6 +311,8 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
+	// Fields and methods were combined into one function due to striking similarity
+	//	in the underlying implementation.
 	public static void deleteFieldsOrMethods(Classes classes, JComboBox<String> list, JFrame frame, String attribute) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
@@ -206,7 +320,7 @@ public class guiHelperMethods extends HelperMethods {
 		if (finaleList == null) {
 			return;
 		}
-		// Create Drop-down box of existing classes
+		// Create drop-down box of existing classes
 		JComboBox<String> List2 = findStuff(classes, finaleList.getSelectedItem().toString(), attribute, false);
 
 		// Create a panel containing a drop-down box and text field
@@ -218,6 +332,7 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Delete " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
+		// Perform the proper deletion
 		if (result2 == 0) {
 			String entityname = list.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
@@ -235,7 +350,7 @@ public class guiHelperMethods extends HelperMethods {
 		if (finaleList == null) {
 			return;
 		}
-		// Create Drop-down box of existing classes
+		// Create drop-down box of existing classes
 		JComboBox<String> methodList = findStuff(classes, finaleList.getSelectedItem().toString(), "Method", false);
 		JTextField type = new JTextField(20);
 		JTextField name = new JTextField(20);
@@ -265,7 +380,7 @@ public class guiHelperMethods extends HelperMethods {
 		if (finaleList == null) {
 			return;
 		}
-		// Create Drop-down box of existing classes
+		// Create drop-down box of existing classes
 		JComboBox<String> methodList = findStuff(classes, finaleList.getSelectedItem().toString(), "Method", true);
 
 		// Create a panel containing a drop-down box and text field
@@ -279,7 +394,8 @@ public class guiHelperMethods extends HelperMethods {
 		if (result2 != 0) {
 			return;
 		}
-
+		
+		// Get the correct entity/method/parameter to be renamed 
 		Entity e = null;
 		for (int x = 0; x < classes.getEntities().size(); ++x) {
 			if (finaleList.getSelectedItem() == classes.getEntities().get(x).getName()) {
@@ -297,6 +413,7 @@ public class guiHelperMethods extends HelperMethods {
 			p[x] = m.getParameters().get(x).getName();
 		}
 
+		// Create drop-down of all parameters, and a text box for renaming the selected parameter
 		JComboBox<String> parameterList = new JComboBox<String>(p);
 		JTextField name = new JTextField(20);
 
@@ -338,6 +455,7 @@ public class guiHelperMethods extends HelperMethods {
 			return;
 		}
 
+		// Select the correct entity/method/parameter to delete
 		Entity e = null;
 		for (int x = 0; x < classes.getEntities().size(); ++x) {
 			if (finaleList.getSelectedItem() == classes.getEntities().get(x).getName()) {
@@ -395,7 +513,6 @@ public class guiHelperMethods extends HelperMethods {
 	// Finds fields/methods that are in a specific class (if opt == true, then it
 	// only finds methods with parameters)
 	private static JComboBox<String> findStuff(Classes test, String inEntity, String type, Boolean opt) {
-		// Create Drop-down box of existing classes
 		ArrayList<Entity> entities2 = test.getEntities();
 		String[] attributeStrings = null;
 		for (int x = 0; x < entities2.size(); ++x) {
@@ -466,12 +583,7 @@ public class guiHelperMethods extends HelperMethods {
 		}
 
 		if (finale.size() == 0) {
-			if (type.equals("Field")) {
-				JOptionPane.showMessageDialog(frame, "There are no fields!");
-			} else if (type.equals("Method")) {
-				JOptionPane.showMessageDialog(frame, "There are no methods!");
-			}
-
+			JOptionPane.showMessageDialog(frame, "Invalid action.");
 			return null;
 		}
 
