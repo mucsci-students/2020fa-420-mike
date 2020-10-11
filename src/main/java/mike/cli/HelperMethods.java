@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 import mike.datastructures.*;
+import mike.datastructures.Relationship.Type;
 import mike.cli.CommandLine;
 import mike.gui.GUI;
 
@@ -118,7 +119,7 @@ public class HelperMethods {
 				String relationName = (String) objList.get(x).get("relationName");
 				String classOne = (String) objList.get(x).get("ClassOne");
 				String classTwo = (String) objList.get(x).get("ClassTwo");
-				userClasses.createRelationship(CommandLine.checkEnum(relationName.toUpperCase()), classOne, classTwo);
+				userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
 			}
 		}
 
@@ -266,6 +267,20 @@ public class HelperMethods {
 						"   -- " + relation.getName() + ": " + relation.getFirstClass() + "--" + relation.getSecondClass());
 			}
 		}
-
+		
+		private static Type checkEnum (String command) {
+			switch(command){
+				case "REALIZATION":
+					return Type.REALIZATION;
+				case "AGGREGATION":
+					return Type.AGGREGATION;
+				case "COMPOSITION":
+					return Type.COMPOSITION;
+				case "INHERITANCE":
+					return Type.INHERITANCE;
+				default:
+					return null;
+			}
+		}
 }
 

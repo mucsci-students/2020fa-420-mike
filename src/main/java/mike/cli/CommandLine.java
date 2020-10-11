@@ -457,7 +457,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 	}
 
 	// Return enum type that user requested, null if invalid
-	public static Type checkEnum (String command) {
+	private static Type checkEnum (String command) {
 		switch(command){
 			case "REALIZATION":
 				return Type.REALIZATION;
