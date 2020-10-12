@@ -2,20 +2,27 @@ package mike.gui;
 
 import javax.swing.JLabel;
 import java.awt.Point;
+import java.awt.geom.Line2D;
+import java.awt.Graphics2D;
 
+import mike.gui.Line;
 import mike.gui.GUI;
 import mike.datastructures.Relationship;
 
 public class GUIRelationship {
-	public void drawRelationship(JLabel L1, JLabel L2, Relationship.Type type) {
+	public static void drawRelationship(Relationship.Type type, JLabel L1, JLabel L2) {
 		Point p1 = getEdgeIntersectionPoint(L1, L2);
 		Point p2 = getEdgeIntersectionPoint(L2, L1);
-		drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY(), type);
-		// Return instance of line to change later?
+		
+		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		
+		GUI.relations.add(line);
+		GUI.centerPanel.add(line);
+		GUI.centerPanel.validate();
 	}
 
 	// Returns the point on the edge of L1 on the line between the centers of L1 and L2
-	public Point getEdgeIntersectionPoint(JLabel L1, JLabel L2) {
+	public static Point getEdgeIntersectionPoint(JLabel L1, JLabel L2) {
 		double x1, y1, x2, y2, h1, w1, h2, w2;
 		x1 = L1.getX();
 		y1 = L1.getY();
@@ -110,11 +117,5 @@ public class GUIRelationship {
 		}
 
 		return p;
-	}
-	
-	public void drawLine(int x1, int y1, int x2, int y2, Relationship.Type type)
-	{
-		// To Do : Draw stylized line based on type
-		// Return instance of line?
 	}
 }
