@@ -21,7 +21,7 @@ import mike.datastructures.Relationship.Type;
 
 public class guiHelperMethods extends HelperMethods {
 
-	public static void createClass(Classes classes) {
+	public static void createClass(Classes classes, JFrame frame) {
 		JTextField name = new JTextField(20);
 
 		// Create a panel containing a drop-down box and text field
@@ -31,6 +31,11 @@ public class guiHelperMethods extends HelperMethods {
 
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
+		
+		if(name.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
 
 		if (result == 0) {
 			classes.createClass(name.getText());
@@ -56,6 +61,12 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Rename Class", JOptionPane.OK_CANCEL_OPTION);
 
+		if(rename.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
+
+		
 		if (result == 0) {
 			String oldname = list.getSelectedItem().toString();
 			classes.renameClass(oldname, rename.getText());
@@ -253,6 +264,11 @@ public class guiHelperMethods extends HelperMethods {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
+		if(name.getText().contains(" ") || type.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
+		
 		// Perform the proper creation
 		if (result == 0) {
 			String entityname = list.getSelectedItem().toString();
@@ -289,6 +305,11 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Rename " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
+
+		if(rename.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
 
 		// Perform the proper renaming
 		if (result2 == 0) {
@@ -358,6 +379,12 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Create Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
 
+		if(name.getText().contains(" ") || type.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
+
+		
 		if (result2 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
 			classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
@@ -417,6 +444,11 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result3 = JOptionPane.showConfirmDialog(null, inputFields3, "Rename Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
+		
+		if(name.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+			return;
+		}
 
 		if (result3 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
