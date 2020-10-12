@@ -405,7 +405,6 @@ public class guiHelperMethods extends HelperMethods {
 		
 		if (result2 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
-			System.out.println(entityname);
 			if(classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText())) {
 				GUI.updateClass(entityname, classes.copyEntity(entityname));
