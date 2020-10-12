@@ -28,18 +28,21 @@ public class guiHelperMethods extends HelperMethods {
 		JPanel inputFields = new JPanel();
 		inputFields.add(new JLabel("Enter a Class name: "));
 		inputFields.add(name);
-
+		
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
 		
-		if(name.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(name.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
-
+		
 		if (result == 0) {
-			classes.createClass(name.getText());
-			GUI.showClass(classes.copyEntity(name.getText()));
+			if(classes.createClass(name.getText())){
+				GUI.showClass(classes.copyEntity(name.getText()));
+			} else {
+				JOptionPane.showMessageDialog(frame, "An entity with that name already exists.");
+			}
 		}
 	}
 
@@ -60,17 +63,19 @@ public class guiHelperMethods extends HelperMethods {
 
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Rename Class", JOptionPane.OK_CANCEL_OPTION);
-
-		if(rename.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		
+		if(rename.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
-
 		
 		if (result == 0) {
 			String oldname = list.getSelectedItem().toString();
-			classes.renameClass(oldname, rename.getText());
-			GUI.updateClass(oldname, classes.copyEntity(rename.getText()));
+			if(classes.renameClass(oldname, rename.getText())) {
+				GUI.updateClass(oldname, classes.copyEntity(rename.getText()));
+			} else {
+				JOptionPane.showMessageDialog(frame, "An entity with that name already exists.");
+			}	
 		}
 	}
 
@@ -263,9 +268,9 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
-
-		if(name.getText().contains(" ") || type.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		
+		if(name.getText().contains(" ") || type.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -273,11 +278,19 @@ public class guiHelperMethods extends HelperMethods {
 		if (result == 0) {
 			String entityname = list.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
-				classes.createField(entityname, name.getText(), type.getText());
+				if(classes.createField(entityname, name.getText(), type.getText())) {
+					GUI.updateClass(entityname, classes.copyEntity(entityname));
+				} else {
+					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
+				}
 			} else {
-				classes.createMethod(entityname, name.getText(), type.getText());
+				if(classes.createMethod(entityname, name.getText(), type.getText())) {
+					GUI.updateClass(entityname, classes.copyEntity(entityname));
+				} else {
+					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
+				}
 			}
-			GUI.updateClass(entityname, classes.copyEntity(entityname));
+			
 		}
 	}
 
@@ -306,21 +319,27 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Rename " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(rename.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(rename.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
-
+		
 		// Perform the proper renaming
 		if (result2 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
-				classes.renameField(entityname, List2.getSelectedItem().toString(), rename.getText());
+				if(classes.renameField(entityname, List2.getSelectedItem().toString(), rename.getText())) {
+					GUI.updateClass(entityname, classes.copyEntity(entityname));
+				} else {
+					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
+				}
 			} else {
-				classes.renameMethod(entityname, List2.getSelectedItem().toString(), rename.getText());
+				if(classes.renameMethod(entityname, List2.getSelectedItem().toString(), rename.getText())) {
+					GUI.updateClass(entityname, classes.copyEntity(entityname));
+				} else {
+					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
+				}
 			}
-
-			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
@@ -379,17 +398,21 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Create Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(name.getText().contains(" ") || type.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(name.getText().contains(" ") || type.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
-
 		
 		if (result2 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
-			classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
-					name.getText(), type.getText());
-			GUI.updateClass(entityname, classes.copyEntity(entityname));
+			System.out.println(entityname);
+			if(classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
+					name.getText(), type.getText())) {
+				GUI.updateClass(entityname, classes.copyEntity(entityname));
+			} else {
+				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
+			}
+			
 		}
 	}
 
@@ -444,17 +467,16 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result3 = JOptionPane.showConfirmDialog(null, inputFields3, "Rename Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
-		
-		if(name.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
-			return;
-		}
 
 		if (result3 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
-			classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
-					parameterList.getSelectedItem().toString(), name.getText());
-			GUI.updateClass(entityname, classes.copyEntity(entityname));
+			if(classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
+					parameterList.getSelectedItem().toString(), name.getText())) {
+				GUI.updateClass(entityname, classes.copyEntity(entityname));
+			} else {
+				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
+			}
+			
 		}
 	}
 
