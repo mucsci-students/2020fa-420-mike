@@ -19,7 +19,6 @@ public class RelationshipTest {
 		assertEquals("Second class name should be set properly.", "C", r.getSecondClass());
 	}
 
-
 	@Test
 	public void testEquals() {
 		Relationship r1 = new Relationship(Type.REALIZATION, "B", "C");

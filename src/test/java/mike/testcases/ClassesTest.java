@@ -123,7 +123,6 @@ public class ClassesTest {
     {
         Classes classes = new Classes();
         classes.createClass("e");
-
         assertTrue("Found class 'e'", classes.containsEntity("e"));
         assertFalse("False for non-existing class", classes.containsEntity("fake"));
     }
@@ -157,7 +156,6 @@ public class ClassesTest {
     /** test getRelationship
      *
      */
-
     @Test
     public void testGetRelationship()
     {
@@ -174,7 +172,6 @@ public class ClassesTest {
 
         assertEquals("Null when relationship is not found", null, classes.getRelationship(Type.AGGREGATION, "fake", "stillFake"));
     }
-
 
     /* ------------------------------------------------------------------------------- */
     /*                       CLASS (ENTITY) FUNCTIONS                                  */
@@ -431,7 +428,6 @@ public class ClassesTest {
         Classes classes = new Classes();
         classes.createClass("e");
         classes.createClass("e2");
-
         assertFalse("False when creating relationship between non-existent classes (1)", classes.createRelationship(Type.REALIZATION, "fake1", "e2"));
         assertFalse("False when creating relationship between non-existent classes (2)", classes.createRelationship(Type.REALIZATION, "e", "fake"));
       

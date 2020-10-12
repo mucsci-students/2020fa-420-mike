@@ -46,8 +46,8 @@ public class EntityTest {
     @Test
     public void testCreateField() {
         Entity e = new Entity("e");
-
         e.createField("a1", "int");
+      
         assertTrue("Field a1 was created", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertFalse("False when duplicating field", e.createField("a1", "int"));
@@ -80,6 +80,7 @@ public class EntityTest {
         assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
         e.deleteField("a1");
+      
         assertFalse("a1 field was deleted", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertTrue("a2 field still exists", e.containsField("a2"));
@@ -123,6 +124,7 @@ public class EntityTest {
         assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
 
         e.deleteMethod("a1");
+
         assertFalse("a1 method was deleted", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertTrue("a2 method still exists", e.containsMethod("a2"));
