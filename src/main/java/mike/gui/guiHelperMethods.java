@@ -152,13 +152,6 @@ public class guiHelperMethods extends HelperMethods {
 				listTwo.removeItem(currRelationship.getSecondClass());
 		    }
 		}
-		            
-		// Remove the selected class from listTwo
-		//for(int x = 0; x < numClasses; ++x){
-			//if((list.getItemAt(x).toString()).equals(selectedClass)) {
-				//listTwo.removeItem(list.getSelectedItem());
-			//}
-		//}
 					
 		// Check if creating a relationship is valid
 		if(listTwo.getItemCount() == 0) {
@@ -419,7 +412,7 @@ public class guiHelperMethods extends HelperMethods {
 		JPanel inputFields3 = new JPanel();
 		inputFields3.add(new JLabel("Choose a Parameter:"));
 		inputFields3.add(parameterList);
-		enterInput("Enter a Parameter name: ", inputFields2, name);
+		enterInput("Enter a Parameter name: ", inputFields3, name);
 
 		// Ask for input with inputFields
 		int result3 = JOptionPane.showConfirmDialog(null, inputFields3, "Rename Parameter",
