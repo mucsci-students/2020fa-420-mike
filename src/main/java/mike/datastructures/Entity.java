@@ -7,6 +7,8 @@ public class Entity {
 	private String name;
 	private ArrayList<Field> fields;
 	private ArrayList<Method> methods;
+	private int xLocation;
+	private int yLocation;
 
 	//*********************************************************//
 	// Constructor //
@@ -16,6 +18,8 @@ public class Entity {
 		name = newname;
 		fields = new ArrayList<Field>();
 		methods = new ArrayList<Method>();
+		xLocation = 0;
+		yLocation = 0;
 	}
 	
 	//*********************************************************//
@@ -42,6 +46,26 @@ public class Entity {
 		return methods;
 	}
 	
+	public int getXLocation()
+	{
+		return xLocation;
+	}
+	
+	public void setXLocation(int newX)
+	{
+		xLocation = newX;
+	}
+	
+	public int getYLocation()
+	{
+		return yLocation;
+	}
+	
+	public void setYLocation(int newY)
+	{
+		yLocation = newY;
+	}
+
 	//*********************************************************//
 	// Equals Function //
 	//*********************************************************//
@@ -205,6 +229,5 @@ public class Entity {
 		}
 		return null;
 	}
-
 }
 
