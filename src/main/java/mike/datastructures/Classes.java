@@ -1,6 +1,7 @@
 package mike.datastructures;
 
 import java.util.ArrayList;
+import mike.datastructures.Relationship.Type;
 
 public class Classes {
     private static ArrayList<Entity> entities;
@@ -32,6 +33,9 @@ public class Classes {
     // *********************************************************//
 
     public boolean createClass(String name) {
+        if(name == null){
+            return false;
+        }
         Entity e = new Entity(name);
         if (entities.contains(e)) {
             // Duplicate found.
@@ -41,12 +45,11 @@ public class Classes {
     }
 
     public boolean renameClass(String target, String newname) {
-        if(searchEntity(newname)) {
+        if(containsEntity(newname)) {
         	return false; // Already contains desired name
         }
 
-        Entity e = copyEntity(target);
-        int index = entities.indexOf(e);
+        int index = entities.indexOf(new Entity(target));
 
         if (index < 0) {
             return false; // Target not found.
@@ -68,8 +71,7 @@ public class Classes {
     }
 
     public boolean deleteClass(String target) {
-        Entity e = copyEntity(target);
-        int index = entities.indexOf(e);
+        int index = entities.indexOf(new Entity(target));
 
         if (index < 0) {
             // Target not found.
@@ -96,14 +98,12 @@ public class Classes {
     // Field Functions //
     // *********************************************************//
 
-    public boolean createField(String targetclass, String field) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+    public boolean createField(String targetclass, String field, String type) {
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createField(field);
+                return e.createField(field, type);
             }
         }
         // Target not found.
@@ -111,9 +111,7 @@ public class Classes {
     }
 
     public boolean renameField(String targetclass, String targetfield, String newfield) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -125,9 +123,7 @@ public class Classes {
     }
 
     public boolean deleteField(String targetclass, String targetfield) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -142,14 +138,12 @@ public class Classes {
     // Method Functions //
     // *********************************************************//
 
-    public boolean createMethod(String targetclass, String method) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+    public boolean createMethod(String targetclass, String method, String type) {
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createMethod(method);
+                return e.createMethod(method, type);
             }
         }
         // Target not found.
@@ -157,9 +151,7 @@ public class Classes {
     }
 
     public boolean renameMethod(String targetclass, String targetmethod, String newmethod) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -171,9 +163,7 @@ public class Classes {
     }
 
     public boolean deleteMethod(String targetclass, String targetmethod) {
-        Entity e;
-        for (int index = 0; index < entities.size(); ++index) {
-            e = entities.get(index);
+        for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Try to rename the target attribute.
@@ -188,25 +178,68 @@ public class Classes {
     // Relationship Functions //
     // *********************************************************//
 
-    public boolean createRelationship(String name, String class1, String class2) {
-        if(!searchEntity(class1) || !searchEntity(class2)) {
+    public boolean createRelationship(Type name, String class1, String class2) {
+        if(name == null){
+            return false;
+        }
+
+        if(!containsEntity(class1) || !containsEntity(class2)) {
         	//class1 or class2 does not exist
         	return false;
         }
     	
     	for (Relationship r : relationships) {
-            if ((r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
-                    || (r.getFirstClass().equals(class2) && r.getSecondClass().equals(class1))) {
-                // There already exists a relationship between those two classes.
+            if (r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2)) {
+                // There already exists a relationship between those two classes in this direction.
                 return false;
             }
         }
         return relationships.add(new Relationship(name, class1, class2));
     }
 
-    public boolean deleteRelationship(String name, String class1, String class2) {
+    public boolean deleteRelationship(Type name, String class1, String class2) {
         Relationship r = new Relationship(name, class1, class2);
         return relationships.remove(r);
+    }
+
+    // *********************************************************//
+    // Parameter Functions //
+    // *********************************************************//
+
+    public boolean createParameter(String className, String method, String name, String type){
+        for (Entity e : entities) {
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.createParameter(method, name, type);
+            }
+        }
+        // Target not found.
+        return false;
+    }
+
+    public boolean renameParameter(String className, String method, String name, String newname){
+        for (Entity e : entities) {
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.renameParameter(method, name, newname);
+            }
+        }
+        // Target not found.
+        return false;
+    }
+
+    public boolean deleteParameter(String className, String method, String name){
+        for (Entity e : entities) {
+            // If target found.
+            if (e.getName().equals(className)) {
+                // Try to rename the target attribute.
+                return e.deleteParameter(method, name);
+            }
+        }
+        // Target not found.
+        return false;
     }
 
     // *********************************************************//
@@ -228,7 +261,7 @@ public class Classes {
 
     /* Entity functions */
 
-    public boolean searchEntity(String name)
+    public boolean containsEntity(String name)
     {
         for (Entity e : entities)
         {
@@ -248,17 +281,7 @@ public class Classes {
         {
             if(e.getName().equals(name))
             {
-                Entity ret = new Entity(name);
-                //loop through attributes
-                for (String s : e.getMethods())
-                {
-                    ret.createMethod(s);
-                }
-                for (String s : e.getFields())
-                {
-                    ret.createField(s);
-                }
-                return ret;
+                return e;
             }
         }
         return null;
@@ -268,11 +291,11 @@ public class Classes {
     // Relationship Helper Functions (for testing mainly) //
     // *********************************************************//
 
-    public boolean searchRelationship(String name, String class1, String class2)
+    public boolean containsRelationship(Type name, String class1, String class2)
     {
         for (Relationship r : relationships)
         {
-            if(r.getName().equals(name) && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
+            if(r.getName() == name && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
             {
                 return true;
             }
@@ -281,11 +304,11 @@ public class Classes {
     }
 
     //return relationship or null if not found
-    public Relationship getRelationship(String name, String class1, String class2)
+    public Relationship getRelationship(Type name, String class1, String class2)
     {
         for (Relationship r : relationships)
         {
-            if(r.getName().equals(name) && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
+            if(r.getName() == name && r.getFirstClass().equals(class1) && r.getSecondClass().equals(class2))
             {
                 return r;
             }
