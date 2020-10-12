@@ -243,9 +243,7 @@ public class Controller extends guiHelperMethods {
 				String[] entityStrings = new String[entities.size()];
 				for(int x = 0; x < entities.size(); ++x) {
 					entityStrings[x] = entities.get(x).getName();
-				}
-				JComboBox<String> list = new JComboBox<>(entityStrings);
-				
+				}				
 				
 				/* React to the node selection. */
 				switch(node.toString()) {
@@ -255,14 +253,14 @@ public class Controller extends guiHelperMethods {
 					case "Create Relationship" : createRelation(classes,  entityStrings, frame); break;
 					case "Delete Relationship" : deleteRelation(classes, entityStrings, frame); break;
 					case "Create Field" : createFieldsOrMethods(classes, entityStrings, "Field", frame); break;
-					case "Rename Field" : renameFieldsOrMethods(classes, list, frame, "Field"); break;
-					case "Delete Field" : deleteFieldsOrMethods(classes, list, frame, "Field"); break;
+					case "Rename Field" : renameFieldsOrMethods(classes, frame, "Field"); break;
+					case "Delete Field" : deleteFieldsOrMethods(classes, frame, "Field"); break;
 					case "Create Method" : createFieldsOrMethods(classes, entityStrings, "Method", frame); break;
-					case "Rename Method" : renameFieldsOrMethods(classes, list, frame, "Method"); break;
-					case "Delete Method" : deleteFieldsOrMethods(classes, list, frame, "Method"); break;
-					case "Create Parameter" : createParameter(classes, list, frame); break;
-					case "Rename Parameter" : renameParameter(classes, list, frame); break;
-					case "Delete Parameter" : deleteParameter(classes, list, frame); break;
+					case "Rename Method" : renameFieldsOrMethods(classes, frame, "Method"); break;
+					case "Delete Method" : deleteFieldsOrMethods(classes, frame, "Method"); break;
+					case "Create Parameter" : createParameter(classes, frame); break;
+					case "Rename Parameter" : renameParameter(classes, frame); break;
+					case "Delete Parameter" : deleteParameter(classes, frame); break;
 					default : throw new RuntimeException("Unknown button pressed");
 				}
 				for(Entity curEntity : entities) {

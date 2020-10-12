@@ -267,7 +267,7 @@ public class guiHelperMethods extends HelperMethods {
 
 	// Fields and methods were combined into one function due to striking similarity
 	//	in the underlying implementation.
-	public static void renameFieldsOrMethods(Classes classes, JComboBox<String> list, JFrame frame, String attribute) {
+	public static void renameFieldsOrMethods(Classes classes, JFrame frame, String attribute) {
 		
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
@@ -292,7 +292,7 @@ public class guiHelperMethods extends HelperMethods {
 
 		// Perform the proper renaming
 		if (result2 == 0) {
-			String entityname = list.getSelectedItem().toString();
+			String entityname = finaleList.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
 				classes.renameField(entityname, List2.getSelectedItem().toString(), rename.getText());
 			} else {
@@ -305,7 +305,7 @@ public class guiHelperMethods extends HelperMethods {
 
 	// Fields and methods were combined into one function due to striking similarity
 	//	in the underlying implementation.
-	public static void deleteFieldsOrMethods(Classes classes, JComboBox<String> list, JFrame frame, String attribute) {
+	public static void deleteFieldsOrMethods(Classes classes, JFrame frame, String attribute) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
 				"Delete " + attribute);
@@ -326,7 +326,7 @@ public class guiHelperMethods extends HelperMethods {
 
 		// Perform the proper deletion
 		if (result2 == 0) {
-			String entityname = list.getSelectedItem().toString();
+			String entityname = finaleList.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
 				classes.deleteField(entityname, List2.getSelectedItem().toString());
 			} else {
@@ -336,7 +336,7 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
-	public static void createParameter(Classes classes, JComboBox<String> list, JFrame frame) {
+	public static void createParameter(Classes classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", false, "Create Parameter");
 		if (finaleList == null) {
@@ -359,14 +359,15 @@ public class guiHelperMethods extends HelperMethods {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if (result2 == 0) {
-			String entityname = list.getSelectedItem().toString();
+			String entityname = finaleList.getSelectedItem().toString();
+			System.out.println(entityname);
 			classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText());
 			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
-	public static void renameParameter(Classes classes, JComboBox<String> list, JFrame frame) {
+	public static void renameParameter(Classes classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", true, "Rename Parameter");
 		if (finaleList == null) {
@@ -419,14 +420,14 @@ public class guiHelperMethods extends HelperMethods {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if (result3 == 0) {
-			String entityname = list.getSelectedItem().toString();
+			String entityname = finaleList.getSelectedItem().toString();
 			classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString(), name.getText());
 			GUI.updateClass(entityname, classes.copyEntity(entityname));
 		}
 	}
 
-	public static void deleteParameter(Classes classes, JComboBox<String> list, JFrame frame) {
+	public static void deleteParameter(Classes classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", true, "Delete Parameter");
 		if (finaleList == null) {
@@ -476,7 +477,7 @@ public class guiHelperMethods extends HelperMethods {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if (result3 == 0) {
-			String entityname = list.getSelectedItem().toString();
+			String entityname = finaleList.getSelectedItem().toString();
 			classes.deleteParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString());
 			GUI.updateClass(entityname, classes.copyEntity(entityname));
@@ -568,8 +569,13 @@ public class guiHelperMethods extends HelperMethods {
 		} else if (type == "Method" && opt == true) {
 			for (int x = 0; x < entities.size(); ++x) {
 				Entity re = entities.get(x);
-				if (re.getMethods().size() != 0 && re.getMethods().get(x).getParameters().size() != 0) {
-					finale.add(re);
+				if (re.getMethods().size() != 0) {
+					for(int y = 0; y < re.getMethods().size(); ++y) {
+						if(re.getMethods().get(y).getParameters().size() != 0) {
+							finale.add(re);
+						}
+					}
+					
 				}
 			}
 		}
