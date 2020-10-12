@@ -106,9 +106,6 @@ public class GUI implements ViewInterface {
 		node.add(new DefaultMutableTreeNode("Create Parameter"));
 		node.add(new DefaultMutableTreeNode("Rename Parameter"));
 		node.add(new DefaultMutableTreeNode("Delete Parameter"));
-		node = new DefaultMutableTreeNode("list");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("list all"));
 		return new JTree(top);
 	}
 

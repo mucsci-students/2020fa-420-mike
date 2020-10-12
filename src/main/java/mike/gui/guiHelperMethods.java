@@ -142,7 +142,6 @@ public class guiHelperMethods extends HelperMethods {
 		JComboBox<String>listTwo = new JComboBox<>(entityStrings);
 		ArrayList<Relationship> allRelationships = classes.getRelationships();
 		String selectedClass = list.getSelectedItem().toString();
-		int numClasses = listTwo.getItemCount();
 					
 		// Remove classes from listTwo based on existing relationships
 		// Find all relationships that have use the selected class as class 1...
