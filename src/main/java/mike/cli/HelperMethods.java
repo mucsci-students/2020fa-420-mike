@@ -14,7 +14,6 @@ import org.json.simple.parser.*;
 
 import mike.datastructures.*;
 import mike.datastructures.Relationship.Type;
-import mike.cli.CommandLine;
 import mike.gui.GUI;
 
 import java.util.ArrayList;

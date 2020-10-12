@@ -21,7 +21,6 @@ import java.util.HashMap;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
-import mike.gui.guiHelperMethods;
 
 public class Controller extends guiHelperMethods {
 
@@ -236,7 +235,6 @@ public class Controller extends guiHelperMethods {
 					case "Field" : return;
 					case "Method" : return;
 					case "Parameter" : return;
-					case "list" : return;
 					default: break;
 				}
 				
@@ -265,13 +263,6 @@ public class Controller extends guiHelperMethods {
 					case "Create Parameter" : createParameter(classes, list, frame); break;
 					case "Rename Parameter" : renameParameter(classes, list, frame); break;
 					case "Delete Parameter" : deleteParameter(classes, list, frame); break;
-					case "list all" :        	
-							System.out.println();							
-							listClasses(classes);
-							System.out.println();
-							listRelationships(classes);
-							System.out.println();
-							break;
 					default : throw new RuntimeException("Unknown button pressed");
 				}
 				for(Entity curEntity : entities) {
