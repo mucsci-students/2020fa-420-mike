@@ -149,7 +149,6 @@ public class GUI implements ViewInterface {
 	}
 
 	public static void updateClass(String oldname, Entity e) {
-		System.out.println(oldname);
 		JLabel classObj = entityLabels.remove(oldname);
 		centerPanel.remove(classObj);
 		classObj.setText(entityToHTML(e));
