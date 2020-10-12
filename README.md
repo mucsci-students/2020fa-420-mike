@@ -16,8 +16,11 @@ later time. The application runs using a Command Line Interface or a Graphical U
 
 1. Navigate to the directory with the files and have a command prompt ready
 2. Type these commands in the command prompt:
+
    ```gradle build```
+
    ```gradle shadowJar```
+
    ```java -jar ./build/libs/mike-all.jar (launches the GUI) or java -jar ./build/libs/mike-all.jar cli (launches the CLI)```
 
 Gradle build builds the application, gradle shadowJar creates a jar file with all of the dependencies
