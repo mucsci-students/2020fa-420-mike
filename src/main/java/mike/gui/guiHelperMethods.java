@@ -32,8 +32,8 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
 		
-		if(name.getText().contains(" ")){
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
+		if(name.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
 			return;
 		}
 		
@@ -64,8 +64,8 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Rename Class", JOptionPane.OK_CANCEL_OPTION);
 		
-		if(rename.getText().contains(" ")){
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
+		if(rename.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
 			return;
 		}
 		
@@ -269,8 +269,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 		
-		if(name.getText().contains(" ") || type.getText().contains(" ")){
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
+		if(name.getText().contains(" ") || type.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
 			return;
 		}
 		
@@ -319,8 +319,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Rename " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(rename.getText().contains(" ")){
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
+		if(rename.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
 			return;
 		}
 		
@@ -398,8 +398,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Create Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(name.getText().contains(" ") || type.getText().contains(" ")){
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
+		if(name.getText().contains(" ") || type.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
 			return;
 		}
 		
