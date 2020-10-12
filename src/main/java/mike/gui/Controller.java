@@ -247,7 +247,7 @@ public class Controller extends guiHelperMethods {
 				
 				/* React to the node selection. */
 				switch(node.toString()) {
-					case "Create Class" : createClass(classes); break;
+					case "Create Class" : createClass(classes, frame); break;
 					case "Rename Class" : renameClass(classes, entityStrings, frame); break;
 					case "Delete Class" : deleteClass(classes, entityStrings, frame); break;
 					case "Create Relationship" : createRelation(classes,  entityStrings, frame); break;
