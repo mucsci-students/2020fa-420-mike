@@ -1,5 +1,5 @@
 name: Gradle Checks on PRs
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   build:
