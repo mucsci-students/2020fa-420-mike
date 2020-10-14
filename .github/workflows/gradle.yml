@@ -1,3 +1,6 @@
+name: Gradle Checks on PRs
+on: pull_request
+
 language: java
 install: skip
 
@@ -6,5 +9,5 @@ dist: trusty
 jdk: oraclejdk11
 
 script:
-  - gradle build --scan -s
+  - gradle build
   - gradle test
