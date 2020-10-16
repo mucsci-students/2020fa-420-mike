@@ -37,6 +37,7 @@ public class Controller extends guiHelperMethods {
 	
 	public static void clickClass(JLabel newview) {
 		newview.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				// catching the current values for x,y coordinates on screen
 				if (e.getSource() == newview) {
@@ -50,15 +51,15 @@ public class Controller extends guiHelperMethods {
 	
 	public static void moveClass(JLabel newview, Entity entity) {
 		newview.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (e.getSource() == newview) {
 					JComponent jc = (JComponent) e.getSource();
 					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
 					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
 					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
-					GUI.repaintLine(entity.getName());
-					changed = true;
 				}
+				GUI.repaintLine(entity.getName());
 			}
 		});
 	}

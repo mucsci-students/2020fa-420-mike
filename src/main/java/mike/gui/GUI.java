@@ -115,35 +115,13 @@ public class GUI implements ViewInterface {
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
 	
-		pane.add(newview, new Integer(2));
+		pane.add(newview, 2);
 		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
 		entitylabels.put(entity.getName(), newview);
 
-		newview.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// catching the current values for x,y coordinates on screen
-				if (e.getSource() == newview) {
-					x_pressed = e.getX();
-					y_pressed = e.getY();
-				}
-			}
-		});
+		Controller.clickClass(newview);
+		Controller.moveClass(newview, entity);
 
-		newview.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				if (e.getSource() == newview) {
-					JComponent jc = (JComponent) e.getSource();
-					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
-					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
-					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
-				}
-				repaintLine(entity.getName());
-			}
-		});
-		//newview.scrollRectToVisible(new Rectangle(0,0,newview.getWidth(), newview.getHeight()));
-		//centerPanel.validate();
 		pane.validate();
 		
 		return newview;
@@ -160,8 +138,6 @@ public class GUI implements ViewInterface {
 		for(Line l : deletingLines) {
 			relations.remove(l);
 		}
-		pane.validate();
-		pane.repaint();
 	}
 	
 	public static void deleteLine(String class1, String class2) {		
@@ -173,8 +149,6 @@ public class GUI implements ViewInterface {
 			}
 		}
 		relations.remove(temp);
-		pane.validate();
-		pane.repaint();
 	}
 	
 	public static void repaintLine(String name) {
@@ -191,8 +165,6 @@ public class GUI implements ViewInterface {
 				l.repaint();
 			}
 		}
-		pane.validate();
-		pane.repaint();
 	}
 	
 	public static void updateClass(String oldname, Entity e) {
@@ -202,7 +174,7 @@ public class GUI implements ViewInterface {
 		entitylabels.put(e.getName(), classObj);
 		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width, classObj.getPreferredSize().height);
 		classObj.setName(e.getName());
-		pane.add(classObj, new Integer(2));
+		pane.add(classObj, 2);
 		pane.validate();
 	}
 
@@ -220,13 +192,11 @@ public class GUI implements ViewInterface {
 		Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
 		
 		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY(), L1, L2);
-		//Line line = new Line(0, 0, 100, 100);
 
 		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
-		//line.setBounds(125, 261-184, 371-125, 184-261);
 
 		relations.add(line);
-		pane.add(line, new Integer(1));
+		pane.add(line, 1);
 		pane.validate();
 		pane.repaint();
 

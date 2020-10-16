@@ -23,7 +23,7 @@ public class Line extends JComponent {
 		this.classTwo = classTwo;
 		
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension (782, 725));
+		this.setPreferredSize(new Dimension (classOne.getParent().getWidth(), classOne.getParent().getHeight()));
 	}
 	
 	public void setx1(double newx1) {
