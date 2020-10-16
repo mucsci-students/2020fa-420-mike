@@ -46,64 +46,33 @@ public class GUI implements ViewInterface {
 		JButton save = new JButton("Save");
 		JButton saveAs = new JButton("Save As");
 		JButton load = new JButton("Load");
+		JButton addClass = new JButton("Add Class");
+		JButton editMode = new JButton("Enable Edit Mode");
 		menuBar.add(save);
 		menuBar.add(saveAs);
 		menuBar.add(load);
-
-		// Creating the side-bar
-		JTree tree = createTree();
-		tree.setRootVisible(false);
-		JScrollPane treeView = new JScrollPane(tree);
-		Dimension d = new Dimension(200, treeView.getHeight());
-		treeView.setPreferredSize(d);
+		menuBar.add(addClass);
+		menuBar.add(editMode);
 
 		// Creating the middle panel
 		pane.setBackground(Color.WHITE);
 		
 		// Adding all panels onto frame
 		frame.getContentPane().add(BorderLayout.CENTER, pane);
-		frame.getContentPane().add(BorderLayout.WEST, treeView);
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
 		pane.validate();
 		pane.repaint();
-		
+
+		//set listeners
+		Controller.addClassListener(addClass ,frame);
+		Controller.editModeListener(editMode, frame, pane);
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
 		Controller.loadListener(load, entitylabels, pane, frame);
-		Controller.treeListener(tree, frame, entitylabels);
 		Controller.exitListener(frame);
-	}
-
-	private static JTree createTree() {
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode("UML");
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Class");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Class"));
-		node.add(new DefaultMutableTreeNode("Rename Class"));
-		node.add(new DefaultMutableTreeNode("Delete Class"));
-		node = new DefaultMutableTreeNode("Relationship");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Relationship"));
-		node.add(new DefaultMutableTreeNode("Delete Relationship"));
-		node = new DefaultMutableTreeNode("Field");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Field"));
-		node.add(new DefaultMutableTreeNode("Rename Field"));
-		node.add(new DefaultMutableTreeNode("Delete Field"));
-		node = new DefaultMutableTreeNode("Method");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Method"));
-		node.add(new DefaultMutableTreeNode("Rename Method"));
-		node.add(new DefaultMutableTreeNode("Delete Method"));
-		node = new DefaultMutableTreeNode("Parameter");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Parameter"));
-		node.add(new DefaultMutableTreeNode("Rename Parameter"));
-		node.add(new DefaultMutableTreeNode("Delete Parameter"));
-		return new JTree(top);
 	}
 
 	public static JLabel showClass(Entity entity) {
@@ -236,5 +205,13 @@ public class GUI implements ViewInterface {
 		html += "</html>";
 
 		return html;
+	}
+
+	public static HashMap<String, JLabel> getEntityLabels() {
+		return entitylabels;
+	}
+
+	public static JLayeredPane getPane() {
+		return pane;
 	}
 }

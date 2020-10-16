@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.HeadlessException;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,7 +26,7 @@ public class Controller extends guiHelperMethods {
 
 	private static Classes classes = new Classes();
 	private static View view;
-	private static Boolean changed = false;
+	private static Boolean changed = false, editMode = false;
 	private static int x_pressed = 0;
 	private static int y_pressed = 0;
 	private static Path path = null;
@@ -44,6 +44,10 @@ public class Controller extends guiHelperMethods {
 					x_pressed = e.getX();
 					y_pressed = e.getY();
 				}
+				//if in edit mode, show text boxes and such for fields/methods/parameter
+				if(editMode) {
+
+				}
 			}
 		});
 	}
@@ -53,13 +57,20 @@ public class Controller extends guiHelperMethods {
 		newview.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if (e.getSource() == newview) {
-					JComponent jc = (JComponent) e.getSource();
-					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
-					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
-					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
+				//allow dragging classes if not in edit mode
+				if(!editMode) {
+					if (e.getSource() == newview) {
+						JComponent jc = (JComponent) e.getSource();
+						jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
+						entity.setXLocation(jc.getX() + e.getX() - x_pressed);
+						entity.setYLocation(jc.getY() + e.getY() - y_pressed);
+					}
+					GUI.repaintLine(entity.getName());
 				}
-				GUI.repaintLine(entity.getName());
+				//if in edit mode, drag from one class to another to create relationship
+				else {
+
+				}
 			}
 		});
 	}
@@ -212,6 +223,48 @@ public class Controller extends guiHelperMethods {
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 			  }
 		  }
+		});
+	}
+
+	public static void addClassListener(JButton addClass, JFrame frame) {
+		addClass.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				createClass(classes, frame);
+
+				ArrayList<Entity> entities = classes.getEntities();
+
+				//prevent classes from gathering in middle after class is added
+				for(Entity curEntity : entities) {
+					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
+				}
+				changed = true;
+			}
+		});
+	}
+
+	public static void editModeListener(JButton editButton, JFrame frame, JLayeredPane pane) {
+		editButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				//if in edit mode
+				if(editMode) {
+					editMode = false;
+					//Change button to signify we are out of edit mode
+					editButton.setText("Enable Edit Mode");
+					editButton.setBackground(null);
+				}
+				//if not in edit mode
+				else {
+					editMode = true;
+					//change button to signify we are in edit mode
+					editButton.setText("Disable Edit Mode");
+					editButton.setBackground(Color.RED);
+				}
+			}
 		});
 	}
 	
