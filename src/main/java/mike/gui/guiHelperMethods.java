@@ -183,19 +183,22 @@ public class guiHelperMethods extends HelperMethods {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Relationship", 
 				JOptionPane.OK_CANCEL_OPTION);
 
-		Type name;
+		Type type;
 		if (composition.isSelected()) {
-			name = Type.COMPOSITION;
+			type = Type.COMPOSITION;
 		} else if (aggregation.isSelected()) {
-			name = Type.AGGREGATION;
+			type = Type.AGGREGATION;
 		} else if (realization.isSelected()) {
-			name = Type.REALIZATION;
+			type = Type.REALIZATION;
 		} else {
-			name = Type.INHERITANCE;
+			type = Type.INHERITANCE;
 		}
 
 		if (result == 0) {
-			classes.createRelationship(name, list.getSelectedItem().toString(), listTwo.getSelectedItem().toString());
+			String name1 = list.getSelectedItem().toString();
+			String name2 = listTwo.getSelectedItem().toString();
+			classes.createRelationship(type, name1, name2);
+			GUI.createRelationship(type, name1, name2);
 		}
 	}
 	

@@ -3,11 +3,14 @@ package mike.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,17 +28,16 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import mike.datastructures.Entity;
-import mike.datastructures.Field;
-import mike.datastructures.Method;
-import mike.datastructures.Parameter;
+import mike.datastructures.*;
+import mike.gui.Line;
 
 public class GUI implements ViewInterface {
 	// Global Variables
 	public static JPanel centerPanel = new JPanel();
 	static int x_pressed = 0;
 	static int y_pressed = 0;
-	static HashMap<String, JLabel> entityLabels = new HashMap<String, JLabel>();
+	static HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
+	static ArrayList<Line> relations = new ArrayList<Line>();
 
 	public GUI() {
 		// Creating the frame
@@ -72,11 +74,11 @@ public class GUI implements ViewInterface {
 		frame.getContentPane().add(BorderLayout.WEST, treeView);
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 		frame.setVisible(true);
-
+		
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
-		Controller.loadListener(load, entityLabels, centerPanel, frame);
-		Controller.treeListener(tree, frame, entityLabels, centerPanel);
+		Controller.loadListener(load, entitylabels, centerPanel, frame);
+		Controller.treeListener(tree, frame, entitylabels, centerPanel);
 		Controller.exitListener(frame);
 	}
 
@@ -118,7 +120,7 @@ public class GUI implements ViewInterface {
 		newview.setBorder(new CompoundBorder(border, margin));
 
 		centerPanel.add(newview);
-		entityLabels.put(entity.getName(), newview);
+		entitylabels.put(entity.getName(), newview);
 
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
@@ -149,20 +151,35 @@ public class GUI implements ViewInterface {
 	}
 
 	public static void updateClass(String oldname, Entity e) {
-		JLabel classObj = entityLabels.remove(oldname);
+		JLabel classObj = entitylabels.remove(oldname);
 		centerPanel.remove(classObj);
 		classObj.setText(entityToHTML(e));
-		entityLabels.put(e.getName(), classObj);
+		entitylabels.put(e.getName(), classObj);
 		centerPanel.add(classObj);
 		centerPanel.validate();
 	}
 
 	public static void deleteClass(String name) {
-		centerPanel.remove(entityLabels.get(name));
-		entityLabels.remove(name);
+		centerPanel.remove(entitylabels.get(name));
+		entitylabels.remove(name);
 		centerPanel.repaint();
 	}
 
+	public static void createRelationship(Relationship.Type type, String name1, String name2)
+	{
+		JLabel L1 = entitylabels.get(name1);
+		JLabel L2 = entitylabels.get(name2);
+		Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
+		Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
+		
+		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		
+		relations.add(line);
+		centerPanel.add(line);
+		centerPanel.validate();
+		centerPanel.repaint();
+	}
+	
 	public static String entityToHTML(Entity e) {
 		String html = "<html>" + e.getName() + "<br/>";
 
