@@ -37,7 +37,6 @@ public class Controller extends guiHelperMethods {
 	
 	public static void clickClass(JLabel newview) {
 		newview.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mousePressed(MouseEvent e) {
 				// catching the current values for x,y coordinates on screen
 				if (e.getSource() == newview) {
@@ -51,13 +50,13 @@ public class Controller extends guiHelperMethods {
 	
 	public static void moveClass(JLabel newview, Entity entity) {
 		newview.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (e.getSource() == newview) {
 					JComponent jc = (JComponent) e.getSource();
 					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
 					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
 					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
+					GUI.repaintLine(entity.getName());
 					changed = true;
 				}
 			}
@@ -157,7 +156,7 @@ public class Controller extends guiHelperMethods {
   
 	
 	// Listen to any function calls
-	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JPanel centerPanel, JFrame frame) {
+	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JLayeredPane pane, JFrame frame) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -187,8 +186,8 @@ public class Controller extends guiHelperMethods {
 
 				  if (result == 0) {				  
 					  classes.empty();
-					  centerPanel.removeAll();
-					  centerPanel.repaint();
+					  pane.removeAll();
+					  pane.repaint();
 					  
 					  File file = new File(directory.getText());
 					  if(file.isAbsolute()){
@@ -200,7 +199,7 @@ public class Controller extends guiHelperMethods {
 					  
 					  load(path, classes);
 					  changed = false;
-					  centerPanel.validate();
+					  pane.validate();
 				  }
 				 
 				  
@@ -216,7 +215,7 @@ public class Controller extends guiHelperMethods {
 	}
 	
 	// Listen to any function calls
-	public static void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels, JPanel centerPanel) {
+	public static void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels) {
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();

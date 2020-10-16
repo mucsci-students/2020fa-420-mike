@@ -3,14 +3,10 @@ package mike.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.border.Border;
@@ -33,7 +29,7 @@ import mike.gui.Line;
 
 public class GUI implements ViewInterface {
 	// Global Variables
-	public static JPanel centerPanel = new JPanel();
+	static JLayeredPane pane = new JLayeredPane();
 	static int x_pressed = 0;
 	static int y_pressed = 0;
 	static HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
@@ -62,23 +58,22 @@ public class GUI implements ViewInterface {
 		treeView.setPreferredSize(d);
 
 		// Creating the middle panel
-		centerPanel.setBackground(Color.WHITE);
-
-		GridBagLayout gridbag = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		centerPanel.setLayout(gridbag);
-
+		pane.setBackground(Color.WHITE);
+		
 		// Adding all panels onto frame
-		frame.getContentPane().add(BorderLayout.CENTER, centerPanel);
+		frame.getContentPane().add(BorderLayout.CENTER, pane);
 		frame.getContentPane().add(BorderLayout.WEST, treeView);
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		pane.validate();
+		pane.repaint();
 		
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
-		Controller.loadListener(load, entitylabels, centerPanel, frame);
-		Controller.treeListener(tree, frame, entitylabels, centerPanel);
+		Controller.loadListener(load, entitylabels, pane, frame);
+		Controller.treeListener(tree, frame, entitylabels);
 		Controller.exitListener(frame);
 	}
 
@@ -115,11 +110,13 @@ public class GUI implements ViewInterface {
 		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
+		newview.setName(entity.getName());
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
-
-		centerPanel.add(newview);
+	
+		pane.add(newview, new Integer(2));
+		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
 		entitylabels.put(entity.getName(), newview);
 
 		newview.addMouseListener(new MouseAdapter() {
@@ -142,27 +139,77 @@ public class GUI implements ViewInterface {
 					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
 					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
 				}
+				repaintLine(entity.getName());
 			}
 		});
-
-		centerPanel.validate();
-
+		//newview.scrollRectToVisible(new Rectangle(0,0,newview.getWidth(), newview.getHeight()));
+		//centerPanel.validate();
+		pane.validate();
+		
 		return newview;
 	}
-
+	
+	public static void deleteLines(String name) {
+		ArrayList<Line> deletingLines = new ArrayList<Line>();
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+				pane.remove(l);
+				deletingLines.add(l);
+			}
+		}
+		for(Line l : deletingLines) {
+			relations.remove(l);
+		}
+		pane.validate();
+		pane.repaint();
+	}
+	
+	public static void deleteLine(String class1, String class2) {		
+		Line temp = null;
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(class1) && l.getClassTwo().getName().equals(class2)) {
+				pane.remove(l);
+				temp = l;	
+			}
+		}
+		relations.remove(temp);
+		pane.validate();
+		pane.repaint();
+	}
+	
+	public static void repaintLine(String name) {
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+				JLabel L1 = entitylabels.get(l.getClassOne().getName());
+				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
+				Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
+				Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
+				l.setx1(p1.getX());
+				l.sety1(p1.getY());
+				l.setx2(p2.getX());
+				l.sety2(p2.getY());
+				l.repaint();
+			}
+		}
+		pane.validate();
+		pane.repaint();
+	}
+	
 	public static void updateClass(String oldname, Entity e) {
 		JLabel classObj = entitylabels.remove(oldname);
-		centerPanel.remove(classObj);
+		pane.remove(classObj);
 		classObj.setText(entityToHTML(e));
 		entitylabels.put(e.getName(), classObj);
-		centerPanel.add(classObj);
-		centerPanel.validate();
+		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width, classObj.getPreferredSize().height);
+		classObj.setName(e.getName());
+		pane.add(classObj, new Integer(2));
+		pane.validate();
 	}
 
 	public static void deleteClass(String name) {
-		centerPanel.remove(entitylabels.get(name));
+		pane.remove(entitylabels.get(name));
 		entitylabels.remove(name);
-		centerPanel.repaint();
+		pane.repaint();
 	}
 
 	public static void createRelationship(Relationship.Type type, String name1, String name2)
@@ -172,12 +219,17 @@ public class GUI implements ViewInterface {
 		Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
 		Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
 		
-		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-		
+		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY(), L1, L2);
+		//Line line = new Line(0, 0, 100, 100);
+
+		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
+		//line.setBounds(125, 261-184, 371-125, 184-261);
+
 		relations.add(line);
-		centerPanel.add(line);
-		centerPanel.validate();
-		centerPanel.repaint();
+		pane.add(line, new Integer(1));
+		pane.validate();
+		pane.repaint();
+
 	}
 	
 	public static String entityToHTML(Entity e) {
