@@ -75,25 +75,89 @@ public class GUI implements ViewInterface {
 		Controller.exitListener(frame);
 	}
 
-	public static JLabel showClass(Entity entity) {
-		JLabel newview = new JLabel(entityToHTML(entity));
+	public static JLayeredPane showClass(Entity entity) {
+		URL p = GUI.class.getResource("xmark.jpg");
+		
+		//Entire label		
+		JLabel newview = new JLabel();
+		BoxLayout lay = new BoxLayout(newview, BoxLayout.Y_AXIS);
+		newview.setLayout(lay);
+		
+		// Line 1
+		JPanel line = new JPanel();
+		line.setLayout(new BoxLayout(line, BoxLayout.X_AXIS));
+		line.setBackground(Color.LIGHT_GRAY);
+		JButton test = new JButton("hi");
+		JTextField test3 = new JTextField("this is text field");
+		test.setAlignmentX(Component.LEFT_ALIGNMENT);
+		test3.setAlignmentX(Component.LEFT_ALIGNMENT);
+		line.add(test);
+		line.add(test3);
+		line.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		// Line 2
+		JPanel line2 = new JPanel();
+		line2.setLayout(new BoxLayout(line2, BoxLayout.X_AXIS));
+		JButton test2 = new JButton("hi");
+		line2.add(test2);
+		line2.setAlignmentX(Component.LEFT_ALIGNMENT);
+		// Line 3
+		JPanel line3 = new JPanel();
+		line3.setLayout(new BoxLayout(line3, BoxLayout.X_AXIS));
+		line3.setBackground(Color.LIGHT_GRAY);
+		JButton test4 = new JButton("hi once again");
+		JTextField test5 = new JTextField("this is another text field");
+		line3.add(test4);
+		line3.add(test5);
+		line3.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		// Design entire label
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
-		newview.setName(entity.getName());
+		newview.setName("new name");
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
-	
-		pane.add(newview, 2);
-		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
+
+		// Add all lines into label
+		newview.add(line);
+		
+		newview.add(line2);
+		newview.add(line3);
+		newview.setBounds(0, 0, lay.preferredLayoutSize(newview).width, lay.preferredLayoutSize(newview).height);
+        
+		pane.add(newview, new Integer(2));
 		entitylabels.put(entity.getName(), newview);
+		
+		newview.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
 
-		Controller.clickClass(newview);
-		Controller.moveClass(newview, entity);
-
+				// catching the current values for x,y coordinates on screen
+				if (e.getSource() == newview) {
+					System.out.println("testing");
+					x_pressed = e.getX();
+					y_pressed = e.getY();
+				}
+			}
+		});
+		
+		newview.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if (e.getSource() == newview) {
+					JComponent jc = (JComponent) e.getSource();
+					jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
+					entity.setXLocation(jc.getX() + e.getX() - x_pressed);
+					entity.setYLocation(jc.getY() + e.getY() - y_pressed);
+				}
+				repaintLine(entity.getName());
+			}
+		});
+		
 		pane.validate();
 		
-		return newview;
+		return pane;
 	}
 	
 	public static void deleteLines(String name) {
