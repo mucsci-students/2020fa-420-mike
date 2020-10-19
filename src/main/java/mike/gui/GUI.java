@@ -37,7 +37,7 @@ public class GUI implements ViewInterface {
 	static int y_pressed = 0;
 	public static HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
 	static ArrayList<Line> relations = new ArrayList<Line>();
-	static JFrame frame = new JFrame("UML GUI Example");
+	static JFrame frame = new JFrame("Team mike UML Editor");
 	public GUI() {
 		// Creating the frame
 		

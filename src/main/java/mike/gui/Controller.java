@@ -68,6 +68,7 @@ public class Controller extends guiHelperMethods {
 				//if in edit mode, drag from one class to another to create relationship
 				else {
 				}
+				GUI.repaintLine(entity.getName());
 			}
 		});
 	}

@@ -10,9 +10,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 public class Line extends JComponent {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	double x1, y1, x2, y2;
 	JLabel classOne, classTwo;
