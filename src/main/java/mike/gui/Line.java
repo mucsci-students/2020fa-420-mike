@@ -10,6 +10,10 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 public class Line extends JComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	double x1, y1, x2, y2;
 	JLabel classOne, classTwo;
 	Line(double x1, double y1, double x2, double y2, JLabel classOne, JLabel classTwo) {
@@ -23,7 +27,14 @@ public class Line extends JComponent {
 		this.classTwo = classTwo;
 		
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension (classOne.getParent().getWidth(), classOne.getParent().getHeight()));
+		this.setPreferredSize(new Dimension (782, 725));
+	}
+	
+	public void setNewPoints(double newx1, double newy1, double newx2, double newy2) {
+		x1 = newx1;
+		y1 = newy1;
+		x2 = newx2;
+		y2 = newy2;
 	}
 	
 	public void setx1(double newx1) {
