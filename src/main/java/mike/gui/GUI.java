@@ -59,17 +59,17 @@ public class GUI implements ViewInterface {
 
 		// Creating the middle panel
 		pane.setBackground(Color.WHITE);
-		
+
 		// Adding all panels onto frame
 		frame.getContentPane().add(BorderLayout.CENTER, pane);
 		frame.getContentPane().add(BorderLayout.WEST, treeView);
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		pane.validate();
 		pane.repaint();
-		
+
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
 		Controller.loadListener(load, entitylabels, pane, frame);
@@ -114,7 +114,7 @@ public class GUI implements ViewInterface {
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
-	
+
 		pane.add(newview, 2);
 		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
 		entitylabels.put(entity.getName(), newview);
@@ -123,37 +123,37 @@ public class GUI implements ViewInterface {
 		Controller.moveClass(newview, entity);
 
 		pane.validate();
-		
+
 		return newview;
 	}
-	
+
 	public static void deleteLines(String name) {
 		ArrayList<Line> deletingLines = new ArrayList<Line>();
-		for(Line l : relations) {
-			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+		for (Line l : relations) {
+			if (l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
 				pane.remove(l);
 				deletingLines.add(l);
 			}
 		}
-		for(Line l : deletingLines) {
+		for (Line l : deletingLines) {
 			relations.remove(l);
 		}
 	}
-	
-	public static void deleteLine(String class1, String class2) {		
+
+	public static void deleteLine(String class1, String class2) {
 		Line temp = null;
-		for(Line l : relations) {
-			if(l.getClassOne().getName().equals(class1) && l.getClassTwo().getName().equals(class2)) {
+		for (Line l : relations) {
+			if (l.getClassOne().getName().equals(class1) && l.getClassTwo().getName().equals(class2)) {
 				pane.remove(l);
-				temp = l;	
+				temp = l;
 			}
 		}
 		relations.remove(temp);
 	}
-	
+
 	public static void repaintLine(String name) {
-		for(Line l : relations) {
-			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+		for (Line l : relations) {
+			if (l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
 				JLabel L1 = entitylabels.get(l.getClassOne().getName());
 				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
 				Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
@@ -166,13 +166,14 @@ public class GUI implements ViewInterface {
 			}
 		}
 	}
-	
+
 	public static void updateClass(String oldname, Entity e) {
 		JLabel classObj = entitylabels.remove(oldname);
 		pane.remove(classObj);
 		classObj.setText(entityToHTML(e));
 		entitylabels.put(e.getName(), classObj);
-		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width, classObj.getPreferredSize().height);
+		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width,
+				classObj.getPreferredSize().height);
 		classObj.setName(e.getName());
 		pane.add(classObj, 2);
 		pane.validate();
@@ -184,14 +185,13 @@ public class GUI implements ViewInterface {
 		pane.repaint();
 	}
 
-	public static void createRelationship(Relationship.Type type, String name1, String name2)
-	{
+	public static void createRelationship(Relationship.Type type, String name1, String name2) {
 		JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
 		Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
 		Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
-		
-		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY(), L1, L2);
+
+		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY(), L1, L2, type);
 
 		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
 
@@ -201,7 +201,7 @@ public class GUI implements ViewInterface {
 		pane.repaint();
 
 	}
-	
+
 	public static String entityToHTML(Entity e) {
 		String html = "<html>" + e.getName() + "<br/>";
 
