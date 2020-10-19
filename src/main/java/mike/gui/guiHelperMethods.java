@@ -64,8 +64,8 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Rename Class", JOptionPane.OK_CANCEL_OPTION);
 		
-		if(rename.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(rename.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -275,8 +275,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 		
-		if(name.getText().contains(" ") || type.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(name.getText().contains(" ") || type.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -416,6 +416,7 @@ public class guiHelperMethods extends HelperMethods {
 		
 		if (result2 == 0) {
 			String entityname = finaleList.getSelectedItem().toString();
+			System.out.println(entityname);
 			if(classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText())) {
 				GUI.updateClass(entityname, classes.copyEntity(entityname));

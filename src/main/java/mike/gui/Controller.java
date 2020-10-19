@@ -30,23 +30,26 @@ public class Controller extends guiHelperMethods {
 	private static int x_pressed = 0;
 	private static int y_pressed = 0;
 	private static Path path = null;
+	private static JLabel inClass = null;
 	
 	public Controller (View.InterfaceType viewtype){
-		view = new View(viewtype);
+		setView(new View(viewtype));
 	}
 	
 	public static void clickClass(JLabel newview) {
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// catching the current values for x,y coordinates on screen
-				if (e.getSource() == newview) {
+				if(editMode) {
+					if(inClass != null){
+						GUI.exitEditingClass(inClass);
+					}
+					inClass = GUI.entityToEditingHTML(newview);
+				}// catching the current values for x,y coordinates on screen
+				else if (e.getSource() == newview) {
+					//if in edit mode, show text boxes and such for fields/methods/parameter
 					x_pressed = e.getX();
 					y_pressed = e.getY();
-				}
-				//if in edit mode, show text boxes and such for fields/methods/parameter
-				if(editMode) {
-
 				}
 			}
 		});
@@ -69,7 +72,6 @@ public class Controller extends guiHelperMethods {
 				}
 				//if in edit mode, drag from one class to another to create relationship
 				else {
-
 				}
 			}
 		});
@@ -256,6 +258,10 @@ public class Controller extends guiHelperMethods {
 					//Change button to signify we are out of edit mode
 					editButton.setText("Enable Edit Mode");
 					editButton.setBackground(null);
+					if(inClass != null) {
+						GUI.exitEditingClass(inClass);
+					}
+					inClass = null;
 				}
 				//if not in edit mode
 				else {
@@ -325,4 +331,15 @@ public class Controller extends guiHelperMethods {
 		});
 	}
 
+	public static Classes getClasses() {
+		return classes;
+	}
+
+	public static View getView() {
+		return view;
+	}
+
+	public static void setView(View view) {
+		Controller.view = view;
+	}
 }
