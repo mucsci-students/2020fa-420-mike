@@ -15,9 +15,17 @@ public class View {
 		viewtype = newtype;
 
 		if (viewtype.equals(InterfaceType.GUI)) {
-			viewinterface = new GUI();
+			setViewinterface(new GUI());
 		} else {
-			viewinterface = new CommandLine();
+			setViewinterface(new CommandLine());
 		}
+	}
+
+	public static ViewInterface getViewinterface() {
+		return viewinterface;
+	}
+
+	public static void setViewinterface(ViewInterface viewinterface) {
+		View.viewinterface = viewinterface;
 	}
 }
