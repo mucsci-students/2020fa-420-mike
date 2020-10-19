@@ -32,8 +32,8 @@ public class guiHelperMethods extends HelperMethods {
 		// Ask for input with inputFields
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
 		
-		if(name.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(name.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -73,6 +73,7 @@ public class guiHelperMethods extends HelperMethods {
 			String oldname = list.getSelectedItem().toString();
 			if(classes.renameClass(oldname, rename.getText())) {
 				GUI.updateClass(oldname, classes.copyEntity(rename.getText()));
+				GUI.repaintLine(rename.getText());
 			} else {
 				JOptionPane.showMessageDialog(frame, "An entity with that name already exists.");
 			}	
@@ -99,6 +100,7 @@ public class guiHelperMethods extends HelperMethods {
 			String name = list.getSelectedItem().toString();
 			classes.deleteClass(name);
 			GUI.deleteClass(name);
+			GUI.deleteLines(name);
 		}
 	}
 	
@@ -243,6 +245,7 @@ public class guiHelperMethods extends HelperMethods {
 				}
 			}
 			classes.deleteRelationship(targetType, class1, class2);
+			GUI.deleteLine(class1, class2);
 		}
 	}
 
@@ -283,12 +286,14 @@ public class guiHelperMethods extends HelperMethods {
 			if (attribute.equals("Field")) {
 				if(classes.createField(entityname, name.getText(), type.getText())) {
 					GUI.updateClass(entityname, classes.copyEntity(entityname));
+					GUI.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
 				}
 			} else {
 				if(classes.createMethod(entityname, name.getText(), type.getText())) {
 					GUI.updateClass(entityname, classes.copyEntity(entityname));
+					GUI.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
 				}
@@ -322,8 +327,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Rename " + attribute,
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(rename.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(rename.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -333,12 +338,14 @@ public class guiHelperMethods extends HelperMethods {
 			if (attribute.equals("Field")) {
 				if(classes.renameField(entityname, List2.getSelectedItem().toString(), rename.getText())) {
 					GUI.updateClass(entityname, classes.copyEntity(entityname));
+					GUI.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
 				}
 			} else {
 				if(classes.renameMethod(entityname, List2.getSelectedItem().toString(), rename.getText())) {
 					GUI.updateClass(entityname, classes.copyEntity(entityname));
+					GUI.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
 				}
@@ -376,6 +383,7 @@ public class guiHelperMethods extends HelperMethods {
 				classes.deleteMethod(entityname, List2.getSelectedItem().toString());
 			}
 			GUI.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.repaintLine(entityname);
 		}
 	}
 
@@ -401,8 +409,8 @@ public class guiHelperMethods extends HelperMethods {
 		int result2 = JOptionPane.showConfirmDialog(null, inputFields2, "Create Parameter",
 				JOptionPane.OK_CANCEL_OPTION);
 
-		if(name.getText().contains(" ") || type.getText().contains(" ")) {
-			JOptionPane.showMessageDialog(frame, "Spaces are not allowed!");
+		if(name.getText().contains(" ") || type.getText().contains(" ")){
+			JOptionPane.showMessageDialog(frame, "Spaces are not allowed");
 			return;
 		}
 		
@@ -411,6 +419,7 @@ public class guiHelperMethods extends HelperMethods {
 			if(classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText())) {
 				GUI.updateClass(entityname, classes.copyEntity(entityname));
+				GUI.repaintLine(entityname);
 			} else {
 				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
 			}
@@ -475,6 +484,7 @@ public class guiHelperMethods extends HelperMethods {
 			if(classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString(), name.getText())) {
 				GUI.updateClass(entityname, classes.copyEntity(entityname));
+				GUI.repaintLine(entityname);
 			} else {
 				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
 			}
@@ -536,6 +546,7 @@ public class guiHelperMethods extends HelperMethods {
 			classes.deleteParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString());
 			GUI.updateClass(entityname, classes.copyEntity(entityname));
+			GUI.repaintLine(entityname);
 		}
 	}
 
