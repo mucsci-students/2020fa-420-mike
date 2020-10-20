@@ -193,7 +193,12 @@ public class GUI implements ViewInterface {
 	{
 		JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
-		GUIRelationship.drawRelationship(type, L1, L2);
+		Line line = new Line(L1, L2, type);
+		line.setBounds(0, 0, GUI.pane.getWidth(), GUI.pane.getHeight());
+		
+		GUI.relations.add(line);
+		GUI.pane.add(line);
+		GUI.pane.validate();
 	}
 	
 	public static String entityToHTML(Entity e) {

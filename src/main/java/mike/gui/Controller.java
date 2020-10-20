@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
+import mike.datastructures.Relationship;
 
 public class Controller extends guiHelperMethods {
 
@@ -221,6 +222,11 @@ public class Controller extends guiHelperMethods {
 			  for(Entity curEntity : classes.getEntities()) {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
+			  }
+			  
+			  for(Relationship r : classes.getRelationships())
+			  {
+				  GUI.createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass());
 			  }
 		  }
 		});
