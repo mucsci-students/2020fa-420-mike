@@ -35,6 +35,13 @@ public class Line extends JComponent {
 		this.setPreferredSize(new Dimension(classOne.getParent().getWidth(), classOne.getParent().getHeight()));
 	}
 
+	public void setNewPoints(double newx1, double newy1, double newx2, double newy2) {
+		x1 = newx1;
+		y1 = newy1;
+		x2 = newx2;
+		y2 = newy2;
+	}
+
 	public void setx1(double newx1) {
 		x1 = newx1;
 	}
@@ -59,70 +66,55 @@ public class Line extends JComponent {
 		return classTwo;
 	}
 
-	public void paint(Graphics g) {
+	public void paintComponent(Graphics g) {
 		// Setting Rendering Hints
-		RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHints(rh);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 		// Get line length
 		double ydiff = y2 - y1;
 		double xdiff = x2 - x1;
 		double length = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-		
-		super.paint(g);
-		
+
+		super.paintComponent(g);
+
 		// Draw line
 		g2d.setColor(Color.BLACK);
-		g2d.setStroke(new BasicStroke(4f));
+		g2d.setStroke(new BasicStroke(1f));
 		g2d.rotate(-Math.atan2(xdiff, ydiff), x1, y1);
-		g2d.draw(new Line2D.Double(x1, y1, x1, y1 + length));
-
-		// Stylizing line.
-
-		Path2D.Double path = new Path2D.Double();
-
-		double y = y1 + length;
-
-		switch (type) {
-		case COMPOSITION:
-			// Diamond
-			g2d.setStroke(new BasicStroke(8f));
-			path.moveTo(x1, y);
-			path.lineTo(x1 + 6, y - 10);
-			path.lineTo(x1, y - 20);
-			path.lineTo(x1 - 6, y - 10);
-			path.lineTo(x1, y);
-			break;
-		case AGGREGATION:
-			// Empty Diamond
-			g2d.setStroke(new BasicStroke(4f));
-			path.moveTo(x1, y);
-			path.lineTo(x1 + 8, y - 12);
-			path.lineTo(x1, y - 24);
-			path.lineTo(x1 - 8, y - 12);
-			path.lineTo(x1, y);
-			break;
-		case REALIZATION:
-			// Filled Arrow
-			g2d.setStroke(new BasicStroke(8f));
-			path.moveTo(x1, y);
-			path.lineTo(x1 + 6, y - 10);
-			path.lineTo(x1 - 6, y - 10);
-			path.lineTo(x1, y);
-			break;
-		default:
-			// Empty Arrow
-			g2d.setStroke(new BasicStroke(4f));
-			path.moveTo(x1, y);
-			path.lineTo(x1 + 12, y - 16);
-			path.lineTo(x1 - 12, y - 16);
-			path.lineTo(x1, y);
-			break;
+		
+		if (type == Type.REALIZATION) {
+			g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 4));
+			return;
 		}
+		g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
+		// Stylizing line
 
-		g2d.draw(path);
+		int y = (int) (y1 + length - 4);
+		int x = (int) x1;
+
+		if (type == Type.COMPOSITION) {
+			// Filled Diamond
+			int xpoints[] = { x, x + 6, x, x - 6, x };
+			int ypoints[] = { y, y - 10, y - 20, y - 10, y };
+			g2d.fillPolygon(xpoints, ypoints, 5);
+		} else if (type == Type.AGGREGATION) {
+			// Empty Diamond
+			g2d.setColor(Color.WHITE);
+			int xpoints[] = { x, x + 6, x, x - 6, x };
+			int ypoints[] = { y, y - 10, y - 20, y - 10, y };
+			g2d.fillPolygon(xpoints, ypoints, 5);
+			g2d.setColor(Color.BLACK);
+			g2d.drawPolygon(xpoints, ypoints, 5);
+		} else {
+			// Filled Arrow
+			g2d.setColor(Color.WHITE);
+			int xpoints[] = {x, x + 7, x - 7, x};
+			int ypoints[] = {y, y - 14, y - 14, y };
+			g2d.fillPolygon(xpoints, ypoints, 4);
+			g2d.setColor(Color.BLACK);
+			g2d.drawPolygon(xpoints, ypoints, 4);
+		}
 	}
 }

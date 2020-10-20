@@ -2,22 +2,25 @@ package mike.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -32,12 +35,12 @@ public class GUI implements ViewInterface {
 	static JLayeredPane pane = new JLayeredPane();
 	static int x_pressed = 0;
 	static int y_pressed = 0;
-	static HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
+	public static HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
 	static ArrayList<Line> relations = new ArrayList<Line>();
-
+	static JFrame frame = new JFrame("Team mike UML Editor");
 	public GUI() {
 		// Creating the frame
-		JFrame frame = new JFrame("UML GUI Example");
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1000, 800);
 
@@ -59,7 +62,7 @@ public class GUI implements ViewInterface {
 
 		// Creating the middle panel
 		pane.setBackground(Color.WHITE);
-
+		
 		// Adding all panels onto frame
 		frame.getContentPane().add(BorderLayout.CENTER, pane);
 		frame.getContentPane().add(BorderLayout.WEST, treeView);
@@ -69,14 +72,14 @@ public class GUI implements ViewInterface {
 
 		pane.validate();
 		pane.repaint();
-
+		
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
 		Controller.loadListener(load, entitylabels, pane, frame);
 		Controller.treeListener(tree, frame, entitylabels);
 		Controller.exitListener(frame);
 	}
-
+	
 	private static JTree createTree() {
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode("UML");
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Class");
@@ -110,18 +113,18 @@ public class GUI implements ViewInterface {
 		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
-		newview.setName(entity.getName());
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
+		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
 
 		pane.add(newview, 2);
-		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
 		entitylabels.put(entity.getName(), newview);
 
+		newview.setName(entity.getName());
 		Controller.clickClass(newview);
 		Controller.moveClass(newview, entity);
-
+		
+		newview.setBounds(0, 0, newview.getPreferredSize().width, newview.getPreferredSize().height);
 		pane.validate();
 
 		return newview;
@@ -129,53 +132,64 @@ public class GUI implements ViewInterface {
 
 	public static void deleteLines(String name) {
 		ArrayList<Line> deletingLines = new ArrayList<Line>();
-		for (Line l : relations) {
-			if (l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
 				pane.remove(l);
 				deletingLines.add(l);
 			}
 		}
-		for (Line l : deletingLines) {
+		for(Line l : deletingLines) {
 			relations.remove(l);
 		}
+		pane.validate();
+		pane.repaint();
 	}
-
-	public static void deleteLine(String class1, String class2) {
+	
+	public static void deleteLine(String class1, String class2) {		
 		Line temp = null;
-		for (Line l : relations) {
-			if (l.getClassOne().getName().equals(class1) && l.getClassTwo().getName().equals(class2)) {
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(class1) && l.getClassTwo().getName().equals(class2)) {
 				pane.remove(l);
-				temp = l;
+				temp = l;	
 			}
 		}
 		relations.remove(temp);
+		pane.validate();
+		pane.repaint();
 	}
-
+	
 	public static void repaintLine(String name) {
-		for (Line l : relations) {
-			if (l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
 				JLabel L1 = entitylabels.get(l.getClassOne().getName());
 				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
-				Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
-				Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
-				l.setx1(p1.getX());
-				l.sety1(p1.getY());
-				l.setx2(p2.getX());
-				l.sety2(p2.getY());
+				// (a,b) = L1 center
+				double a = L1.getLocation().x + L1.getSize().width / 2;
+				double b = L1.getLocation().y + L1.getSize().height / 2;
+				
+				// (c,d) = L2 center
+				double c = L2.getLocation().x + L2.getSize().width / 2;
+				double d = L2.getLocation().y + L2.getSize().height / 2;
+
+				double[] centers1 = {a, b, c, d};
+				Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1.getSize(), L1.getLocation(), centers1);
+				double[] centers2 = {c, d, a, b};
+				Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2.getSize(), L2.getLocation(), centers2);
+				
+				l.setNewPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 				l.repaint();
 			}
 		}
 	}
-
+	
 	public static void updateClass(String oldname, Entity e) {
 		JLabel classObj = entitylabels.remove(oldname);
 		pane.remove(classObj);
 		classObj.setText(entityToHTML(e));
 		entitylabels.put(e.getName(), classObj);
-		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width,
-				classObj.getPreferredSize().height);
+		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width, classObj.getPreferredSize().height);
 		classObj.setName(e.getName());
-		pane.add(classObj, 2);
+		pane.add(classObj, new Integer(2));
 		pane.validate();
 	}
 
@@ -185,23 +199,13 @@ public class GUI implements ViewInterface {
 		pane.repaint();
 	}
 
-	public static void createRelationship(Relationship.Type type, String name1, String name2) {
+	public static void createRelationship(Relationship.Type type, String name1, String name2)
+	{
 		JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
-		Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1, L2);
-		Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2, L1);
-
-		Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY(), L1, L2, type);
-
-		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
-
-		relations.add(line);
-		pane.add(line, 1);
-		pane.validate();
-		pane.repaint();
-
+		GUIRelationship.drawRelationship(type, L1, L2);
 	}
-
+	
 	public static String entityToHTML(Entity e) {
 		String html = "<html>" + e.getName() + "<br/>";
 
@@ -236,5 +240,13 @@ public class GUI implements ViewInterface {
 		html += "</html>";
 
 		return html;
+	}
+	
+	public static HashMap<String, JLabel> getEntityLabels() {
+		return entitylabels;
+	}
+
+	public static JLayeredPane getPane() {
+		return pane;
 	}
 }
