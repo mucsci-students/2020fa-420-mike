@@ -16,7 +16,6 @@ public class GUIRelationship {
 		// (c,d) = L2 center
 		double c = L2.getLocation().x + L2.getSize().width / 2;
 		double d = L2.getLocation().y + L2.getSize().height / 2;
-		
 		double[] centers1 = {a, b, c, d};
 		Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1.getSize(), L1.getLocation(), centers1);
 		double[] centers2 = {c, d, a, b};
