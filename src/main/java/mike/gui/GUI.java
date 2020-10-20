@@ -113,7 +113,8 @@ public class GUI implements ViewInterface {
 		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);\
+		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
 
