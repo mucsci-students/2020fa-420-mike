@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import mike.datastructures.Relationship.Type;
 
 public class Line extends JComponent {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5573668863596984829L;
 	private double x1, y1, x2, y2;
 	private JLabel classOne, classTwo;
 	private boolean toSelf;
