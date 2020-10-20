@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -16,6 +17,8 @@ import mike.datastructures.Relationship.Type;
 import mike.gui.GUI;
 
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
 	
 @SuppressWarnings("unchecked")
 public class HelperMethods {
@@ -37,11 +40,11 @@ public class HelperMethods {
 			ArrayList<JSONObject> objList = new ArrayList<JSONObject>();
 
 			loadClasses(userClasses, javaObj, list, objList);
-
+			
 			// Clear out variables for reuse
 			list = (JSONArray) javaObj.get("Relationships");
 			objList.clear();
-
+			
 			loadRelationships(userClasses, javaObj, list, objList);
 		}
 
@@ -59,7 +62,6 @@ public class HelperMethods {
 					// Extract name of class, add to loadFile
 					String className = (String) objList.get(x).get("className");
 					userClasses.createClass(className);
-					GUI.showClass(userClasses.copyEntity(className));
 					
 					// Extract all fields of associated class, add to loadFile
 					JSONArray classFields = (JSONArray) objList.get(x).get("fields");
@@ -69,7 +71,6 @@ public class HelperMethods {
 						String fieldType = field.get("fieldType").toString();
 
 						userClasses.createField(className, fieldName, fieldType);
-						GUI.updateClass(className, userClasses.copyEntity(className));
 					}
 
 					// Extract all methods of associated class, add to loadFile
@@ -80,7 +81,6 @@ public class HelperMethods {
 						String methodType = method.get("methodType").toString();
 
 						userClasses.createMethod(className, methodName, methodType);
-						GUI.updateClass(className, userClasses.copyEntity(className));
 						JSONArray methodParam = (JSONArray) method.get("Parameters");
 						for (int z = 0; z < methodParam.size(); ++z) {
 							JSONObject param = (JSONObject) methodParam.get(z);
@@ -88,7 +88,6 @@ public class HelperMethods {
 							String paramType = param.get("paramType").toString();
 
 							userClasses.createParameter(className, methodName, paramName, paramType);
-							GUI.updateClass(className, userClasses.copyEntity(className));
 						}
 					}
 					
@@ -98,6 +97,12 @@ public class HelperMethods {
 					e.setXLocation(Math.toIntExact(location));
 					location = (Long) objList.get(x).get("yPosition");
 					e.setYLocation(Math.toIntExact(location));
+					GUI.showClass(e);
+				}
+			
+				for(Entity curEntity : userClasses.getEntities()) {
+					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
+					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 				}
 			}
 
@@ -118,6 +123,7 @@ public class HelperMethods {
 				String classOne = (String) objList.get(x).get("ClassOne");
 				String classTwo = (String) objList.get(x).get("ClassTwo");
 				userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
+				GUI.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
 			}
 		}
 
