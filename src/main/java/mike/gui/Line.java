@@ -22,7 +22,7 @@ public class Line extends JComponent {
 	private JLabel L1, L2;
 	private Type type;
 
-	Line(JLabel L1, JLabel L2, Type type) {
+	public Line(JLabel L1, JLabel L2, Type type) {
 		super();
 		this.type = type;
 		this.L1 = L1;
@@ -63,7 +63,7 @@ public class Line extends JComponent {
 
 	// Returns the point on the edge of L1 on the line between the centers of L1 and
 	// L2
-	public static Point getEdgeIntersectionPoint(Dimension d1, Point p1, double[] centers) {
+	private static Point getEdgeIntersectionPoint(Dimension d1, Point p1, double[] centers) {
 		if (centers[1] <= centers[3]) {
 			p1.y += d1.getHeight();
 		}
@@ -134,13 +134,13 @@ public class Line extends JComponent {
 		}
 	}
 
-	public void drawFilledDiamond(Graphics2D g2d, int x, int y) {
+	private void drawFilledDiamond(Graphics2D g2d, int x, int y) {
 		int xpoints[] = { x, x + 6, x, x - 6, x };
 		int ypoints[] = { y, y - 10, y - 20, y - 10, y };
 		g2d.fillPolygon(xpoints, ypoints, 5);
 	}
 
-	public void drawEmptyDiamond(Graphics2D g2d, int x, int y) {
+	private void drawEmptyDiamond(Graphics2D g2d, int x, int y) {
 		g2d.setColor(Color.WHITE);
 		int xpoints[] = { x, x + 6, x, x - 6, x };
 		int ypoints[] = { y, y - 10, y - 20, y - 10, y };
@@ -149,7 +149,7 @@ public class Line extends JComponent {
 		g2d.drawPolygon(xpoints, ypoints, 5);
 	}
 
-	public void drawEmptyArrow(Graphics2D g2d, int x, int y) {
+	private void drawEmptyArrow(Graphics2D g2d, int x, int y) {
 		g2d.setColor(Color.WHITE);
 		int xpoints[] = { x, x + 7, x - 7, x };
 		int ypoints[] = { y, y - 14, y - 14, y };
