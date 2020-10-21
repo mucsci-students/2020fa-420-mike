@@ -33,7 +33,6 @@ public class Controller extends guiHelperMethods {
 	private static int x_pressed = 0;
 	private static int y_pressed = 0;
 	private static Path path = null;
-	private static JLabel inClass = null;
 	
 	public Controller (View.InterfaceType viewtype){
 		setView(new View(viewtype));

@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
