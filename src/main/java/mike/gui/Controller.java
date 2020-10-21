@@ -7,6 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -21,6 +23,7 @@ import java.util.HashMap;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
+import mike.datastructures.Relationship;
 
 public class Controller extends guiHelperMethods {
 
@@ -220,6 +223,11 @@ public class Controller extends guiHelperMethods {
 					JLabel curLabel = entityLabels.get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 			  }
+			  
+			  for(Relationship r : classes.getRelationships())
+			  {
+				  GUI.createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass());
+			  }
 		  }
 		});
 	}
@@ -315,6 +323,18 @@ public class Controller extends guiHelperMethods {
 				}
 				changed = true;
 			}
+		});
+	}
+	
+	public static void resizeListener(JFrame frame, ArrayList<Line> relations)
+	{
+		frame.addComponentListener(new ComponentAdapter() {
+		    public void componentResized(ComponentEvent componentEvent) {
+		    	for (Line l : relations)
+		    	{
+		    		l.setBounds(0, 0, GUI.pane.getWidth(), GUI.pane.getHeight());
+		    	}
+		    }
 		});
 	}
 

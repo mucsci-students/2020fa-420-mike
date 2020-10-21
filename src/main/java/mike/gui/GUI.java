@@ -73,6 +73,7 @@ public class GUI implements ViewInterface {
 		pane.validate();
 		pane.repaint();
 		
+		Controller.resizeListener(frame, relations);
 		Controller.saveListener(save, frame);
 		Controller.saveAsListener(saveAs, frame);
 		Controller.loadListener(load, entitylabels, pane, frame);
@@ -113,7 +114,8 @@ public class GUI implements ViewInterface {
 		JLabel newview = new JLabel(entityToHTML(entity));
 		newview.setBackground(Color.LIGHT_GRAY);
 		newview.setOpaque(true);
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 4);
+		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+
 		Border margin = new EmptyBorder(6, 6, 6, 6);
 		newview.setBorder(new CompoundBorder(border, margin));
 
@@ -163,20 +165,8 @@ public class GUI implements ViewInterface {
 			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
 				JLabel L1 = entitylabels.get(l.getClassOne().getName());
 				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
-				// (a,b) = L1 center
-				double a = L1.getLocation().x + L1.getSize().width / 2;
-				double b = L1.getLocation().y + L1.getSize().height / 2;
 				
-				// (c,d) = L2 center
-				double c = L2.getLocation().x + L2.getSize().width / 2;
-				double d = L2.getLocation().y + L2.getSize().height / 2;
-
-				double[] centers1 = {a, b, c, d};
-				Point p1 = GUIRelationship.getEdgeIntersectionPoint(L1.getSize(), L1.getLocation(), centers1);
-				double[] centers2 = {c, d, a, b};
-				Point p2 = GUIRelationship.getEdgeIntersectionPoint(L2.getSize(), L2.getLocation(), centers2);
-				
-				l.setNewPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+				l.update();
 				l.repaint();
 			}
 		}
@@ -203,7 +193,12 @@ public class GUI implements ViewInterface {
 	{
 		JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
-		GUIRelationship.drawRelationship(type, L1, L2);
+		Line line = new Line(L1, L2, type);
+		line.setBounds(0, 0, GUI.pane.getWidth(), GUI.pane.getHeight());
+		
+		GUI.relations.add(line);
+		GUI.pane.add(line);
+		GUI.pane.validate();
 	}
 	
 	public static String entityToHTML(Entity e) {
@@ -249,7 +244,4 @@ public class GUI implements ViewInterface {
 	public static JLayeredPane getPane() {
 		return pane;
 	}
-	
-
-	
 }
