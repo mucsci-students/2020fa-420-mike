@@ -19,20 +19,21 @@ import mike.datastructures.Relationship.Type;
 public class Line extends JComponent {
 	private static final long serialVersionUID = -5573668863596984829L;
 	private double x1, y1, x2, y2;
-	private JLabel classOne, classTwo;
-	private boolean toSelf;
+	private JLabel L1, L2;
 	private Type type;
 
 	Line(JLabel L1, JLabel L2, Type type) {
 		super();
 		this.type = type;
-		update(L1, L2);
+		this.L1 = L1;
+		this.L2 = L2;
+		update();
 
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension(classOne.getParent().getWidth(), classOne.getParent().getHeight()));
+		this.setPreferredSize(new Dimension(L1.getParent().getWidth(), L2.getParent().getHeight()));
 	}
 
-	public void update(JLabel L1, JLabel L2) {
+	public void update() {
 		// (a,b) = L1 center
 		double a = L1.getLocation().x + L1.getSize().width / 2;
 		double b = L1.getLocation().y + L1.getSize().height / 2;
@@ -50,8 +51,6 @@ public class Line extends JComponent {
 		y1 = p1.getY();
 		x2 = p2.getX();
 		y2 = p2.getY();
-		classOne = L1;
-		classTwo = L2;
 	}
 
 	// Returns the point on the edge of L1 on the line between the centers of L1 and
@@ -78,28 +77,12 @@ public class Line extends JComponent {
 		return p1;
 	}
 
-	public void setx1(double newx1) {
-		x1 = newx1;
-	}
-
-	public void sety1(double newy1) {
-		y1 = newy1;
-	}
-
-	public void setx2(double newx2) {
-		x2 = newx2;
-	}
-
-	public void sety2(double newy2) {
-		y2 = newy2;
-	}
-
 	public JLabel getClassOne() {
-		return classOne;
+		return L1;
 	}
 
 	public JLabel getClassTwo() {
-		return classTwo;
+		return L2;
 	}
 
 	public void paintComponent(Graphics g) {

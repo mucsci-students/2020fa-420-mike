@@ -166,7 +166,7 @@ public class GUI implements ViewInterface {
 				JLabel L1 = entitylabels.get(l.getClassOne().getName());
 				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
 				
-				l.update(L1, L2);
+				l.update();
 				l.repaint();
 			}
 		}
