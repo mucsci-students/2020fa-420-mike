@@ -33,6 +33,14 @@ public class Line extends JComponent {
 		this.setPreferredSize(new Dimension(L1.getParent().getWidth(), L2.getParent().getHeight()));
 	}
 
+	public JLabel getClassOne() {
+		return L1;
+	}
+
+	public JLabel getClassTwo() {
+		return L2;
+	}
+
 	public void update() {
 		// (a,b) = L1 center
 		double a = L1.getLocation().x + L1.getSize().width / 2;
@@ -69,20 +77,15 @@ public class Line extends JComponent {
 		double i2 = (p1.y - centers[1]) / m;
 
 		// Point of intersection; Pick closest intersection point
-		if (Math.pow((centers[0] - p1.x), 2) + j1 * j1 > i2 * i2 + Math.pow((centers[1] - p1.y), 2)) {
+		double deltax = centers[0] - p1.x;
+		double deltay = centers[1] - p1.y;
+
+		if (deltax * deltax + j1 * j1 > i2 * i2 + deltay * deltay) {
 			p1.x = (int) (i2 + centers[0]);
 		} else {
 			p1.y = (int) (j1 + centers[1]);
 		}
 		return p1;
-	}
-
-	public JLabel getClassOne() {
-		return L1;
-	}
-
-	public JLabel getClassTwo() {
-		return L2;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -109,8 +112,8 @@ public class Line extends JComponent {
 		if (type == Type.REALIZATION) {
 			// Dashed line
 			float[] dashedpattern = { 4f, 4f };
-			Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
-					dashedpattern, 1.0f);
+			Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
+					1.0f);
 
 			g2d.setStroke(dashedstroke);
 			g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
