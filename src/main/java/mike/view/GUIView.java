@@ -161,10 +161,8 @@ public class GUIView {
 	public static void repaintLine(String name) {
 		for(Line l : relations) {
 			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
-				JLabel L1 = entitylabels.get(l.getClassOne().getName());
-				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
-				
-				l.update(L1, L2);
+
+				l.update();
 				l.repaint();
 			}
 		}
