@@ -200,5 +200,4 @@ public class GUI implements ViewInterface {
 		Entity e = Controller.getClasses().copyEntity(inClass.getName());
 		showClass(e);
 	}
-	
 }
