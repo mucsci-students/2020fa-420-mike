@@ -21,7 +21,7 @@ public class Line extends JComponent {
 	private JLabel classOne, classTwo;
 	private Type type;
 
-	Line(JLabel L1, JLabel L2, Type type) {
+	public Line(JLabel L1, JLabel L2, Type type) {
 		super();
 		this.type = type;
 		update(L1, L2);

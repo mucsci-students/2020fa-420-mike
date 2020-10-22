@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
+import mike.controller.Controller;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
@@ -18,7 +19,7 @@ public class htmlBox {
 	
 	private JLabel newBox;
 	
-	htmlBox (Entity entity) {
+	public htmlBox (Entity entity) {
 		// Create JLabel and basic settings
 		this.newBox = new JLabel(entityToHTML(entity));
 		newBox.setName(entity.getName());
@@ -34,8 +35,7 @@ public class htmlBox {
 		this.newBox.setBounds(0, 0, this.newBox.getPreferredSize().width, this.newBox.getPreferredSize().height);
 		this.newBox.setLocation(entity.getXLocation(), entity.getYLocation());
 		
-		Controller.clickClass(this.newBox);
-		Controller.moveClass(this.newBox, entity);
+		Controller.classControls(this.newBox, entity);
 	}
 	
 	public JLabel getBox() {

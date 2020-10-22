@@ -12,16 +12,17 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import mike.cli.HelperMethods;
-import mike.datastructures.Classes;
+import mike.HelperMethods;
+import mike.datastructures.Model;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship;
 import mike.datastructures.Relationship.Type;
+import mike.view.GUIView;
 
 public class guiHelperMethods extends HelperMethods {
 
-	public static void createClass(Classes classes, JFrame frame) {
+	public static void createClass(Model classes, JFrame frame) {
 		JTextField name = new JTextField(20);
 
 		// Create a panel containing a drop-down box and text field
@@ -39,14 +40,14 @@ public class guiHelperMethods extends HelperMethods {
 		
 		if (result == 0) {
 			if(classes.createClass(name.getText())){
-				GUI.showClass(classes.copyEntity(name.getText()));
+				GUIView.showClass(classes.copyEntity(name.getText()));
 			} else {
 				JOptionPane.showMessageDialog(frame, "An entity with that name already exists.");
 			}
 		}
 	}
 
-	public static void renameClass(Classes classes, String[] entityStrings, JFrame frame) {
+	public static void renameClass(Model classes, String[] entityStrings, JFrame frame) {
 		if(entityStrings.length == 0) {
 			JOptionPane.showMessageDialog(frame, "There are no classes to rename.");
 			return;
@@ -72,14 +73,14 @@ public class guiHelperMethods extends HelperMethods {
 		if (result == 0) {
 			String oldname = list.getSelectedItem().toString();
 			if(classes.renameClass(oldname, rename.getText())) {
-				GUI.repaintLine(rename.getText());
+				GUIView.repaintLine(rename.getText());
 			} else {
 				JOptionPane.showMessageDialog(frame, "An entity with that name already exists.");
 			}	
 		}
 	}
 
-	public static void deleteClass(Classes classes, String[] entityStrings, JFrame frame) {
+	public static void deleteClass(Model classes, String[] entityStrings, JFrame frame) {
 		if(entityStrings.length == 0) {
 			JOptionPane.showMessageDialog(frame, "There are no classes to delete.");
 			return;
@@ -98,12 +99,12 @@ public class guiHelperMethods extends HelperMethods {
 		if (result == 0) {
 			String name = list.getSelectedItem().toString();
 			classes.deleteClass(name);
-			GUI.deleteClass(name);
-			GUI.deleteLines(name);
+			GUIView.deleteClass(name);
+			GUIView.deleteLines(name);
 		}
 	}
 	
-	public static void createRelation(Classes classes, String[] entityStrings, JFrame frame) {
+	public static void createRelation(Model classes, String[] entityStrings, JFrame frame) {
 		if (classes.getEntities().size() < 2) {
 			JOptionPane.showMessageDialog(frame,  "There are not enough classes to create a relationship.");
 			return;
@@ -199,11 +200,11 @@ public class guiHelperMethods extends HelperMethods {
 			String name1 = list.getSelectedItem().toString();
 			String name2 = listTwo.getSelectedItem().toString();
 			classes.createRelationship(type, name1, name2);
-			GUI.createRelationship(type, name1, name2);
+			GUIView.createRelationship(type, name1, name2);
 		}
 	}
 	
-	public static void deleteRelation(Classes classes, String[] entityStrings, JFrame frame) {
+	public static void deleteRelation(Model classes, String[] entityStrings, JFrame frame) {
 		if (classes.getRelationships().size() == 0) {
 			JOptionPane.showMessageDialog(frame,  "There are no relationships to delete.");
 			return;
@@ -244,13 +245,13 @@ public class guiHelperMethods extends HelperMethods {
 				}
 			}
 			classes.deleteRelationship(targetType, class1, class2);
-			GUI.deleteLine(class1, class2);
+			GUIView.deleteLine(class1, class2);
 		}
 	}
 
 	// Fields and methods were combined into one function due to striking similarity
 	//	in the underlying implementation.
-	public static void createFieldsOrMethods(Classes classes, String[] entityStrings, String attribute, JFrame frame) {
+	public static void createFieldsOrMethods(Model classes, String[] entityStrings, String attribute, JFrame frame) {
 		if(classes.getEntities().size() == 0) {
 			JOptionPane.showMessageDialog(frame, "There are no classes to create a " + attribute);
 			return;
@@ -284,13 +285,13 @@ public class guiHelperMethods extends HelperMethods {
 			String entityname = list.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
 				if(classes.createField(entityname, name.getText(), type.getText())) {
-					GUI.repaintLine(entityname);
+					GUIView.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
 				}
 			} else {
 				if(classes.createMethod(entityname, name.getText(), type.getText())) {
-					GUI.repaintLine(entityname);
+					GUIView.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
 				}
@@ -301,7 +302,7 @@ public class guiHelperMethods extends HelperMethods {
 
 	// Fields and methods were combined into one function due to striking similarity
 	//	in the underlying implementation.
-	public static void renameFieldsOrMethods(Classes classes, JFrame frame, String attribute) {
+	public static void renameFieldsOrMethods(Model classes, JFrame frame, String attribute) {
 		
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
@@ -334,13 +335,13 @@ public class guiHelperMethods extends HelperMethods {
 			String entityname = finaleList.getSelectedItem().toString();
 			if (attribute.equals("Field")) {
 				if(classes.renameField(entityname, List2.getSelectedItem().toString(), rename.getText())) {
-					GUI.repaintLine(entityname);
+					GUIView.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A field with that name already exists.");
 				}
 			} else {
 				if(classes.renameMethod(entityname, List2.getSelectedItem().toString(), rename.getText())) {
-					GUI.repaintLine(entityname);
+					GUIView.repaintLine(entityname);
 				} else {
 					JOptionPane.showMessageDialog(frame, "A method with that name already exists.");
 				}
@@ -350,7 +351,7 @@ public class guiHelperMethods extends HelperMethods {
 
 	// Fields and methods were combined into one function due to striking similarity
 	//	in the underlying implementation.
-	public static void deleteFieldsOrMethods(Classes classes, JFrame frame, String attribute) {
+	public static void deleteFieldsOrMethods(Model classes, JFrame frame, String attribute) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, attribute, false,
 				"Delete " + attribute);
@@ -377,11 +378,11 @@ public class guiHelperMethods extends HelperMethods {
 			} else {
 				classes.deleteMethod(entityname, List2.getSelectedItem().toString());
 			}
-			GUI.repaintLine(entityname);
+			GUIView.repaintLine(entityname);
 		}
 	}
 
-	public static void createParameter(Classes classes, JFrame frame) {
+	public static void createParameter(Model classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", false, "Create Parameter");
 		if (finaleList == null) {
@@ -413,7 +414,7 @@ public class guiHelperMethods extends HelperMethods {
 			System.out.println(entityname);
 			if(classes.createParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					name.getText(), type.getText())) {
-				GUI.repaintLine(entityname);
+				GUIView.repaintLine(entityname);
 			} else {
 				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
 			}
@@ -421,7 +422,7 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
-	public static void renameParameter(Classes classes, JFrame frame) {
+	public static void renameParameter(Model classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", true, "Rename Parameter");
 		if (finaleList == null) {
@@ -477,7 +478,7 @@ public class guiHelperMethods extends HelperMethods {
 			String entityname = finaleList.getSelectedItem().toString();
 			if(classes.renameParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString(), name.getText())) {
-				GUI.repaintLine(entityname);
+				GUIView.repaintLine(entityname);
 			} else {
 				JOptionPane.showMessageDialog(frame, "A parameter with that name already exists.");
 			}
@@ -485,7 +486,7 @@ public class guiHelperMethods extends HelperMethods {
 		}
 	}
 
-	public static void deleteParameter(Classes classes, JFrame frame) {
+	public static void deleteParameter(Model classes, JFrame frame) {
 		// Create a window asking for which class to choose from
 		JComboBox<String> finaleList = inputClass(classes.getEntities(), frame, "Method", true, "Delete Parameter");
 		if (finaleList == null) {
@@ -538,7 +539,7 @@ public class guiHelperMethods extends HelperMethods {
 			String entityname = finaleList.getSelectedItem().toString();
 			classes.deleteParameter(finaleList.getSelectedItem().toString(), methodList.getSelectedItem().toString(),
 					parameterList.getSelectedItem().toString());
-			GUI.repaintLine(entityname);
+			GUIView.repaintLine(entityname);
 		}
 	}
 
@@ -563,7 +564,7 @@ public class guiHelperMethods extends HelperMethods {
 
 	// Finds fields/methods that are in a specific class (if opt == true, then it
 	// only finds methods with parameters)
-	private static JComboBox<String> findStuff(Classes test, String inEntity, String type, Boolean opt) {
+	private static JComboBox<String> findStuff(Model test, String inEntity, String type, Boolean opt) {
 		ArrayList<Entity> entities2 = test.getEntities();
 		String[] attributeStrings = null;
 		for (int x = 0; x < entities2.size(); ++x) {

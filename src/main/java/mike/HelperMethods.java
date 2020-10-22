@@ -1,4 +1,4 @@
-package mike.cli;
+package mike;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import org.json.simple.parser.*;
 
 import mike.datastructures.*;
 import mike.datastructures.Relationship.Type;
-import mike.gui.GUI;
+import mike.view.GUIView;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 public class HelperMethods {
 
 	// Main load function. Calls loadClasses and loadRelationships
-		public static void load(Path userPath, Classes userClasses)
+		public static void load(Path userPath, Model userClasses)
 				throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
 			userClasses.clear();
@@ -50,7 +50,7 @@ public class HelperMethods {
 
 		// Takes all of the information from the classes in the JSON file,
 			// and inserts them to the currently running program
-			private static void loadClasses(Classes userClasses, JSONObject javaObj, JSONArray list,
+			private static void loadClasses(Model userClasses, JSONObject javaObj, JSONArray list,
 				ArrayList<JSONObject> objList) {
 				// Add class names and attributes from JSONArray list to loadFile
 				for (int x = 0; x < list.size(); ++x) {
@@ -97,18 +97,18 @@ public class HelperMethods {
 					e.setXLocation(Math.toIntExact(location));
 					location = (Long) objList.get(x).get("yPosition");
 					e.setYLocation(Math.toIntExact(location));
-					GUI.showClass(e);
+					GUIView.showClass(e);
 				}
 			
 				for(Entity curEntity : userClasses.getEntities()) {
-					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
+					JLabel curLabel = GUIView.getEntityLabels().get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
 				}
 			}
 
 		// Takes all of the information from the relationships in the JSON file,
 		// and inserts them into the currently running program
-		private static void loadRelationships(Classes userClasses, JSONObject javaObj, JSONArray list,
+		private static void loadRelationships(Model userClasses, JSONObject javaObj, JSONArray list,
 				ArrayList<JSONObject> objList) {
 			// Add relationship and class names from JSONArray list to loadFile
 			for (int x = 0; x < list.size(); ++x) {
@@ -123,12 +123,12 @@ public class HelperMethods {
 				String classOne = (String) objList.get(x).get("ClassOne");
 				String classTwo = (String) objList.get(x).get("ClassTwo");
 				userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
-				GUI.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
+				GUIView.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
 			}
 		}
 
 		// Main save function. Calls saveClasses and saveRelationships
-		public static void save(Path directory, Classes userClasses) throws IOException {
+		public static void save(Path directory, Model userClasses) throws IOException {
 			JSONObject saveFile = new JSONObject();
 
 			saveFile = saveClasses(saveFile, userClasses);
@@ -138,7 +138,7 @@ public class HelperMethods {
 		}
 
 		// Creates a JSONObject for the classes and saves it to the saveFile
-			private static JSONObject saveClasses(JSONObject saveFile, Classes userClasses) {
+			private static JSONObject saveClasses(JSONObject saveFile, Model userClasses) {
 				JSONArray allClasses = new JSONArray();
 
 				for (Entity entity : userClasses.getEntities()) {
@@ -187,7 +187,7 @@ public class HelperMethods {
 			}
 
 		// Creates a JSONObject for the relationships and saves it to the saveFile
-		private static JSONObject saveRelationships(JSONObject saveFile, Classes userClasses) {
+		private static JSONObject saveRelationships(JSONObject saveFile, Model userClasses) {
 			JSONArray allRelationships = new JSONArray();
 
 			for (Relationship relation : userClasses.getRelationships()) {
@@ -220,7 +220,7 @@ public class HelperMethods {
 		}
 
 		// Lists all of the classes and their respective attributes
-		public static void listClasses(Classes userClasses) {
+		public static void listClasses(Model userClasses) {
 			System.out.println("Classes:");
 			for (Entity curEntity : userClasses.getEntities()) {
 				System.out.println("	" + curEntity.getName() + ":");
@@ -264,7 +264,7 @@ public class HelperMethods {
 		}
 
 		// Lists all of the relationships and the classes they are pointing to
-		public static void listRelationships(Classes userClasses) {
+		public static void listRelationships(Model userClasses) {
 			System.out.println("Relationships:");
 			for (Relationship relation : userClasses.getRelationships()) {
 				System.out.println(
