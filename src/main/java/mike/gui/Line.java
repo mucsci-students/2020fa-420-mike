@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 
 import javax.swing.JComponent;
@@ -16,21 +17,41 @@ import javax.swing.JLabel;
 import mike.datastructures.Relationship.Type;
 
 public class Line extends JComponent {
-	private static final long serialVersionUID = 3292067459899020340L;
+	private static final long serialVersionUID = -5573668863596984829L;
 	private double x1, y1, x2, y2;
-	private JLabel classOne, classTwo;
+	private JLabel L1, L2;
+	boolean isSelf;
 	private Type type;
 
 	public Line(JLabel L1, JLabel L2, Type type) {
 		super();
 		this.type = type;
-		update(L1, L2);
+		this.L1 = L1;
+		this.L2 = L2;
+		this.isSelf = L1.equals(L2);
+		update();
 
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension(classOne.getParent().getWidth(), classOne.getParent().getHeight()));
+		this.setPreferredSize(new Dimension(L1.getParent().getWidth(), L2.getParent().getHeight()));
 	}
 
-	public void update(JLabel L1, JLabel L2) {
+	public JLabel getClassOne() {
+		return L1;
+	}
+
+	public JLabel getClassTwo() {
+		return L2;
+	}
+
+	public void update() {
+		if (isSelf)
+		{
+			x1 = L1.getLocation().x;
+			y1 = L1.getLocation().y;
+			x2 = x1;
+			y2 = y1;
+			return;
+		}
 		// (a,b) = L1 center
 		double a = L1.getLocation().x + L1.getSize().width / 2;
 		double b = L1.getLocation().y + L1.getSize().height / 2;
@@ -48,13 +69,11 @@ public class Line extends JComponent {
 		y1 = p1.getY();
 		x2 = p2.getX();
 		y2 = p2.getY();
-		classOne = L1;
-		classTwo = L2;
 	}
 
 	// Returns the point on the edge of L1 on the line between the centers of L1 and
 	// L2
-	public static Point getEdgeIntersectionPoint(Dimension d1, Point p1, double[] centers) {
+	private static Point getEdgeIntersectionPoint(Dimension d1, Point p1, double[] centers) {
 		if (centers[1] <= centers[3]) {
 			p1.y += d1.getHeight();
 		}
@@ -68,36 +87,15 @@ public class Line extends JComponent {
 		double i2 = (p1.y - centers[1]) / m;
 
 		// Point of intersection; Pick closest intersection point
-		if (Math.pow((centers[0] - p1.x), 2) + j1 * j1 > i2 * i2 + Math.pow((centers[1] - p1.y), 2)) {
+		double deltax = centers[0] - p1.x;
+		double deltay = centers[1] - p1.y;
+
+		if (deltax * deltax + j1 * j1 > i2 * i2 + deltay * deltay) {
 			p1.x = (int) (i2 + centers[0]);
 		} else {
 			p1.y = (int) (j1 + centers[1]);
 		}
 		return p1;
-	}
-
-	public void setx1(double newx1) {
-		x1 = newx1;
-	}
-
-	public void sety1(double newy1) {
-		y1 = newy1;
-	}
-
-	public void setx2(double newx2) {
-		x2 = newx2;
-	}
-
-	public void sety2(double newy2) {
-		y2 = newy2;
-	}
-
-	public JLabel getClassOne() {
-		return classOne;
-	}
-
-	public JLabel getClassTwo() {
-		return classTwo;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -108,6 +106,64 @@ public class Line extends JComponent {
 
 		super.paintComponent(g);
 
+		if (isSelf)
+		{
+			drawSelfRelationship(g2d);
+		}
+		else {
+			drawRelationship(g2d);
+		}
+	}
+	
+	private void drawSelfRelationship(Graphics2D g2d)
+	{
+		g2d.setColor(Color.BLACK);
+		
+		if (type == Type.REALIZATION)
+		{
+			float[] dashedpattern = { 4f, 4f };
+			Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
+					1.0f);
+
+			g2d.setStroke(dashedstroke);
+			g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 0, 240, Arc2D.OPEN));
+			
+			int x = (int)(x1 - 4);
+			int y = (int)(y1 + 16);
+			g2d.setStroke(new BasicStroke(1f));
+			g2d.rotate(-Math.toRadians(85), x, y);
+			drawEmptyArrow(g2d, x, y);
+			return;
+		}
+		
+		g2d.setStroke(new BasicStroke(1f));
+		g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 0, 240, Arc2D.OPEN));
+		
+		if (type == Type.COMPOSITION)
+		{
+			int x = (int)(x1 - 22);
+			int y = (int)(y1 + 14);
+			
+			g2d.rotate(Math.toRadians(95), x, y);
+			drawFilledDiamond(g2d, x, y);
+		} else if (type == Type.AGGREGATION) {
+			int x = (int)(x1 - 22);
+			int y = (int)(y1 + 14);
+			
+			g2d.rotate(Math.toRadians(95), x, y);
+			drawEmptyDiamond(g2d, x, y);
+		}
+		else 
+		{
+			int x = (int)(x1 - 4);
+			int y = (int)(y1 + 16);
+			g2d.rotate(-Math.toRadians(85), x, y);
+			drawEmptyArrow(g2d, x, y);
+		}
+	}
+	
+	private void drawRelationship(Graphics2D g2d)
+	{
 		// Get line length
 		double ydiff = y2 - y1;
 		double xdiff = x2 - x1;
@@ -124,8 +180,8 @@ public class Line extends JComponent {
 		if (type == Type.REALIZATION) {
 			// Dashed line
 			float[] dashedpattern = { 4f, 4f };
-			Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
-					dashedpattern, 1.0f);
+			Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
+					1.0f);
 
 			g2d.setStroke(dashedstroke);
 			g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
@@ -146,13 +202,13 @@ public class Line extends JComponent {
 		}
 	}
 
-	public void drawFilledDiamond(Graphics2D g2d, int x, int y) {
+	private void drawFilledDiamond(Graphics2D g2d, int x, int y) {
 		int xpoints[] = { x, x + 6, x, x - 6, x };
 		int ypoints[] = { y, y - 10, y - 20, y - 10, y };
 		g2d.fillPolygon(xpoints, ypoints, 5);
 	}
 
-	public void drawEmptyDiamond(Graphics2D g2d, int x, int y) {
+	private void drawEmptyDiamond(Graphics2D g2d, int x, int y) {
 		g2d.setColor(Color.WHITE);
 		int xpoints[] = { x, x + 6, x, x - 6, x };
 		int ypoints[] = { y, y - 10, y - 20, y - 10, y };
@@ -161,7 +217,7 @@ public class Line extends JComponent {
 		g2d.drawPolygon(xpoints, ypoints, 5);
 	}
 
-	public void drawEmptyArrow(Graphics2D g2d, int x, int y) {
+	private void drawEmptyArrow(Graphics2D g2d, int x, int y) {
 		g2d.setColor(Color.WHITE);
 		int xpoints[] = { x, x + 7, x - 7, x };
 		int ypoints[] = { y, y - 14, y - 14, y };
