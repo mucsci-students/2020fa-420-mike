@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import mike.datastructures.Classes;
 import mike.datastructures.Entity;
@@ -43,8 +42,13 @@ public class Controller extends guiHelperMethods {
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// catching the current values for x,y coordinates on screen
-				if (e.getSource() == newview) {
+				if(editMode) {
+					if(inClass != null){
+						GUI.exitEditingClass(inClass);
+					}
+					inClass = GUI.htmlBoxToEditBox(newview);
+				}// catching the current values for x,y coordinates on screen
+				else if (e.getSource() == newview) {
 					//if in edit mode, show text boxes and such for fields/methods/parameter
 					x_pressed = e.getX();
 					y_pressed = e.getY();
@@ -71,21 +75,20 @@ public class Controller extends guiHelperMethods {
 				//if in edit mode, drag from one class to another to create relationship
 				else {
 				}
-				GUI.repaintLine(entity.getName());
 			}
 		});
 	}
 		
-	public static void exitListener(JFrame frame) throws HeadlessException {
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.addWindowListener(new WindowAdapter()
+	public static void exitListener() throws HeadlessException {	
+		GUI.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		GUI.getFrame().addWindowListener(new WindowAdapter()
 	    {
 	        //@Override
 	        public void windowClosing(WindowEvent e)
 	        {	
 	        	if(changed){
 	        		int n = JOptionPane.showConfirmDialog(
-					    frame,
+	        			GUI.getFrame(),
 					    "You have unsaved changes.  Do you still want to exit?",
 					    "Exit",
 					    JOptionPane.YES_NO_OPTION);
@@ -102,14 +105,14 @@ public class Controller extends guiHelperMethods {
 	}
 	
 	// Listen to any function calls
-	public static void saveListener(JButton save, JFrame frame) {
+	public static void saveListener(JButton save) {
 		save.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
 			  try {
 				  if(path == null){
-					  saveWithInput(frame);
+					  saveWithInput();
 				  }
 				  else{
 					  save(path, classes);
@@ -122,17 +125,17 @@ public class Controller extends guiHelperMethods {
 		});
 	}
 	
-	public static void saveAsListener(JButton saveAs, JFrame frame) {
+	public static void saveAsListener(JButton saveAs) {
 		saveAs.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  saveWithInput(frame);
+			  saveWithInput();
 		  }
 		});
 	}
 	
-	private static void saveWithInput(JFrame frame) {
+	private static void saveWithInput() {
 		try {	
 		  JTextField fileName = new JTextField(20);
 		  JTextField directory = new JTextField(40);
@@ -154,7 +157,7 @@ public class Controller extends guiHelperMethods {
 				  path = Paths.get(System.getProperty("user.dir") + directory.getText() + "\\" + fileName.getText());
 				  file = new File(path.getParent().toString());
 				  if(!file.isDirectory()){  
-					  JOptionPane.showMessageDialog(frame, "Directory does not exist.  File saved to uml directory.");
+					  JOptionPane.showMessageDialog(GUI.getFrame(), "Directory does not exist.  File saved to uml directory.");
 				  }
 			  }
 			      
@@ -169,7 +172,7 @@ public class Controller extends guiHelperMethods {
   
 	
 	// Listen to any function calls
-	public static void loadListener(JButton load, HashMap<String, JLabel> entityLabels, JLayeredPane pane, JFrame frame) {
+	public static void loadListener(JButton load) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
@@ -177,7 +180,7 @@ public class Controller extends guiHelperMethods {
 			  try {
 				  if(changed == true) {
 					  int n = JOptionPane.showConfirmDialog(
-							    frame,
+							  	GUI.getFrame(),
 							    "You have unsaved changes.  Do you still want to load a new file?",
 							    "Exit",
 							    JOptionPane.YES_NO_OPTION);
@@ -197,7 +200,8 @@ public class Controller extends guiHelperMethods {
 				  // Ask for input with inputFields
 				  int result = JOptionPane.showConfirmDialog(null, inputFields, "Load", JOptionPane.OK_CANCEL_OPTION);
 
-				  if (result == 0) {				  
+				  if (result == 0) {
+					  JLayeredPane pane = GUI.getPane();
 					  classes.empty();
 					  pane.removeAll();
 					  pane.repaint();
@@ -220,25 +224,19 @@ public class Controller extends guiHelperMethods {
 				  e1.printStackTrace();
 			  }
 			  for(Entity curEntity : classes.getEntities()) {
-					JLabel curLabel = entityLabels.get(curEntity.getName());
+					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());				
-			  }
-			  
-			  for(Relationship r : classes.getRelationships())
-			  {
-				  GUI.createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass());
 			  }
 		  }
 		});
 	}
 
-	public static void addClassListener(JButton addClass, JFrame frame) {
+	public static void addClassListener(JButton addClass) {
 		addClass.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				createClass(classes, frame);
-
+				//createClass(classes, frame);
 				ArrayList<Entity> entities = classes.getEntities();
 
 				//prevent classes from gathering in middle after class is added
@@ -246,20 +244,33 @@ public class Controller extends guiHelperMethods {
 					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 				}
+				for(Relationship r : classes.getRelationships())
+				{
+					GUI.createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass());
+				}
 				changed = true;
 			}
 		});
 	}
 
-	public static void editModeListener(JButton editButton, JFrame frame, JLayeredPane pane) {
+	public static void editModeListener(JButton editButton) {
 		editButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				//if in edit mode
-				
+				if(editMode) {
+					editMode = false;
+					//Change button to signify we are out of edit mode
+					editButton.setText("Enable Edit Mode");
+					editButton.setBackground(null);
+					if(inClass != null) {
+						GUI.exitEditingClass(inClass);
+					}
+					inClass = null;
+				}
 				//if not in edit mode
-				{
+				else {
 					editMode = true;
 					//change button to signify we are in edit mode
 					editButton.setText("Disable Edit Mode");
@@ -270,7 +281,7 @@ public class Controller extends guiHelperMethods {
 	}
 	
 	// Listen to any function calls
-	public static void treeListener(JTree tree, JFrame frame, HashMap<String, JLabel> entityLabels) {
+	public static void treeListener(JTree tree) {
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -300,6 +311,7 @@ public class Controller extends guiHelperMethods {
 				}				
 				
 				/* React to the node selection. */
+				JFrame frame = GUI.getFrame();
 				switch(node.toString()) {
 					case "Create Class" : createClass(classes, frame); break;
 					case "Rename Class" : renameClass(classes, entityStrings, frame); break;
@@ -318,7 +330,7 @@ public class Controller extends guiHelperMethods {
 					default : throw new RuntimeException("Unknown button pressed");
 				}
 				for(Entity curEntity : entities) {
-					JLabel curLabel = entityLabels.get(curEntity.getName());
+					JLabel curLabel = GUI.getEntityLabels().get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 				}
 				changed = true;
@@ -326,13 +338,13 @@ public class Controller extends guiHelperMethods {
 		});
 	}
 	
-	public static void resizeListener(JFrame frame, ArrayList<Line> relations)
+	public static void resizeListener()
 	{
-		frame.addComponentListener(new ComponentAdapter() {
+		GUI.getFrame().addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent componentEvent) {
-		    	for (Line l : relations)
+		    	for (Line l : GUI.getRelations())
 		    	{
-		    		l.setBounds(0, 0, GUI.pane.getWidth(), GUI.pane.getHeight());
+		    		l.setBounds(0, 0, GUI.getPane().getWidth(), GUI.getPane().getHeight());
 		    	}
 		    }
 		});
