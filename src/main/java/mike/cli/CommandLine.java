@@ -88,9 +88,6 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 			line = reader.readLine("Enter a command: ", "", (MaskingCallback) null, null);
 			line = line.trim();
 			
-			if(line.isEmpty()) {
-				continue;
-			}
 			String[] commands = line.split(" ");
 
 			if (commands[0].equals("quit")) {
@@ -473,12 +470,8 @@ public class CommandLine extends HelperMethods implements ViewInterface {
   // True if they want to return
 	private static boolean savePrompt (boolean prompt, LineReader reader) {
 		while (prompt == true) {
-			String line = reader.readLine("Enter a command: ", "", (MaskingCallback) null, null);
+			String line = reader.readLine("", "", (MaskingCallback) null, null);
 			line = line.trim();
-
-			if(line.isEmpty()){
-				continue;
-			}
 			
 			if (line.equals("yes")) {
 				System.out.println("Proceeding.\n");
