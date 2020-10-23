@@ -3,7 +3,7 @@ package mike.datastructures;
 import java.util.ArrayList;
 import mike.datastructures.Relationship.Type;
 
-public class Classes {
+public class Model {
     private static ArrayList<Entity> entities;
     private static ArrayList<Relationship> relationships;
 
@@ -11,7 +11,7 @@ public class Classes {
     // Constructor //
     // *********************************************************//
 
-    public Classes() {
+    public Model() {
         entities = new ArrayList<Entity>();
         relationships = new ArrayList<Relationship>();
     }

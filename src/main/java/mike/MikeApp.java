@@ -1,15 +1,17 @@
 package mike;
 
-import mike.gui.Controller;
-import mike.gui.View;
+import java.io.IOException;
+
+import mike.datastructures.Model;
+import mike.view.CLIView;
+import mike.view.GUIView;
 
 public class MikeApp {
-	static Controller controller;
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if (args.length == 1 && args[0].equals("cli")) {
-			controller = new Controller(View.InterfaceType.CLI);
+			new CLIView(new Model());
 		} else if (args.length == 0) {
-			controller = new Controller(View.InterfaceType.GUI);
+			new GUIView();
 		} else {
 			System.out.println(
 					"Invalid input. Enter 'cli' for the command line interface, or enter nothing for the gui.");

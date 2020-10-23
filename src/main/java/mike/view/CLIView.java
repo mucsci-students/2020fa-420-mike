@@ -1,11 +1,10 @@
-package mike.cli;
+package mike.view;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
@@ -17,24 +16,16 @@ import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import org.jline.reader.Completer;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.MaskingCallback;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
-import mike.datastructures.Classes;
+import mike.datastructures.Model;
 import mike.datastructures.Relationship.Type;
-import mike.gui.ViewInterface;
+import mike.HelperMethods;
 
-public class CommandLine extends HelperMethods implements ViewInterface {
-	private static Classes classes = new Classes();
+public class CLIView {
+	private Model classes;
 	
-	public CommandLine() throws IOException {
+	public CLIView(Model classModel) throws IOException {
     // Initialize variables
+		this.classes = classModel;
 		boolean prompt = false;
 		String[] commandUsage = {
 			"\n  save <name>.json (optional <path>)", 
@@ -154,7 +145,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							else {
 								path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
 							}
-							save(path, classes);
+							HelperMethods.save(path, classes);
 							System.out.println("File saved at: " + path.toString());
 							prompt = false;
 						}
@@ -171,7 +162,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							else {
 								path = Paths.get(System.getProperty("user.dir") + "\\" + commands[2] + "\\" + commands[1]);  
 							}
-							save(path, classes);
+							HelperMethods.save(path, classes);
 							System.out.println("File saved at: " + path.toString());
 							prompt = false;
 						}
@@ -201,7 +192,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 									path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
 								}
 								
-								load(path, classes);
+								HelperMethods.load(path, classes);
 								prompt = false;
 							}
 						}
@@ -397,7 +388,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							System.out.println(errorMessage + commandUsage[16] + "\n");
 						} else {
 							System.out.println();
-							listClasses(classes);
+							HelperMethods.listClasses(classes);
 							System.out.println();							
 						}
 					} else if (commands[1].equals("relationships")) {
@@ -405,7 +396,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							System.out.println(errorMessage + commandUsage[17] + "\n");
 						} else {
 							System.out.println();							
-							listRelationships(classes);
+							HelperMethods.listRelationships(classes);
 							System.out.println();							
 						}
 					} else if (commands[1].equals("all")) {
@@ -413,9 +404,9 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							System.out.println(errorMessage + commandUsage[18] + "\n");
 						} else {
 							System.out.println();							
-							listClasses(classes);
+							HelperMethods.listClasses(classes);
 							System.out.println();
-							listRelationships(classes);
+							HelperMethods.listRelationships(classes);
 							System.out.println();							
 						}
 					} else {
