@@ -17,6 +17,15 @@ import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import org.jline.reader.Completer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.MaskingCallback;
+import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import mike.datastructures.Classes;
 import mike.datastructures.Relationship.Type;
 import mike.gui.ViewInterface;
@@ -108,7 +117,6 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 		LineReader savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
 	
 		while(true) {
-
 			String line = null;
 			
 			line = reader.readLine("Enter a command: ", "", (MaskingCallback) null, null);
