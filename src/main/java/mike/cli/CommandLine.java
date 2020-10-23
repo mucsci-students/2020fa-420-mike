@@ -6,6 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import org.jline.reader.Completer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.MaskingCallback;
+import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import mike.datastructures.Classes;
 import mike.datastructures.Relationship.Type;
 import mike.gui.ViewInterface;
@@ -13,7 +22,7 @@ import mike.gui.ViewInterface;
 public class CommandLine extends HelperMethods implements ViewInterface {
 	private static Classes classes = new Classes();
 	
-	public CommandLine() {
+	public CommandLine() throws IOException {
     // Initialize variables
 		boolean prompt = false;
 		String[] commandUsage = {
@@ -22,17 +31,17 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 			"\n  create class <name>",
 			"\n  create field <class name> <field type> <field name>",
 			"\n  create method <class name> <method type> <method name>",
-			"\n  create rel <type> <class name1> <class name2>",
-			"\n  create param <class name> <method> <parameter type> <parameter name>",
+			"\n  create relationship <type> <class name1> <class name2>",
+			"\n  create parameter <class name> <method> <parameter type> <parameter name>",
 			"\n  delete class <name>",
 			"\n  delete field <class name> <field name>",
 			"\n  delete method <class name> <method name>",
-			"\n  delete rel <type> <class name1> <class name2>",
-			"\n  delete param <class name> <method name>, <parameter name>",
+			"\n  delete relationship <type> <class name1> <class name2>",
+			"\n  delete parameter <class name> <method name>, <parameter name>",
 			"\n  rename class <name> <newname>",
 			"\n  rename field <class name> <field name> <newname>",
 			"\n  rename method <class name> <method name> <newname>",
-			"\n  rename param <class name> <method name> <parameter name> <parameter newname>",
+			"\n  rename parameter <class name> <method name> <parameter name> <parameter newname>",
 			"\n  list classes",
 			"\n  list relationships",
 			"\n  list all",
@@ -40,33 +49,57 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 		};
 		String errorMessage = "\nError in parsing command. Proper command usage is: ";
 		
-		Scanner cmdLine = new Scanner(System.in);
 		System.out.println("Hello, and welcome to Team mike's UML editor.");
 		System.out.println("To exit the program, type 'quit'.");
 		System.out.println("To see all the commands available, type 'help'.\n");
-		System.out.print("Enter a command: ");
+		
+		Terminal terminal = TerminalBuilder.builder()
+				.system(true)
+				.build();
 
-		while(cmdLine.hasNextLine()) {
-			String line = cmdLine.nextLine();
+		Completer completer = new StringsCompleter(
+				"save",
+				"load",
+				"create",
+				"delete",
+				"rename",
+				"list",
+				"class",
+				"field",
+				"method",
+				"relationship",
+				"parameter",
+				"classes",
+				"relationships",
+				"all",
+				"clear"
+				);
+
+		DefaultParser parser = new DefaultParser();
+		parser.setEscapeChars(new char[] {});
+
+		LineReader reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
+				.variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+		
+		
+		while(true) {
+			String line = null;
 			
-			//Redo loop if blank line			
-			if(line.isEmpty()){
-				System.out.print("Enter a command: ");
-				continue;
-			}
-			//Parse command line string into a list of commands by spaces
+			line = reader.readLine("Enter a command: ", "", (MaskingCallback) null, null);
+			line = line.trim();
+			
 			String[] commands = line.split(" ");
 
 			if (commands[0].equals("quit")) {
 				if (prompt == true) {
 					System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 					System.out.println("Type 'yes' to quit, or 'no' to go back.");
-					prompt = savePrompt(prompt, cmdLine);
+					prompt = savePrompt(prompt, reader);
 				}
 				if (!prompt) {
+					terminal.close();
 					break;
 				}
-				System.out.print("Enter a command: ");
 				continue;
 			}
 
@@ -122,7 +155,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							if (prompt == true) {
 								System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 								System.out.println("Type 'yes' to continue loading, or 'no' to go back.");
-								prompt = savePrompt(prompt, cmdLine);
+								prompt = savePrompt(prompt, reader);
 							}
 							if (!prompt) {
 								File file = new File(commands[1]);
@@ -181,7 +214,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						} else {
 							System.out.println("\nCreate method failed. Make sure the method doesn't already exist and the class name does exist.\n");
 						}
-					} else if (commands[1].equals("rel")) {
+					} else if (commands[1].equals("relationship")) {
 						if (commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[5] + "\n");
 							break;
@@ -191,7 +224,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						} else {
 							System.out.println("\nCreate relationship failed. Make sure the classes exist, the relationship type is valid, and that it is not a duplicate.\n");							
 						}
-					} else if (commands[1].equals("param")) {
+					} else if (commands[1].equals("parameter")) {
 						if (commands.length != 6) {
 							System.out.println(errorMessage + commandUsage[6] + "\n");
 							break;
@@ -243,7 +276,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						} else {
 							System.out.println("\nDelete method failed. Make sure the method and class name exist.\n");							
 						}
-					} else if (commands[1].equals("rel")) {
+					} else if (commands[1].equals("relationship")) {
 						if (commands.length != 5) {
 							System.out.println(errorMessage + commandUsage[10] + "\n");
 							break;
@@ -253,7 +286,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						} else {
 							System.out.println("\nDelete relationship failed. Make sure the relationship exists.\n");							
 						}
-					} else if (commands[1].equals("param")) {
+					} else if (commands[1].equals("parameter")) {
 						if (commands.length != 5) {
 							System.out.println(errorMessage + commands[11] + "\n");
 							break;
@@ -304,7 +337,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 						} else {
 							System.out.println("\nRename method failed. Make sure the class and method exist and the new method name doesn't exist.\n");
 						}
-					} else if (commands[1].equals("param")) {
+					} else if (commands[1].equals("parameter")) {
 						if (commands.length != 6) {
 							System.out.println(errorMessage + commandUsage[15] + "\n");
 							break;
@@ -362,7 +395,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 					} else if (!classes.empty()) {
 						System.out.println("\nAre you sure you want to delete everything?");
 						System.out.println("Type 'yes' to delete, or 'no' to go back.");
-						boolean answer = savePrompt(true, cmdLine);
+						boolean answer = savePrompt(true, reader);
 							
 						if (!answer) {
 							classes.clear();
@@ -375,9 +408,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 				default:
 					System.out.println("\nInvalid command.\nType help to see a list of all commands.\n");
 			}
-			System.out.print("Enter a command: ");
 		}
-		cmdLine.close();
 	}
 
   // Prints out how to use all the commands in the CLI
@@ -437,16 +468,16 @@ public class CommandLine extends HelperMethods implements ViewInterface {
   // Gets user input to set save prompt flag.
   // False if they wish to continue
   // True if they want to return
-	private static boolean savePrompt (boolean prompt, Scanner cmdLine) {
-		while (prompt == true) {		
+	private static boolean savePrompt (boolean prompt, LineReader reader) {
+		while (prompt == true) {
+			String line = reader.readLine("", "", (MaskingCallback) null, null);
+			line = line.trim();
 			
-			String answer = cmdLine.nextLine();
-			
-			if (answer.equals("yes")) {
+			if (line.equals("yes")) {
 				System.out.println("Proceeding.\n");
 				prompt = false;
 				break;
-			} else if (answer.equals("no")) {
+			} else if (line.equals("no")) {
 				System.out.println("Stopping.\n");
 				prompt = true;
 				break;

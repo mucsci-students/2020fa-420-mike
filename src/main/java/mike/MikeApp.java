@@ -3,7 +3,7 @@ package mike;
 import mike.gui.Controller;
 import mike.gui.View;
 
-public class main {
+public class MikeApp {
 	static Controller controller;
 	public static void main(String[] args) {
 		if (args.length == 1 && args[0].equals("cli")) {

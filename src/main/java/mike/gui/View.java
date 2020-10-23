@@ -1,5 +1,7 @@
 package mike.gui;
 
+import java.io.IOException;
+
 import mike.cli.*;
 
 public class View {
@@ -17,7 +19,12 @@ public class View {
 		if (viewtype.equals(InterfaceType.GUI)) {
 			setViewinterface(new GUI());
 		} else {
-			setViewinterface(new CommandLine());
+			try {
+				setViewinterface(new CommandLine());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

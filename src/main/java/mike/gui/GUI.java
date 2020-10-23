@@ -2,25 +2,17 @@ package mike.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Point;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -28,7 +20,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import mike.datastructures.*;
-import mike.gui.Line;
 
 public class GUI implements ViewInterface {
 	// Global Variables
@@ -163,8 +154,8 @@ public class GUI implements ViewInterface {
 	public static void repaintLine(String name) {
 		for(Line l : relations) {
 			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
-				JLabel L1 = entitylabels.get(l.getClassOne().getName());
-				JLabel L2 = entitylabels.get(l.getClassTwo().getName());
+				entitylabels.get(l.getClassOne().getName());
+				entitylabels.get(l.getClassTwo().getName());
 				
 				l.update();
 				l.repaint();
@@ -179,7 +170,7 @@ public class GUI implements ViewInterface {
 		entitylabels.put(e.getName(), classObj);
 		classObj.setBounds(classObj.getX(), classObj.getY(), classObj.getPreferredSize().width, classObj.getPreferredSize().height);
 		classObj.setName(e.getName());
-		pane.add(classObj, new Integer(2));
+		pane.add(classObj, 2);
 		pane.validate();
 	}
 
