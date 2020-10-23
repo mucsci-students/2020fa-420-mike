@@ -4,7 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
+
+import org.jline.reader.Completer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.MaskingCallback;
+import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.completer.AggregateCompleter;
+import org.jline.reader.impl.completer.ArgumentCompleter;
+import org.jline.reader.impl.completer.NullCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -56,32 +67,55 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 		Terminal terminal = TerminalBuilder.builder()
 				.system(true)
 				.build();
-
-		Completer completer = new StringsCompleter(
-				"save",
-				"load",
-				"create",
-				"delete",
-				"rename",
-				"list",
-				"class",
-				"field",
-				"method",
-				"relationship",
-				"parameter",
-				"classes",
-				"relationships",
-				"all",
-				"clear"
+		
+		AggregateCompleter completer = new AggregateCompleter(
+			new ArgumentCompleter(
+				new StringsCompleter("save"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("load"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("quit"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("clear"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("create", "delete"),
+				new StringsCompleter("class", "field", "method", 
+						"parameter", "relationship"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("rename"),
+				new StringsCompleter("class", "field", "method", 
+						"parameter"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("list"),
+				new StringsCompleter("classes", "relationships",
+						"all"),
+				new NullCompleter()
+			)
+		);
+		
+		StringsCompleter savePromptCompleter = new StringsCompleter(
+				"yes",
+				"no"
 				);
-
+		
 		DefaultParser parser = new DefaultParser();
 		parser.setEscapeChars(new char[] {});
-
-		LineReader reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
-				.variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
 		
-		
+		LineReader reader = LineReaderBuilder.builder().terminal(terminal).completer(completer).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+		LineReader savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+	
 		while(true) {
 			String line = null;
 			
@@ -94,7 +128,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 				if (prompt == true) {
 					System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 					System.out.println("Type 'yes' to quit, or 'no' to go back.");
-					prompt = savePrompt(prompt, reader);
+					prompt = savePrompt(prompt, savePromptReader);
 				}
 				if (!prompt) {
 					terminal.close();
@@ -155,7 +189,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							if (prompt == true) {
 								System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 								System.out.println("Type 'yes' to continue loading, or 'no' to go back.");
-								prompt = savePrompt(prompt, reader);
+								prompt = savePrompt(prompt, savePromptReader);
 							}
 							if (!prompt) {
 								File file = new File(commands[1]);
@@ -395,7 +429,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 					} else if (!classes.empty()) {
 						System.out.println("\nAre you sure you want to delete everything?");
 						System.out.println("Type 'yes' to delete, or 'no' to go back.");
-						boolean answer = savePrompt(true, reader);
+						boolean answer = savePrompt(true, savePromptReader);
 							
 						if (!answer) {
 							classes.clear();
@@ -503,3 +537,4 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 		}
 	}
 }
+
