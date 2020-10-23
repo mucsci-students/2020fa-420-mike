@@ -97,9 +97,10 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 				if (prompt == true) {
 					System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 					System.out.println("Type 'yes' to quit, or 'no' to go back.");
-					prompt = savePrompt(prompt);
+					prompt = savePrompt(prompt, reader);
 				}
 				if (!prompt) {
+					terminal.close();
 					break;
 				}
 				continue;
@@ -157,7 +158,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 							if (prompt == true) {
 								System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 								System.out.println("Type 'yes' to continue loading, or 'no' to go back.");
-								prompt = savePrompt(prompt);
+								prompt = savePrompt(prompt, reader);
 							}
 							if (!prompt) {
 								File file = new File(commands[1]);
@@ -397,7 +398,7 @@ public class CommandLine extends HelperMethods implements ViewInterface {
 					} else if (!classes.empty()) {
 						System.out.println("\nAre you sure you want to delete everything?");
 						System.out.println("Type 'yes' to delete, or 'no' to go back.");
-						boolean answer = savePrompt(true);
+						boolean answer = savePrompt(true, reader);
 							
 						if (!answer) {
 							classes.clear();
@@ -470,24 +471,26 @@ public class CommandLine extends HelperMethods implements ViewInterface {
   // Gets user input to set save prompt flag.
   // False if they wish to continue
   // True if they want to return
-	private static boolean savePrompt (boolean prompt) {
-		Scanner cmdLine = new Scanner(System.in);
-		while (prompt == true) {		
+	private static boolean savePrompt (boolean prompt, LineReader reader) {
+		while (prompt == true) {
+			String line = reader.readLine("Enter a command: ", "", (MaskingCallback) null, null);
+			line = line.trim();
+
+			if(line.isEmpty()){
+				continue;
+			}
 			
-			String answer = cmdLine.nextLine();
-			
-			if (answer.equals("yes")) {
+			if (line.equals("yes")) {
 				System.out.println("Proceeding.\n");
 				prompt = false;
 				break;
-			} else if (answer.equals("no")) {
+			} else if (line.equals("no")) {
 				System.out.println("Stopping.\n");
 				prompt = true;
 				break;
 			}
 			System.out.println("Invalid command. Type 'yes' to proceed, or 'no' to go back.");
 		}
-		cmdLine.close();
 		return prompt;
 	}
 
