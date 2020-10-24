@@ -28,8 +28,8 @@ public class editBox {
 		Entity e = Controller.getModel().copyEntity(label.getName());
 		
 		// Get deletion image
-		URL p = GUIView.class.getResource("..\\gui\\resources\\xmark.jpg");
-		ImageIcon icon = new ImageIcon(new ImageIcon(p).getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+		//URL p = GUIView.class.getResource("..\\gui\\resources\\xmark.jpg");
+		//ImageIcon icon = new ImageIcon(new ImageIcon(p).getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
 		
 		// Create entire editBox
         this.newBox = new JLabel();
@@ -42,7 +42,7 @@ public class editBox {
         newEntity.setBackground(Color.LIGHT_GRAY);
 
         //create X button
-        JButton xButton = new JButton(icon);
+        JButton xButton = new JButton("X");
         //class name next to X button
         JTextField className = new JTextField(label.getName());
 
