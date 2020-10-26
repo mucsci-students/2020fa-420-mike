@@ -17,19 +17,17 @@ import mike.view.GUIView;
 public class ClassController {
 
 	private static Boolean editMode = false;
-	private static JLabel inClass = null;
 	private static int x_pressed = 0;
 	private static int y_pressed = 0;
-
+	
 	protected static void clickClass(JLabel newview) {
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(editMode) {
-					if(inClass != null){
-						GUIView.exitEditingClass(inClass);
+					if(Controller.getinClass() == null) {
+						Controller.setinClass(GUIView.htmlBoxToEditBox(newview));
 					}
-					inClass = GUIView.htmlBoxToEditBox(newview);
 				}// catching the current values for x,y coordinates on screen
 				else if (e.getSource() == newview) {
 					//if in edit mode, show text boxes and such for fields/methods/parameter
@@ -72,10 +70,10 @@ public class ClassController {
 					//Change button to signify we are out of edit mode
 					editButton.setText("Enable Edit Mode");
 					editButton.setBackground(null);
-					if(inClass != null) {
-						GUIView.exitEditingClass(inClass);
+					if(Controller.getinClass() != null) {
+						GUIView.exitEditingClass(Controller.getinClass());
 					}
-					inClass = null;
+					Controller.setinClass(null);
 				}
 				//if not in edit mode
 				else {
