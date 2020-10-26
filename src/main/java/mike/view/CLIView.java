@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
@@ -17,15 +16,6 @@ import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import org.jline.reader.Completer;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.MaskingCallback;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
 import mike.datastructures.Model;
 import mike.datastructures.Relationship.Type;
 import mike.HelperMethods;
@@ -33,7 +23,7 @@ import mike.HelperMethods;
 public class CLIView {
 	private Model classes;
 	
-	public CLIView(Model classModel) {
+	public CLIView(Model classModel) throws IOException {
     // Initialize variables
 		this.classes = classModel;
 		boolean prompt = false;
