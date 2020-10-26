@@ -2,7 +2,6 @@ package mike.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,9 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import mike.controller.Controller;
 import mike.datastructures.*;
@@ -48,19 +44,11 @@ public class GUIView {
 		menuBar.add(addClass);
 		menuBar.add(editMode);
 
-		// Creating the side-bar
-		JTree tree = createTree();
-		tree.setRootVisible(false);
-		JScrollPane treeView = new JScrollPane(tree);
-		Dimension d = new Dimension(200, treeView.getHeight());
-		treeView.setPreferredSize(d);
-
 		// Creating the middle panel
 		pane.setBackground(Color.WHITE);
 		
 		// Adding all panels onto frame
 		frame.getContentPane().add(BorderLayout.CENTER, pane);
-		frame.getContentPane().add(BorderLayout.WEST, treeView);
 		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
@@ -68,7 +56,7 @@ public class GUIView {
 		validateRepaint();
 
 		control.frameControls(save, saveAs, load, addClass, editMode);
-		Controller.treeListener(tree);
+	
 	}
 	
 	public static HashMap<String, JLabel> getEntityLabels() {
@@ -91,38 +79,9 @@ public class GUIView {
 		return control;
 	}
 	
-	private static void validateRepaint() {
+	public static void validateRepaint() {
 		pane.validate();
 		pane.repaint();
-	}
-	
-	private static JTree createTree() {
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode("UML");
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Class");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Class"));
-		node.add(new DefaultMutableTreeNode("Rename Class"));
-		node.add(new DefaultMutableTreeNode("Delete Class"));
-		node = new DefaultMutableTreeNode("Relationship");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Relationship"));
-		node.add(new DefaultMutableTreeNode("Delete Relationship"));
-		node = new DefaultMutableTreeNode("Field");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Field"));
-		node.add(new DefaultMutableTreeNode("Rename Field"));
-		node.add(new DefaultMutableTreeNode("Delete Field"));
-		node = new DefaultMutableTreeNode("Method");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Method"));
-		node.add(new DefaultMutableTreeNode("Rename Method"));
-		node.add(new DefaultMutableTreeNode("Delete Method"));
-		node = new DefaultMutableTreeNode("Parameter");
-		top.add(node);
-		node.add(new DefaultMutableTreeNode("Create Parameter"));
-		node.add(new DefaultMutableTreeNode("Rename Parameter"));
-		node.add(new DefaultMutableTreeNode("Delete Parameter"));
-		return new JTree(top);
 	}
 
 	public static void showClass(Entity entity) {
@@ -161,7 +120,6 @@ public class GUIView {
 	public static void repaintLine(String name) {
 		for(Line l : relations) {
 			if(l.getClassOne().getName().equals(name) || l.getClassTwo().getName().equals(name)) {
-				
 				l.update();
 				l.repaint();
 			}
@@ -189,10 +147,10 @@ public class GUIView {
 	public static JLabel htmlBoxToEditBox(JLabel label) {
 		pane.remove(label);
 		
-		editBox newview = new editBox(label);
-		pane.add(newview.getBox(), 2);
+		new editBox(label);
+		pane.add(editBox.getBox(), 2);
 		validateRepaint();
-		return newview.getBox();
+		return editBox.getBox();
 	}
 	
 	public static void exitEditingClass(JLabel inClass) {

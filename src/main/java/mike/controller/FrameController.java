@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Relationship;
@@ -51,7 +53,29 @@ public class FrameController {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//createClass(classes, frame);
+				JTextField name = new JTextField(20);
+
+				// Create a panel containing a drop-down box and text field
+				JPanel inputFields = new JPanel();
+				inputFields.add(new JLabel("Enter a Class name: "));
+				inputFields.add(name);
+				
+				// Ask for input with inputFields
+				int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
+				
+				if(name.getText().contains(" ")){
+					JOptionPane.showMessageDialog(GUIView.getFrame(), "Spaces are not allowed");
+					return;
+				}
+				
+				if (result == 0) {
+					if(Controller.getModel().createClass(name.getText())){
+						GUIView.showClass(Controller.getModel().copyEntity(name.getText()));
+					} else {
+						JOptionPane.showMessageDialog(GUIView.getFrame(), "An entity with that name already exists.");
+					}
+				}
+				
 				ArrayList<Entity> entities = Controller.getModel().getEntities();
 
 				//prevent classes from gathering in middle after class is added

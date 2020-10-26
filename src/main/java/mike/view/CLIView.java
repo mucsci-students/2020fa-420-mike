@@ -528,4 +528,3 @@ public class CLIView {
 		}
 	}
 }
-
