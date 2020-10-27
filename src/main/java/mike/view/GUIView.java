@@ -2,6 +2,7 @@ package mike.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +25,7 @@ public class GUIView {
 	private static ArrayList<Line> relations = new ArrayList<Line>();
 	private static JFrame frame = new JFrame("Team mike UML Editor");
 	private static Controller control = new Controller();
+	private static JMenuBar menuBar = new JMenuBar();
 	
 	public GUIView() {
 		
@@ -32,7 +34,6 @@ public class GUIView {
 		frame.setSize(1000, 800);
 
 		// Creating the menu bar and its options
-		JMenuBar menuBar = new JMenuBar();
 		JButton save = new JButton("Save");
 		JButton saveAs = new JButton("Save As");
 		JButton load = new JButton("Load");
@@ -43,6 +44,7 @@ public class GUIView {
 		menuBar.add(load);
 		menuBar.add(addClass);
 		menuBar.add(editMode);
+		
 
 		// Creating the middle panel
 		pane.setBackground(Color.WHITE);
@@ -59,6 +61,9 @@ public class GUIView {
 	
 	}
 	
+	public static JMenuBar getMenuBar() {
+		return menuBar;
+	}
 	public static HashMap<String, JLabel> getEntityLabels() {
 		return entitylabels;
 	}
@@ -84,11 +89,13 @@ public class GUIView {
 		pane.repaint();
 	}
 
-	public static void showClass(Entity entity) {
+	public static htmlBox showClass(Entity entity) {
 		htmlBox newview = new htmlBox(entity);
 		pane.add(newview.getBox(), 2);
 		entitylabels.put(entity.getName(), newview.getBox());
 		validateRepaint();
+		
+		return newview;
 	}
 
 	public static void deleteLines(String name) {
@@ -134,11 +141,17 @@ public class GUIView {
 
 	public static void createRelationship(Relationship.Type type, String name1, String name2)
 	{
-		JLabel L1 = entitylabels.get(name1);
+		//JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
-		Line line = new Line(L1, L2, type);
+		Line line;
+		if(name1.equals(name2)){
+			line = new Line(editBox.getBox(), editBox.getBox(), type);
+		} else {
+			line = new Line(editBox.getBox(), L2, type);
+		}
+		
 		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
-
+		Controller.getModel().createRelationship(type, name1, name2);
 		relations.add(line);
 		pane.add(line);
 		pane.validate();
@@ -146,17 +159,64 @@ public class GUIView {
 	
 	public static JLabel htmlBoxToEditBox(JLabel label) {
 		pane.remove(label);
-		
-		new editBox(label);
+
+		editBox newBox = new editBox(label);
 		pane.add(editBox.getBox(), 2);
+		ArrayList<Line> movingLines = new ArrayList<Line>();
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(label.getName()) || l.getClassTwo().getName().equals(label.getName())) {
+				movingLines.add(l);
+			}
+		}
+		for(Line l : movingLines) {
+			
+			if(label.getName().equals(l.getClassOne().getName()) && label.getName().equals(l.getClassTwo().getName())){
+				l.setClassOne(editBox.getBox());
+				l.setClassTwo(editBox.getBox());
+				l.setPreferredSize(new Dimension(label.getWidth(), label.getHeight()));
+			} else if (label.getName().equals(l.getClassOne().getName())){
+				l.setClassOne(editBox.getBox());
+				l.setPreferredSize(new Dimension(label.getWidth(), l.getClassTwo().getParent().getHeight()));
+			} else {
+				l.setClassTwo(editBox.getBox());
+				l.setPreferredSize(new Dimension(l.getClassTwo().getParent().getWidth(), label.getHeight()));
+			}
+			l.update();
+		}
 		validateRepaint();
+		
 		return editBox.getBox();
 	}
 	
 	public static void exitEditingClass(JLabel inClass) {
 		pane.remove(inClass);
 		Entity e = Controller.getModel().copyEntity(inClass.getName());
-		showClass(e);
+
+		ArrayList<Line> movingLines = new ArrayList<Line>();
+		for(Line l : relations) {
+			if(l.getClassOne().getName().equals(inClass.getName()) || l.getClassTwo().getName().equals(inClass.getName())) {
+				movingLines.add(l);
+			}
+		}
+
+		JLabel box = showClass(e).getBox();
+		for(Line l : movingLines) {
+			if(inClass.getName().equals(l.getClassTwo().getName()) && inClass.getName().equals(l.getClassOne().getName())){
+				l.setClassOne(box);
+				l.setClassTwo(box);
+				l.setPreferredSize(new Dimension(inClass.getWidth(), inClass.getHeight()));
+			} else if (inClass.getName().equals(l.getClassOne().getName())){
+				l.setClassOne(box);
+				l.setPreferredSize(new Dimension(inClass.getWidth(), l.getClassTwo().getParent().getHeight()));
+			} else {
+				l.setClassTwo(box);
+				l.setPreferredSize(new Dimension(l.getClassTwo().getParent().getWidth(), inClass.getHeight()));
+			}
+
+			l.update();
+		}
+
+		validateRepaint();
 	}
 	
 }

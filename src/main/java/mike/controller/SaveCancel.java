@@ -12,6 +12,8 @@ import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Parameter;
+import mike.datastructures.Relationship;
+import mike.gui.Line;
 import mike.gui.editBox;
 import mike.view.GUIView;
 
@@ -56,6 +58,10 @@ public class SaveCancel {
 			  Controller.getinClass().setName(text.getText());
 			  GUIView.exitEditingClass(Controller.getinClass());
 			  Controller.setinClass(null);
+			  GUIView.getMenuBar().remove(6);
+			  GUIView.getMenuBar().remove(5);
+			  GUIView.getFrame().validate();
+			  GUIView.getFrame().repaint();
 		  }
 		});
 	}
@@ -82,8 +88,25 @@ public class SaveCancel {
 				  }
 				  ++x;
 			  }
+			  
+			  for(Line relation : GUIView.getRelations()){
+				 if((relation.getClassOne().getName()).equals(editBox.getBox().getName())){
+					 GUIView.getPane().remove(relation);
+				 }
+			  }
+			  GUIView.getRelations().clear();
+			  for(Relationship relation : editBox.getBackupRel()){
+				  GUIView.createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+				  Controller.getModel().createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+			  }
 			  GUIView.exitEditingClass(Controller.getinClass());
 			  Controller.setinClass(null);
+
+			  GUIView.getMenuBar().remove(6);
+			  GUIView.getMenuBar().remove(5);
+			  GUIView.getFrame().validate();
+			  GUIView.getFrame().repaint();
+			  GUIView.validateRepaint();
 		  }
 		});
 	}

@@ -1,5 +1,6 @@
 package mike.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -10,7 +11,9 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 //import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
@@ -21,6 +24,7 @@ import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Parameter;
+import mike.datastructures.Relationship;
 import mike.view.GUIView;
 
 public class editBox {
@@ -30,6 +34,7 @@ public class editBox {
 	//private static ImageIcon addIcon = new ImageIcon(new ImageIcon(GUIView.class.getResource("..\\gui\\resources\\addSymbol.png")).getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
 	private static Entity e;
 	private static ArrayList<Entity> backup = new ArrayList<Entity>();
+	private static ArrayList<Relationship> backupRel = new ArrayList<Relationship>();
 	
 	public editBox (JLabel label) {
 		backup.clear();
@@ -47,6 +52,14 @@ public class editBox {
 				  }
 			  }
 			  backup.add(adding);
+		  }
+		backupRel.clear();
+		for(Relationship relation : Controller.getModel().getRelationships()){
+			if(relation.getFirstClass().equals(label.getName())){
+				Relationship adding = new Relationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+				backupRel.add(adding);
+			}
+			
 		  }
 		
 		e = Controller.getModel().copyEntity(label.getName());
@@ -69,6 +82,7 @@ public class editBox {
 		newBox.setName(e.getName());
 		newBox.setBounds(e.getXLocation(), e.getYLocation(), newBox.getLayout().preferredLayoutSize(newBox).width, newBox.getLayout().preferredLayoutSize(newBox).height);
 
+		
 	}
 	
 	public static JLabel getBox() {
@@ -83,8 +97,24 @@ public class editBox {
 		return backup;
 	}
 	
+	public static ArrayList<Relationship> getBackupRel(){
+		return backupRel;
+	}
+	
 	private void createClassSection(String labelName) {
-        JPanel saveCancel = setUpJPanel();     
+        JFrame frame = GUIView.getFrame();
+        JMenuBar menuBar = GUIView.getMenuBar();
+        JButton addRelation = new JButton("Add Relationship");
+		JButton deleteRelation = new JButton("Delete Relationship");
+		menuBar.add(addRelation);
+		menuBar.add(deleteRelation);
+		frame.getContentPane().add(BorderLayout.NORTH, menuBar);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		frame.validate();
+		frame.repaint();		
+        
+		JPanel saveCancel = setUpJPanel();     
         JButton saveButton = new JButton("Save");
         JButton cancelButton = new JButton("Cancel");
         saveCancel.add(saveButton);
@@ -96,7 +126,7 @@ public class editBox {
         JTextField className = new JTextField(labelName);
         newEntity.add(xButton);
         newEntity.add(className);
-        GUIView.getController().saveCancel(saveButton, cancelButton, xButton);
+        GUIView.getController().saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation);
         newBox.add(newEntity);
 	}
 	

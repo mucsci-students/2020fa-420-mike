@@ -34,10 +34,12 @@ public class Controller {
 		FrameController.resizeListener();
 	}
 	
-	public void saveCancel (JButton save, JButton cancel, JButton xButton) {
+	public void saveCancel (JButton save, JButton cancel, JButton xButton, JButton addRelation, JButton deleteRelation) {
 		SaveCancel.saveClass(save);
 		SaveCancel.cancelClass(cancel);
 		SaveCancel.deleteEntity(xButton);
+		ClassController.addRelationListener(addRelation);
+		ClassController.deleteRelationListener(deleteRelation);
 	}
 
 	public void createField (JPanel panel) {
