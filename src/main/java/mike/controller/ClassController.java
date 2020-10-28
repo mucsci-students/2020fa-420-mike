@@ -25,50 +25,51 @@ import mike.datastructures.Relationship;
 import mike.datastructures.Relationship.Type;
 import mike.gui.editBox;
 import mike.view.GUIView;
+import mike.view.ViewTemplate;
 
 public class ClassController {
 
-	private static Boolean editMode = false;
+	private static boolean editMode = false;
 	private static int x_pressed = 0;
 	private static int y_pressed = 0;
 	
 	
-	protected static void addRelationListener(JButton addRelation) {
+	protected static void addRelationListener(JButton addRelation, Controller control) {
 		addRelation.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				ArrayList<Entity> entities = Controller.getModel().getEntities();
+				ArrayList<Entity> entities = control.getModel().getEntities();
                 String[] entityStrings = new String[entities.size()];
                 for(int x = 0; x < entities.size(); ++x) {
                     entityStrings[x] = entities.get(x).getName();
                 }    
-				createRelation(Controller.getModel(), entityStrings, GUIView.getFrame());
+				createRelation(control.getModel(), entityStrings,  ((GUIView) control.getView()).getFrame(),  ((GUIView) control.getView()));
 			}
 		});
 	}
 	
-	protected static void deleteRelationListener(JButton deleteRelation) {
+	protected static void deleteRelationListener(JButton deleteRelation, Controller control) {
 		deleteRelation.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				 
-				deleteRelation(Controller.getModel(), GUIView.getFrame());
+				deleteRelation(control.getModel(),  ((GUIView) control.getView()).getFrame(),  ((GUIView) control.getView()));
 			}
 		});
 	}
 	
-	protected static void clickClass(JLabel newview) {
+	protected static void clickClass(JLabel newview, Controller control) {
 		newview.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(editMode) {
-					if(Controller.getinClass() == null) {
-						JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
-						JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
+					if(control.getinClass() == null) {
+						JButton addClassButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(3);
+						JButton editModeButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(4);
 						editModeButton.setBackground(Color.LIGHT_GRAY);
 						editModeButton.setEnabled(false);
 						addClassButton.setEnabled(false);
-						Controller.setinClass(GUIView.htmlBoxToEditBox(newview));
+						control.setinClass( ((GUIView) control.getView()).htmlBoxToEditBox(newview, control, control.getModel()));
 					}
 				}// catching the current values for x,y coordinates on screen
 				else if (e.getSource() == newview) {
@@ -80,7 +81,7 @@ public class ClassController {
 		});
 	}
 		
-	protected static void moveClass(JLabel newview, Entity entity) {
+	protected static void moveClass(JLabel newview, Entity entity, ViewTemplate view) {
 		newview.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
@@ -92,7 +93,7 @@ public class ClassController {
 						entity.setXLocation(jc.getX() + e.getX() - x_pressed);
 						entity.setYLocation(jc.getY() + e.getY() - y_pressed);
 					}
-					GUIView.repaintLine(entity.getName());
+					((GUIView) view).repaintLine(entity.getName());
 				}
 				//if in edit mode, drag from one class to another to create relationship
 				else {
@@ -101,7 +102,7 @@ public class ClassController {
 		});
 	}
 
-	protected static void editModeListener(JButton editButton) {
+	protected static void editModeListener(JButton editButton, Controller control) {
 		editButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -110,26 +111,26 @@ public class ClassController {
 				if(editMode) {
 					editMode = false;
 					for(int x = 0; x < 4; ++x){
-						  JButton button = (JButton) GUIView.getMenuBar().getComponent(x);
+						  JButton button = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(x);
 						  button.setEnabled(true);
 					}
 					//Change button to signify we are out of edit mode
 					editButton.setText("Enable Edit Mode");
 					editButton.setBackground(null);
-					if(Controller.getinClass() != null) {
-						GUIView.exitEditingClass(Controller.getinClass());
-						GUIView.getMenuBar().remove(6);
-						GUIView.getMenuBar().remove(5);
-						GUIView.getFrame().validate();
-						GUIView.getFrame().repaint();
+					if(control.getinClass() != null) {
+					    ((GUIView) control.getView()).exitEditingClass(control.getinClass(), control, control.getModel());
+					    ((GUIView) control.getView()).getMenuBar().remove(6);
+					    ((GUIView) control.getView()).getMenuBar().remove(5);
+					    ((GUIView) control.getView()).getFrame().validate();
+					    ((GUIView) control.getView()).getFrame().repaint();
 					}
-					Controller.setinClass(null);
+					control.setinClass(null);
 				}
 				//If entering edit mode
 				else {
 					editMode = true;
 					for(int x = 0; x < 3; ++x){
-						  JButton button = (JButton) GUIView.getMenuBar().getComponent(x);
+						  JButton button = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(x);
 						  button.setEnabled(false);
 					}
 					//change button to signify we are in edit mode
@@ -141,7 +142,7 @@ public class ClassController {
 	}
 	
 	
-	private static void createRelation(Model classes, String[] entityStrings, JFrame frame) {
+	private static void createRelation(Model classes, String[] entityStrings, JFrame frame, GUIView view) {
 		if (classes.getEntities().size() < 2) {
 			JOptionPane.showMessageDialog(frame,  "There are not enough classes to create a relationship.");
 			return;
@@ -231,11 +232,11 @@ public class ClassController {
 			String name1 = editBox.getBox().getName();
 			String name2 = listTwo.getSelectedItem().toString();
 			classes.createRelationship(type, name1, name2);
-			GUIView.createRelationship(type, name1, name2);
+			view.createRelationship(type, name1, name2, classes);
 		}
 	}
 	
-	private static void deleteRelation(Model classes, JFrame frame) {
+	private static void deleteRelation(Model classes, JFrame frame, GUIView view) {
 		if (classes.getRelationships().size() == 0) {
 			JOptionPane.showMessageDialog(frame,  "There are no relationships to delete.");
 			return;
@@ -286,7 +287,7 @@ public class ClassController {
 				}
 			}
 			classes.deleteRelationship(targetType, class1, class2);
-			GUIView.deleteLine(class1, class2);
+			view.deleteLine(class1, class2);
 		}
 	}
 }

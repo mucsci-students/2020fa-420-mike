@@ -19,7 +19,7 @@ public class htmlBox {
 	
 	private JLabel newBox;
 	
-	public htmlBox (Entity entity) {
+	public htmlBox (Entity entity, Controller control) {
 		// Create JLabel and basic settings
 		this.newBox = new JLabel(entityToHTML(entity));
 		newBox.setName(entity.getName());
@@ -35,7 +35,7 @@ public class htmlBox {
 		this.newBox.setBounds(0, 0, this.newBox.getPreferredSize().width, this.newBox.getPreferredSize().height);
 		this.newBox.setLocation(entity.getXLocation(), entity.getYLocation());
 		
-		Controller.classControls(this.newBox, entity);
+		control.classControls(this.newBox, entity);
 	}
 	
 	public JLabel getBox() {

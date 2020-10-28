@@ -1,3 +1,4 @@
+
 package mike.controller;
 
 import java.nio.file.Path;
@@ -7,90 +8,100 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import mike.datastructures.Model;
+import mike.view.GUIView;
+import mike.view.ViewTemplate;
 import mike.datastructures.Entity;
 
 public class Controller {
 
-	private static Boolean changed = false;
-	private static Path path = null;
-	private static Model model = new Model();
-	private static JLabel inClass = null;
+	private boolean changed = false;
+	private Path path = null;
+	private Model Cmodel;
+	private ViewTemplate view = null;
+	private JLabel inClass = null;
 	
-	public Controller (){
+	public Controller (Model model, ViewTemplate views){
+	    Cmodel = model;
+	    view = views;
+	    SaveController.saveListener((JButton) ((GUIView) views).getMenuBar().getComponent(0), this);
+	    SaveController.saveAsListener((JButton) ((GUIView) views).getMenuBar().getComponent(1), this);
+	    LoadController.loadListener((JButton) ((GUIView) views).getMenuBar().getComponent(2), this);
+	    FrameController.addClassListener((JButton) ((GUIView) views).getMenuBar().getComponent(3), this);
+	    ClassController.editModeListener((JButton) ((GUIView) views).getMenuBar().getComponent(4), this);
+	    FrameController.exitListener(changed, view);
+	    FrameController.resizeListener(view);
 	}
 	
-	public static void classControls(JLabel box, Entity e) {
-		ClassController.clickClass(box);
-		ClassController.moveClass(box, e);
+	public void classControls(JLabel box, Entity e) {
+		ClassController.clickClass(box, this);
+		ClassController.moveClass(box, e, view);
 	}
 	
-	public void frameControls (JButton save, JButton saveAs, JButton load, JButton addClass, JButton editMode) {
-		SaveController.saveListener(save);
-		SaveController.saveAsListener(saveAs);
-		LoadController.loadListener(load);
-		FrameController.addClassListener(addClass);
-		ClassController.editModeListener(editMode);
-		FrameController.exitListener();
-		FrameController.resizeListener();
+	public void frameControls (JButton[] buttons) {
+		
 	}
 	
 	public void saveCancel (JButton save, JButton cancel, JButton xButton, JButton addRelation, JButton deleteRelation) {
-		SaveCancel.saveClass(save);
-		SaveCancel.cancelClass(cancel);
-		SaveCancel.deleteEntity(xButton);
-		ClassController.addRelationListener(addRelation);
-		ClassController.deleteRelationListener(deleteRelation);
+		SaveCancel.saveClass(save, this);
+		SaveCancel.cancelClass(cancel, this);
+		SaveCancel.deleteEntity(xButton, this);
+		ClassController.addRelationListener(addRelation, this);
+		ClassController.deleteRelationListener(deleteRelation, this);
 	}
 
 	public void createField (JPanel panel) {
-		CreateDeleteController.createField(panel);
+		CreateDeleteController.createField(panel, this);
 	}
 	
 	public void createMethod (JPanel panel) {
-		CreateDeleteController.createMethod(panel);
+		CreateDeleteController.createMethod(panel, this);
 	}
 	
 	public void createParam (JPanel panel, String methodName) {
-		CreateDeleteController.createParam(panel, methodName);
+		CreateDeleteController.createParam(panel, methodName, this);
 	}
 	
 	public void deleteField (JPanel panel) {
-		CreateDeleteController.deleteField(panel);
+		CreateDeleteController.deleteField(panel, this);
 	}
 	
 	public void deleteMethod (JPanel panel) {
-		CreateDeleteController.deleteMethod(panel);
+		CreateDeleteController.deleteMethod(panel, this);
 	}
 	
 	public void deleteParam (JPanel panel, String methodName) {
-		CreateDeleteController.deleteParam(panel, methodName);
+		CreateDeleteController.deleteParam(panel, methodName, this);
 	}
 	
-	public static JLabel getinClass() {
+	public JLabel getinClass() {
 		return inClass;
 	}
 	
-	public static Path getPath() {
+	public Path getPath() {
 		return path;
 	}
 	
-	public static Boolean getChanged() {
+	protected Model getModel() {
+	    return Cmodel;
+	}
+	
+	protected ViewTemplate getView() {
+	    return view;
+	}
+	
+	public Boolean getChanged() {
 		return changed;
 	}
 	
-	public static Model getModel() {
-		return model;
-	}
-	
-	public static void setinClass(JLabel no) {
+	public void setinClass(JLabel no) {
 		inClass = no;
 	}
 	
-	public static void setChanged(Boolean yes) {
+	public void setChanged(Boolean yes) {
 		changed = yes;
 	}
 	
-	public static void setPath(Path yes) {
+	public void setPath(Path yes) {
 		path = yes;
 	}
 	

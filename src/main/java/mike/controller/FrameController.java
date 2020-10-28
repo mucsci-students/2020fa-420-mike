@@ -20,19 +20,20 @@ import mike.datastructures.Entity;
 import mike.datastructures.Relationship;
 import mike.gui.Line;
 import mike.view.GUIView;
+import mike.view.ViewTemplate;
 
 public class FrameController {
 	
-	protected static void exitListener() throws HeadlessException {	
-		GUIView.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		GUIView.getFrame().addWindowListener(new WindowAdapter()
+	protected static void exitListener(boolean changed, ViewTemplate view) throws HeadlessException {	
+	    ((GUIView) view).getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	    ((GUIView) view).getFrame().addWindowListener(new WindowAdapter()
 	    {
 	        //@Override
 	        public void windowClosing(WindowEvent e)
 	        {	
-	        	if(Controller.getChanged()){
+	        	if(changed){
 	        		int n = JOptionPane.showConfirmDialog(
-	        			GUIView.getFrame(),
+	        			((GUIView) view).getFrame(),
 					    "You have unsaved changes.  Do you still want to exit?",
 					    "Exit",
 					    JOptionPane.YES_NO_OPTION);
@@ -48,7 +49,7 @@ public class FrameController {
 	    });
 	}
 	
-	protected static void addClassListener(JButton addClass) {
+	protected static void addClassListener(JButton addClass, Controller control) {
 		addClass.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -64,41 +65,41 @@ public class FrameController {
 				int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class", JOptionPane.OK_CANCEL_OPTION);
 				
 				if(name.getText().contains(" ")){
-					JOptionPane.showMessageDialog(GUIView.getFrame(), "Spaces are not allowed");
+					JOptionPane.showMessageDialog( ((GUIView) control.getView()).getFrame(), "Spaces are not allowed");
 					return;
 				}
 				
 				if (result == 0) {
-					if(Controller.getModel().createClass(name.getText())){
-						GUIView.showClass(Controller.getModel().copyEntity(name.getText()));
+					if(control.getModel().createClass(name.getText())){
+					    ((GUIView) control.getView()).showClass(control.getModel().copyEntity(name.getText()), control);
 					} else {
-						JOptionPane.showMessageDialog(GUIView.getFrame(), "An entity with that name already exists.");
+						JOptionPane.showMessageDialog( ((GUIView) control.getView()).getFrame(), "An entity with that name already exists.");
 					}
 				}
 				
-				ArrayList<Entity> entities = Controller.getModel().getEntities();
+				ArrayList<Entity> entities = control.getModel().getEntities();
 
 				//prevent classes from gathering in middle after class is added
 				for(Entity curEntity : entities) {
-					JLabel curLabel = GUIView.getEntityLabels().get(curEntity.getName());
+					JLabel curLabel =  ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
 					curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 				}
-				for(Relationship r : Controller.getModel().getRelationships())
+				for(Relationship r : control.getModel().getRelationships())
 				{
-					GUIView.createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass());
+				    ((GUIView) control.getView()).createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass(), control.getModel());
 				}
-				Controller.setChanged(true);
+				control.setChanged(true);
 			}
 		});
 	}
 	
-	protected static void resizeListener()
+	protected static void resizeListener(ViewTemplate view)
 	{
-		GUIView.getFrame().addComponentListener(new ComponentAdapter() {
+	    ((GUIView) view).getFrame().addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent componentEvent) {
-		    	for (Line l : GUIView.getRelations())
+		    	for (Line l : ((GUIView) view).getRelations())
 		    	{
-		    		l.setBounds(0, 0, GUIView.getPane().getWidth(), GUIView.getPane().getHeight());
+		    		l.setBounds(0, 0, ((GUIView) view).getPane().getWidth(), ((GUIView) view).getPane().getHeight());
 		    	}
 		    }
 		});
