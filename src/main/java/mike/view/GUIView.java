@@ -91,7 +91,7 @@ public class GUIView {
 
 	public static htmlBox showClass(Entity entity) {
 		htmlBox newview = new htmlBox(entity);
-		pane.add(newview.getBox(), 2);
+		pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
 		entitylabels.put(entity.getName(), newview.getBox());
 		validateRepaint();
 		
@@ -141,27 +141,42 @@ public class GUIView {
 
 	public static void createRelationship(Relationship.Type type, String name1, String name2)
 	{
-		//JLabel L1 = entitylabels.get(name1);
+		JLabel L1 = entitylabels.get(name1);
 		JLabel L2 = entitylabels.get(name2);
+		JLabel editBoxLabel = editBox.getBox();
 		Line line;
-		if(name1.equals(name2)){
-			line = new Line(editBox.getBox(), editBox.getBox(), type);
-		} else {
-			line = new Line(editBox.getBox(), L2, type);
+
+		if(editBoxLabel != null && (editBoxLabel.getName().equals(name1) || editBoxLabel.getName().equals(name2))) {
+			// Recursive relationship being created in editBox
+			if(editBoxLabel.getName().equals(name1) && editBoxLabel.getName().equals(name2)) {
+				line = new Line(editBoxLabel, editBoxLabel, type);
+			} 
+			// editBox is the first class in the relationship
+			else if(editBoxLabel.getName().equals(name1)) {
+				line = new Line(editBoxLabel, L2, type);
+			} 
+			// editBox is the second class in the relationship
+			else {
+				line = new Line(L1, editBoxLabel, type);
+			} 
+		}
+		// editBox is neither class of the relationship
+		else {
+			line = new Line(L1, L2, type);
 		}
 		
 		line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
 		Controller.getModel().createRelationship(type, name1, name2);
 		relations.add(line);
-		pane.add(line);
+		pane.add(line, JLayeredPane.DEFAULT_LAYER);
 		pane.validate();
 	}
 	
 	public static JLabel htmlBoxToEditBox(JLabel label) {
 		pane.remove(label);
 
-		editBox newBox = new editBox(label);
-		pane.add(editBox.getBox(), 2);
+		new editBox(label);
+		pane.add(editBox.getBox(), JLayeredPane.MODAL_LAYER);
 		ArrayList<Line> movingLines = new ArrayList<Line>();
 		for(Line l : relations) {
 			if(l.getClassOne().getName().equals(label.getName()) || l.getClassTwo().getName().equals(label.getName())) {

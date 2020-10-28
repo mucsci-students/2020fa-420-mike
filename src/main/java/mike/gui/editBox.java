@@ -55,11 +55,8 @@ public class editBox {
 		  }
 		backupRel.clear();
 		for(Relationship relation : Controller.getModel().getRelationships()){
-			if(relation.getFirstClass().equals(label.getName())){
-				Relationship adding = new Relationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
-				backupRel.add(adding);
-			}
-			
+			Relationship adding = new Relationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+			backupRel.add(adding);
 		  }
 		
 		e = Controller.getModel().copyEntity(label.getName());
@@ -99,6 +96,10 @@ public class editBox {
 	
 	public static ArrayList<Relationship> getBackupRel(){
 		return backupRel;
+	}
+	
+	public static void setBox(JLabel b) {
+		newBox = b;
 	}
 	
 	private void createClassSection(String labelName) {

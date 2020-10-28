@@ -63,6 +63,11 @@ public class ClassController {
 			public void mousePressed(MouseEvent e) {
 				if(editMode) {
 					if(Controller.getinClass() == null) {
+						JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+						JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
+						editModeButton.setBackground(Color.LIGHT_GRAY);
+						editModeButton.setEnabled(false);
+						addClassButton.setEnabled(false);
 						Controller.setinClass(GUIView.htmlBoxToEditBox(newview));
 					}
 				}// catching the current values for x,y coordinates on screen
@@ -101,9 +106,13 @@ public class ClassController {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//if in edit mode
+				//If leaving edit mode
 				if(editMode) {
 					editMode = false;
+					for(int x = 0; x < 4; ++x){
+						  JButton button = (JButton) GUIView.getMenuBar().getComponent(x);
+						  button.setEnabled(true);
+					}
 					//Change button to signify we are out of edit mode
 					editButton.setText("Enable Edit Mode");
 					editButton.setBackground(null);
@@ -116,9 +125,13 @@ public class ClassController {
 					}
 					Controller.setinClass(null);
 				}
-				//if not in edit mode
+				//If entering edit mode
 				else {
 					editMode = true;
+					for(int x = 0; x < 3; ++x){
+						  JButton button = (JButton) GUIView.getMenuBar().getComponent(x);
+						  button.setEnabled(false);
+					}
 					//change button to signify we are in edit mode
 					editButton.setText("Disable Edit Mode");
 					editButton.setBackground(Color.RED);
@@ -179,12 +192,10 @@ public class ClassController {
 		// Find all relationships that have use the selected class as class 1...
 		for (int x = 0; x < allRelationships.size(); ++x) {
 			if (selectedClass.equals(allRelationships.get(x).getFirstClass())) {
-				System.out.println(x + "-1-" + allRelationships.get(x).getFirstClass() + "/" + allRelationships.get(x).getSecondClass());
 				Relationship currRelationship = allRelationships.get(x);
 		    	// ... and remove the second class of of those relationships from the drop-down box of listTwo
 				listTwo.removeItem(currRelationship.getSecondClass());
 		    } else if (selectedClass.equals(allRelationships.get(x).getSecondClass())){
-		    	System.out.println(x + "-2-" + allRelationships.get(x).getFirstClass() + "/" + allRelationships.get(x).getSecondClass());
 				Relationship currRelationship = allRelationships.get(x);
 		    	// ... and remove the second class of of those relationships from the drop-down box of listTwo
 				listTwo.removeItem(currRelationship.getFirstClass());
@@ -219,7 +230,6 @@ public class ClassController {
 		if (result == 0) {
 			String name1 = editBox.getBox().getName();
 			String name2 = listTwo.getSelectedItem().toString();
-			System.out.println(name1 + " " + name2 + " " + type);
 			classes.createRelationship(type, name1, name2);
 			GUIView.createRelationship(type, name1, name2);
 		}
@@ -245,16 +255,12 @@ public class ClassController {
 				++y;
 			}
 		}
-		System.out.println(y);
 		String[] relationStrings = new String[y];
 		y = 0;
 		for(int x = 0; x < allRelationships.size(); ++x) {
-			System.out.println(editBox.getBox().getName());
-			System.out.println(allRelationships.get(x).getFirstClass());
 			if (editBox.getBox().getName().equals(allRelationships.get(x).getFirstClass())) {
 				
 				relationStrings[y] = allRelationships.get(x).getFirstClass() + "--" + allRelationships.get(x).getSecondClass();
-				System.out.println(relationStrings[y]);
 				++y;
 			}
 		}
