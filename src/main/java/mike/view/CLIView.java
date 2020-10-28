@@ -79,11 +79,11 @@ public class CLIView {
 			new ArgumentCompleter(
 				new StringsCompleter("create", "delete"),
 				new StringsCompleter("class", "field", "method", 
-						"parameter", "relationship"),
+						"parameter"),
 				new NullCompleter()
 			),
 			new ArgumentCompleter(
-				new StringsCompleter("create"),
+				new StringsCompleter("create", "delete"),
 				new StringsCompleter("relationship"),
 				new StringsCompleter("aggregation", "composition", "inheritance", "realization"),
 				new NullCompleter()
