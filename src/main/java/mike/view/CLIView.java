@@ -83,6 +83,12 @@ public class CLIView {
 				new NullCompleter()
 			),
 			new ArgumentCompleter(
+				new StringsCompleter("create"),
+				new StringsCompleter("relationship"),
+				new StringsCompleter("aggregation", "composition", "inheritance", "realization"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
 				new StringsCompleter("rename"),
 				new StringsCompleter("class", "field", "method", 
 						"parameter"),
