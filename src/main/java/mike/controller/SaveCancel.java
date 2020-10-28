@@ -1,10 +1,12 @@
 package mike.controller;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -12,6 +14,8 @@ import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Parameter;
+import mike.datastructures.Relationship;
+import mike.gui.Line;
 import mike.gui.editBox;
 import mike.view.GUIView;
 
@@ -22,11 +26,15 @@ public class SaveCancel {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
+			  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
+			  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+			  editModeButton.setBackground(Color.RED);
+			  editModeButton.setEnabled(true);
+			  addClassButton.setEnabled(true);
 			  Entity entity = editBox.getEntity();
 			  JLabel newBox = editBox.getBox();
 			  JPanel panel = (JPanel) newBox.getComponent(1);
 			  JTextField text = (JTextField) panel.getComponent(1);
-			  
 			  Controller.getModel().renameClass(entity.getName(), text.getText());
 			  
 			  for (int x = 3; x < entity.getFields().size()+3; ++x){
@@ -56,6 +64,12 @@ public class SaveCancel {
 			  Controller.getinClass().setName(text.getText());
 			  GUIView.exitEditingClass(Controller.getinClass());
 			  Controller.setinClass(null);
+			  editBox.setBox(null);
+			  
+			  GUIView.getMenuBar().remove(6);
+			  GUIView.getMenuBar().remove(5);
+			  GUIView.getFrame().validate();
+			  GUIView.getFrame().repaint();
 		  }
 		});
 	}
@@ -65,6 +79,14 @@ public class SaveCancel {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
+			  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
+			  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+			  editModeButton.setBackground(Color.RED);
+			  editModeButton.setEnabled(true);
+			  addClassButton.setEnabled(true);
+			  
+			  
+			  
 			  Controller.getModel().clear();
 			  int x = 0;
 			  for(Entity entity : editBox.getBackup()){
@@ -82,8 +104,24 @@ public class SaveCancel {
 				  }
 				  ++x;
 			  }
+			  
+			  for(Line relation : GUIView.getRelations()){
+				  GUIView.getPane().remove(relation);
+			  }
+			  
+			  GUIView.getRelations().clear();
+
+			  for(Relationship relation : editBox.getBackupRel()){
+				  GUIView.createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+			  }
+			  
 			  GUIView.exitEditingClass(Controller.getinClass());
 			  Controller.setinClass(null);
+			  editBox.setBox(null);
+			  GUIView.getMenuBar().remove(6);
+			  GUIView.getMenuBar().remove(5);
+			  GUIView.getMenuBar().validate();
+			  GUIView.getMenuBar().repaint();
 		  }
 		});
 	}
@@ -93,10 +131,31 @@ public class SaveCancel {
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  Controller.getModel().deleteClass(editBox.getEntity().getName());
-			  GUIView.getPane().remove(Controller.getinClass());
-			  Controller.setinClass(null);
-			  GUIView.validateRepaint();
+			  int n = JOptionPane.showConfirmDialog(
+        			GUIView.getFrame(),
+				    "Are you sure you want to delete this class?",
+				    "Delete Class",
+				    JOptionPane.YES_NO_OPTION);
+			  if(n == 0) {
+				  
+				  GUIView.deleteLines(editBox.getEntity().getName());
+				  Controller.getModel().deleteClass(editBox.getEntity().getName());
+				  
+				  GUIView.getPane().remove(Controller.getinClass());
+				  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
+				  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+				  editModeButton.setBackground(Color.RED);
+				  editModeButton.setEnabled(true);
+				  addClassButton.setEnabled(true);
+				  
+				  GUIView.getMenuBar().remove(6);
+				  GUIView.getMenuBar().remove(5);
+				  GUIView.getMenuBar().validate();
+				  GUIView.getMenuBar().repaint();
+				  Controller.setinClass(null);
+				  editBox.setBox(null);
+				  GUIView.validateRepaint();
+				}	 
 		  }
 		});
 	}

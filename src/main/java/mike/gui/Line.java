@@ -19,7 +19,8 @@ import mike.datastructures.Relationship.Type;
 public class Line extends JComponent {
 	private static final long serialVersionUID = -5573668863596984829L;
 	private double x1, y1, x2, y2;
-	private JLabel L1, L2;
+	private JLabel L1;
+	private JLabel L2;
 	boolean isSelf;
 	private Type type;
 
@@ -43,6 +44,14 @@ public class Line extends JComponent {
 		return L2;
 	}
 
+	public void setClassOne(JLabel newL1) {
+		L1 = newL1;
+	}
+	
+	public void setClassTwo(JLabel newL2) {
+		L2 = newL2;
+	}
+	
 	public void update() {
 		if (isSelf)
 		{

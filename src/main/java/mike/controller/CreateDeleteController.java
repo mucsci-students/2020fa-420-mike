@@ -85,17 +85,13 @@ public class CreateDeleteController {
 			  JLabel newview = editBox.getBox();
 			  
 			  int spot = entity.getFields().size() + 4;
-			  System.out.println(spot);
 			  for(Method m : entity.getMethods()) {
 				  spot += m.getParameters().size() + 2;
-				  System.out.println(spot);
 				  if(m.getName() == methodName) {
 					  break;
 				  }
 			  }
 			  --spot;
-			 System.out.println(spot);
-			 System.out.println(methodName);
 			  
 			  GUIView.getController().deleteParam(editBox.editSection(type.getText(), name.getText(), true, spot), methodName);
 			 
