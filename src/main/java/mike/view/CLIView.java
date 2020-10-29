@@ -191,53 +191,7 @@ public class CLIView implements ViewInterface {
 								else {
 									path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
 								}
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								HelperMethods.load(path, classes, null, null); //POSSIBLY VERY, VERY SCUFFED
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
+								HelperMethods.load(path, classes, null, null);
 								prompt = false;
 							}
 						}
