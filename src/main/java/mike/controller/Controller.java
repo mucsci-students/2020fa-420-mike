@@ -28,7 +28,7 @@ public class Controller {
 	    LoadController.loadListener((JButton) ((GUIView) views).getMenuBar().getComponent(2), this);
 	    FrameController.addClassListener((JButton) ((GUIView) views).getMenuBar().getComponent(3), this);
 	    ClassController.editModeListener((JButton) ((GUIView) views).getMenuBar().getComponent(4), this);
-	    FrameController.exitListener(changed, view);
+	    FrameController.exitListener(view, this);
 	    FrameController.resizeListener(view);
 	}
 	

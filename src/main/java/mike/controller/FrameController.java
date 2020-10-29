@@ -24,14 +24,14 @@ import mike.view.ViewTemplate;
 
 public class FrameController {
 	
-	protected static void exitListener(boolean changed, ViewTemplate view) throws HeadlessException {	
+	protected static void exitListener(ViewTemplate view, Controller control) throws HeadlessException {	
 	    ((GUIView) view).getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	    ((GUIView) view).getFrame().addWindowListener(new WindowAdapter()
 	    {
 	        //@Override
 	        public void windowClosing(WindowEvent e)
 	        {	
-	        	if(changed){
+	        	if(control.getChanged()){
 	        		int n = JOptionPane.showConfirmDialog(
 	        			((GUIView) view).getFrame(),
 					    "You have unsaved changes.  Do you still want to exit?",
