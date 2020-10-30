@@ -21,10 +21,7 @@ later time. The application runs using a Command Line Interface or a Graphical U
 
    ```gradle shadowJar```
 
-   ```java -jar ./build/libs/mike-all.jar (launches the GUI) or java -jar ./build/libs/mike-all.jar cli (launches the CLI)```
-
-Gradle build builds the application, gradle shadowJar creates a jar file with all of the dependencies
-installed, and java -jar ./build/libs/mike-all.jar (cli) runs the application.
+   ```java -jar ./build/libs/mike-all.jar (for GUI) or java -jar ./build/libs/mike-all.jar cli (for CLI)```
 
 ### Developers:
     - Stefan Gligorevic
@@ -33,5 +30,5 @@ installed, and java -jar ./build/libs/mike-all.jar (cli) runs the application.
     - John Hynes
     - Ian Reger
 
-**DISCLAIMER**: 
-This is not a finished product. This is the state of the application after Sprint 2.
+### Version:
+	3.0.0
