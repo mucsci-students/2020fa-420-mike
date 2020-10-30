@@ -20,7 +20,7 @@ import mike.datastructures.Model;
 import mike.datastructures.Relationship.Type;
 import mike.HelperMethods;
 
-public class CLIView {
+public class CLIView implements ViewInterface {
 	private Model classes;
 	
 	public CLIView(Model classModel) throws IOException {
@@ -191,8 +191,7 @@ public class CLIView {
 								else {
 									path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);  
 								}
-								
-								HelperMethods.load(path, classes);
+								HelperMethods.load(path, classes, null, null);
 								prompt = false;
 							}
 						}

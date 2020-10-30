@@ -23,6 +23,7 @@ import mike.controller.Controller;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
+import mike.datastructures.Model;
 import mike.datastructures.Parameter;
 import mike.datastructures.Relationship;
 import mike.view.GUIView;
@@ -36,9 +37,9 @@ public class editBox {
 	private static ArrayList<Entity> backup = new ArrayList<Entity>();
 	private static ArrayList<Relationship> backupRel = new ArrayList<Relationship>();
 	
-	public editBox (JLabel label) {
+	public editBox (JLabel label, Controller control, Model model, GUIView view) {
 		backup.clear();
-		for(Entity entity : Controller.getModel().getEntities()){
+		for(Entity entity : model.getEntities()){
 			Entity adding = new Entity(entity.getName());
 			adding.setXLocation(entity.getXLocation());
 			adding.setYLocation(entity.getYLocation());
@@ -54,21 +55,21 @@ public class editBox {
 			  backup.add(adding);
 		  }
 		backupRel.clear();
-		for(Relationship relation : Controller.getModel().getRelationships()){
+		for(Relationship relation : model.getRelationships()){
 			Relationship adding = new Relationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
 			backupRel.add(adding);
 		  }
 		
-		e = Controller.getModel().copyEntity(label.getName());
+		e = model.copyEntity(label.getName());
 		
 		// Create entire editBox
 		newBox = new JLabel();
         newBox.setLayout(new BoxLayout(newBox, BoxLayout.Y_AXIS));
         
         // Add all model parts into newBox
-        createClassSection(label.getName());
-        createSection("Fields:");
-        createSection("Methods:");
+        createClassSection(label.getName(), control, view);
+        createSection("Fields:", control, model);
+        createSection("Methods:", control, model);
         
 		// Design entire label
         newBox.setBackground(Color.LIGHT_GRAY);
@@ -102,9 +103,9 @@ public class editBox {
 		newBox = b;
 	}
 	
-	private void createClassSection(String labelName) {
-        JFrame frame = GUIView.getFrame();
-        JMenuBar menuBar = GUIView.getMenuBar();
+	private void createClassSection(String labelName, Controller control, GUIView view) {
+        JFrame frame = view.getFrame();
+        JMenuBar menuBar = view.getMenuBar();
         JButton addRelation = new JButton("Add Relationship");
 		JButton deleteRelation = new JButton("Delete Relationship");
 		menuBar.add(addRelation);
@@ -127,18 +128,17 @@ public class editBox {
         JTextField className = new JTextField(labelName);
         newEntity.add(xButton);
         newEntity.add(className);
-        GUIView.getController().saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation);
+        control.saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation);
         newBox.add(newEntity);
 	}
 	
-	private void createSection(String section) {
+	private void createSection(String section, Controller control, Model model) {
 		JLabel Label = new JLabel(section);
 		Label.setFont(new Font("", Font.BOLD, 18));
 		Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
 		newBox.add(Label);
 		
 		// Add all existing fields/methods(and Paramters) to editBox
-		Controller control = GUIView.getController();
 		if(section == "Fields:"){
 			for(Field f : e.getFields()){
 				control.deleteField(editSection(f.getType(), f.getName(), false, newBox.getComponentCount()));

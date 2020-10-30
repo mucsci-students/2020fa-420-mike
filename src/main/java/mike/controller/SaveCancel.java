@@ -21,13 +21,13 @@ import mike.view.GUIView;
 
 public class SaveCancel {
 	
-	protected static void saveClass(JButton saveButton) {
+	protected static void saveClass(JButton saveButton, Controller control) {
 		saveButton.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
-			  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+			  JButton editModeButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(4);
+			  JButton addClassButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(3);
 			  editModeButton.setBackground(Color.RED);
 			  editModeButton.setEnabled(true);
 			  addClassButton.setEnabled(true);
@@ -35,13 +35,13 @@ public class SaveCancel {
 			  JLabel newBox = editBox.getBox();
 			  JPanel panel = (JPanel) newBox.getComponent(1);
 			  JTextField text = (JTextField) panel.getComponent(1);
-			  Controller.getModel().renameClass(entity.getName(), text.getText());
+			  control.getModel().renameClass(entity.getName(), text.getText());
 			  
 			  for (int x = 3; x < entity.getFields().size()+3; ++x){
 				  JPanel panelField = (JPanel) newBox.getComponent(x);
 				  JTextField textField = (JTextField) panelField.getComponent(2);
 				  
-				  Controller.getModel().renameField(entity.getName(), entity.getFields().get(x-3).getName(), textField.getText());
+				  control.getModel().renameField(entity.getName(), entity.getFields().get(x-3).getName(), textField.getText());
 			  }
 			  
 			  int methodNum = -1;
@@ -51,110 +51,110 @@ public class SaveCancel {
 				  JTextField textMethod = (JTextField) panelMethod.getComponent(2);
 				  ++methodNum;
 				  m = entity.getMethods().get(methodNum);
-				  Controller.getModel().renameMethod(entity.getName(), m.getName(), textMethod.getText());
+				  control.getModel().renameMethod(entity.getName(), m.getName(), textMethod.getText());
 				  
 				  for (int y = x+1; y < m.getParameters().size()+x+1; ++y){
 					  JPanel panelParam = (JPanel) newBox.getComponent(y);
 					  JTextField textParam = (JTextField) panelParam.getComponent(3);
 					  
-					  Controller.getModel().renameParameter(entity.getName(), m.getName(), m.getParameters().get(y-x-1).getName(), textParam.getText()); 
+					  control.getModel().renameParameter(entity.getName(), m.getName(), m.getParameters().get(y-x-1).getName(), textParam.getText()); 
 				  } 
 			  }
 			  
-			  Controller.getinClass().setName(text.getText());
-			  GUIView.exitEditingClass(Controller.getinClass());
-			  Controller.setinClass(null);
+			  control.getinClass().setName(text.getText());
+			  ((GUIView) control.getView()).exitEditingClass(control.getinClass(), control, control.getModel());
+			  control.setinClass(null);
 			  editBox.setBox(null);
 			  
-			  GUIView.getMenuBar().remove(6);
-			  GUIView.getMenuBar().remove(5);
-			  GUIView.getFrame().validate();
-			  GUIView.getFrame().repaint();
+			  ((GUIView) control.getView()).getMenuBar().remove(6);
+			  ((GUIView) control.getView()).getMenuBar().remove(5);
+			  ((GUIView) control.getView()).getFrame().validate();
+			  ((GUIView) control.getView()).getFrame().repaint();
 		  }
 		});
 	}
 	
-	protected static void cancelClass(JButton cancelButton) {
+	protected static void cancelClass(JButton cancelButton, Controller control) {
 		cancelButton.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
-			  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+			  JButton editModeButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(4);
+			  JButton addClassButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(3);
 			  editModeButton.setBackground(Color.RED);
 			  editModeButton.setEnabled(true);
 			  addClassButton.setEnabled(true);
 			  
 			  
 			  
-			  Controller.getModel().clear();
+			  control.getModel().clear();
 			  int x = 0;
 			  for(Entity entity : editBox.getBackup()){
-				  Controller.getModel().createClass(entity.getName());
-				  Controller.getModel().getEntities().get(x).setXLocation(entity.getXLocation());
-				  Controller.getModel().getEntities().get(x).setYLocation(entity.getYLocation());
+			      control.getModel().createClass(entity.getName());
+			      control.getModel().getEntities().get(x).setXLocation(entity.getXLocation());
+			      control.getModel().getEntities().get(x).setYLocation(entity.getYLocation());
 				  for(Field field : entity.getFields()){
-					  Controller.getModel().createField(entity.getName(), field.getName(), field.getType());
+				      control.getModel().createField(entity.getName(), field.getName(), field.getType());
 				  }
 				  for(Method method : entity.getMethods()){
-					  Controller.getModel().createMethod(entity.getName(), method.getName(), method.getType());
+				      control.getModel().createMethod(entity.getName(), method.getName(), method.getType());
 					  for(Parameter param : method.getParameters()){
-						  Controller.getModel().createParameter(entity.getName(), method.getName(), param.getName(), param.getType());
+					      control.getModel().createParameter(entity.getName(), method.getName(), param.getName(), param.getType());
 					  }
 				  }
 				  ++x;
 			  }
 			  
-			  for(Line relation : GUIView.getRelations()){
-				  GUIView.getPane().remove(relation);
+			  for(Line relation :  ((GUIView) control.getView()).getRelations()){
+			      ((GUIView) control.getView()).getPane().remove(relation);
 			  }
 			  
-			  GUIView.getRelations().clear();
+			  ((GUIView) control.getView()).getRelations().clear();
 
 			  for(Relationship relation : editBox.getBackupRel()){
-				  GUIView.createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass());
+			      ((GUIView) control.getView()).createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass(), control.getModel());
 			  }
 			  
-			  GUIView.exitEditingClass(Controller.getinClass());
-			  Controller.setinClass(null);
+			  ((GUIView) control.getView()).exitEditingClass(control.getinClass(), control, control.getModel());
+			  control.setinClass(null);
 			  editBox.setBox(null);
-			  GUIView.getMenuBar().remove(6);
-			  GUIView.getMenuBar().remove(5);
-			  GUIView.getMenuBar().validate();
-			  GUIView.getMenuBar().repaint();
+			  ((GUIView) control.getView()).getMenuBar().remove(6);
+			  ((GUIView) control.getView()).getMenuBar().remove(5);
+			  ((GUIView) control.getView()).getMenuBar().validate();
+			  ((GUIView) control.getView()).getMenuBar().repaint();
 		  }
 		});
 	}
 	
-	protected static void deleteEntity(JButton deletion) {
+	protected static void deleteEntity(JButton deletion, Controller control) {
 		deletion.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
 			  int n = JOptionPane.showConfirmDialog(
-        			GUIView.getFrame(),
+				  ((GUIView) control.getView()).getFrame(),
 				    "Are you sure you want to delete this class?",
 				    "Delete Class",
 				    JOptionPane.YES_NO_OPTION);
 			  if(n == 0) {
 				  
-				  GUIView.deleteLines(editBox.getEntity().getName());
-				  Controller.getModel().deleteClass(editBox.getEntity().getName());
+			      ((GUIView) control.getView()).deleteLines(editBox.getEntity().getName());
+				  control.getModel().deleteClass(editBox.getEntity().getName());
 				  
-				  GUIView.getPane().remove(Controller.getinClass());
-				  JButton editModeButton = (JButton) GUIView.getMenuBar().getComponent(4);
-				  JButton addClassButton = (JButton) GUIView.getMenuBar().getComponent(3);
+				  ((GUIView) control.getView()).getPane().remove(control.getinClass());
+				  JButton editModeButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(4);
+				  JButton addClassButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(3);
 				  editModeButton.setBackground(Color.RED);
 				  editModeButton.setEnabled(true);
 				  addClassButton.setEnabled(true);
 				  
-				  GUIView.getMenuBar().remove(6);
-				  GUIView.getMenuBar().remove(5);
-				  GUIView.getMenuBar().validate();
-				  GUIView.getMenuBar().repaint();
-				  Controller.setinClass(null);
+				  ((GUIView) control.getView()).getMenuBar().remove(6);
+				  ((GUIView) control.getView()).getMenuBar().remove(5);
+				  ((GUIView) control.getView()).getMenuBar().validate();
+				  ((GUIView) control.getView()).getMenuBar().repaint();
+				  control.setinClass(null);
 				  editBox.setBox(null);
-				  GUIView.validateRepaint();
+				  ((GUIView) control.getView()).validateRepaint();
 				}	 
 		  }
 		});
