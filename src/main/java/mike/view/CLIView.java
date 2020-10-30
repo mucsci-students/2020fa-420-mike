@@ -389,7 +389,7 @@ public class CLIView implements ViewInterface {
 	    }
 	    break;
 	// Mostly for testing. Undocumented addition to allow for doing things without prompting.
-	case "sudo":
+case "sudo":
 	    if(commands[1].equals("quit") && commands.length == 2) {
 		System.exit(0);
 	    } else if (commands[1].equals("load") && commands.length == 3) {
