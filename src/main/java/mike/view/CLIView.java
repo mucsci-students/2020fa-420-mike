@@ -47,6 +47,10 @@ public class CLIView implements ViewInterface {
 		.variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
 
     }
+    
+    public Model getCLIModel() {
+	return classes;
+    }
 
     public void begin() {
 	System.out.println("Hello, and welcome to Team mike's UML editor.");
@@ -382,6 +386,32 @@ public class CLIView implements ViewInterface {
 		    classes.clear();
 		    prompt = true;
 		}
+	    }
+	    break;
+	// Mostly for testing. Undocumented addition to allow for doing things without prompting.
+	case "sudo":
+	    if(commands[1].equals("quit") && commands.length == 2) {
+		System.exit(0);
+	    } else if (commands[1].equals("load") && commands.length == 3) {
+		try {
+		    File file = new File(commands[2]);
+		    Path path;
+		    if (file.isAbsolute()) {
+			path = Paths.get(commands[2]);
+		    } else {
+			path = Paths.get(System.getProperty("user.dir") + "\\" + commands[2]);
+		    }
+		    HelperMethods.load(path, classes, null, null);
+		    prompt = false;
+		}
+		catch (Exception e) {
+		    System.out.println("Failed to parse directory. Exiting.");
+		}
+	    } else if (commands[1].equals("clear") && commands.length == 2) {
+		classes.clear();
+		prompt = true;
+	    } else {
+		System.out.println("\nInvalid command.\nType help to see a list of all commands.\n");
 	    }
 	    break;
 
