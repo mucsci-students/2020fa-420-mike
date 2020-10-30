@@ -31,4 +31,5 @@ later time. The application runs using a Command Line Interface or a Graphical U
     - Ian Reger
 
 ### Version:
-	3.0.0
+
+3.0.0
