@@ -78,20 +78,23 @@ public class CLIView implements ViewInterface {
 			),
 			new ArgumentCompleter(
 				new StringsCompleter("create", "delete"),
-				new StringsCompleter("class", "field", "method", 
-						"parameter", "relationship"),
+				new StringsCompleter("class", "field", "method", "parameter"),
+				new NullCompleter()
+			),
+			new ArgumentCompleter(
+				new StringsCompleter("create", "delete"),
+				new StringsCompleter("relationship"),
+				new StringsCompleter("aggregation", "composition", "inheritance", "realization"),
 				new NullCompleter()
 			),
 			new ArgumentCompleter(
 				new StringsCompleter("rename"),
-				new StringsCompleter("class", "field", "method", 
-						"parameter"),
+				new StringsCompleter("class", "field", "method", "parameter"),
 				new NullCompleter()
 			),
 			new ArgumentCompleter(
 				new StringsCompleter("list"),
-				new StringsCompleter("classes", "relationships",
-						"all"),
+				new StringsCompleter("classes", "relationships", "all"),
 				new NullCompleter()
 			)
 		);
