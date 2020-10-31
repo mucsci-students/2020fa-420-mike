@@ -2,7 +2,9 @@ package mike.testcases;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,15 +22,25 @@ public class CLIViewTest {
     
     Model model;
     CLIView cli;
+    
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
+    private final PrintStream origOut = System.out;
+    private final PrintStream origErr = System.err;
+    
     @Before
     public void createCLI() throws IOException {
+	System.setOut(new PrintStream(out));
+	System.setErr(new PrintStream(err));
 	model = new Model();
 	cli = (CLIView) new ViewTemplate(ViewTemplate.InterfaceType.CLI, model).getViewinterface();
     }
     
     @After
     public void cleanCLI() {
+	System.setOut(origOut);
+	System.setErr(origErr);
 	String[] commands = {"sudo", "clear"};
 	cli.evaluateCommand(commands);
     }
@@ -154,6 +166,257 @@ public class CLIViewTest {
         //Ensure relationships are also deleted
 
     }
+ 
+    //**********************************************************************************************//
+    //**                                FIELD TESTS                                               **//
+    //**                         (CREATE, RENAME, DELETE)                                         **//
+    //**********************************************************************************************//
+    
+    @Test
+    public void createFieldTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	
+	// Create one field
+	String[] fieldCommands = {"create", "field", "c1", "int", "f1"};
+	cli.evaluateCommand(fieldCommands);
+	assertTrue("CLI did not make a field; Should be one field called f1.", c1.containsField("f1"));
+	assertEquals("c1 made more or less than one field.", 1, c1.getFields().size());
+	
+	// Create multiple fields
+	fieldCommands[4] = "f2";
+	cli.evaluateCommand(fieldCommands);
+	fieldCommands[4] = "f3";
+	cli.evaluateCommand(fieldCommands);
+	fieldCommands[4] = "f4";
+	cli.evaluateCommand(fieldCommands);
+	assertTrue("CLI did not make a field; Should be one field called f2.", c1.containsField("f2"));
+	assertTrue("CLI did not make a field; Should be one field called f3.", c1.containsField("f3"));
+	assertTrue("CLI did not make a field; Should be one field called f4.", c1.containsField("f4"));
+	assertEquals("c1 has more or less than 4 fields", 4, c1.getFields().size());
+	
+	// Create field with wrong length of commands
+	String[] invalidLengthCommand = {"create", "field", "c1", "int", "tooLong", "badLength"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertFalse("CLI made a field; Shouldn't have since too many arguments.", c1.containsField("badLength"));
+	assertFalse("CLI made a field; Shouldn't have since too many arguments.", c1.containsField("tooLong"));
+	assertEquals("CLI made a field; Shouldn't have since too many arguments.", 4, c1.getFields().size());
+	
+	// Create field with non-existing class
+	fieldCommands[2] = "c3";
+	fieldCommands[4] = "f6";
+	cli.evaluateCommand(fieldCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertFalse("CLI made a field in a class that doesn't exist; Should not have", c1.containsField("f6"));
+	assertEquals("c1 has more or less than 4 fields.", 4, c1.getFields().size());
+	
+	// Create field with same name
+	fieldCommands[4] = "f1";
+	cli.evaluateCommand(fieldCommands);
+	assertEquals("CLI made a field; Field name already existed.", 4, c1.getFields().size());
+	
+	// Create field in separate classes
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	fieldCommands[2] = "c2";
+	fieldCommands[4] = "f5";
+	cli.evaluateCommand(fieldCommands);
+	assertTrue("CLI did not make a field; Should be one field called f5.", c2.containsField("f5"));
+	assertEquals("c2 has more or less than one field.", 1, c2.getFields().size());
+	
+	// Can create the same field name in another class
+	fieldCommands[4] = "f1";
+	cli.evaluateCommand(fieldCommands);
+	assertTrue("CLI did not make a field; Should be one field called f1.", c2.containsField("f1"));
+	assertTrue("CLI deleted field f5; f5 should still exist.", c2.containsField("f5"));
+	assertEquals("c2 has more or less than two fields.", 2, c2.getFields().size());
+
+	// Can not create a field with same name, but different type
+	fieldCommands[3] = "int";
+	fieldCommands[4] = "f5";
+	cli.evaluateCommand(fieldCommands);
+	assertTrue("CLI broke", c2.containsField("f5"));
+	assertEquals("c2 has more or less than two fields.", 2, c2.getFields().size());
+    }
+
+    @Test
+    public void renameFieldTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] createFieldCommands = {"create", "field", "c1", "int", "f1"};
+	cli.evaluateCommand(createFieldCommands);
+	
+	// Rename one field
+	String[] renameFieldCommands = {"rename", "field", "c1", "f1", "newf1"};
+	cli.evaluateCommand(renameFieldCommands);
+	assertFalse("c1 still has a f1; Should not have any more f1.", c1.containsField("f1"));
+	assertTrue("c1 still has a f1; Should not have any more f1.", c1.containsField("newf1"));
+	assertEquals("c1 has more or less than one fields.", 1, c1.getFields().size());
+	
+	// Rename multiple fields
+	createFieldCommands[4] = "f2";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f3";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f4";
+	cli.evaluateCommand(createFieldCommands);
+	renameFieldCommands[3] = "f4";
+	renameFieldCommands[4] = "newf4";
+	cli.evaluateCommand(renameFieldCommands);
+	renameFieldCommands[3] = "f3";
+	renameFieldCommands[4] = "newf3";
+	cli.evaluateCommand(renameFieldCommands);
+	renameFieldCommands[3] = "f2";
+	renameFieldCommands[4] = "newf2";
+	cli.evaluateCommand(renameFieldCommands);
+	assertFalse("c1 still has field f2; Should not have it.", c1.containsField("f2"));
+	assertFalse("c1 still has field f3; Should not have it.", c1.containsField("f3"));
+	assertFalse("c1 still has field f4; Should not have it.", c1.containsField("f4"));
+	assertTrue("c1 doesn't have field newf2; Should have it.", c1.containsField("newf2"));
+	assertTrue("c1 doesn't have field newf3; Should have it.", c1.containsField("newf3"));
+	assertTrue("c1 doesn't have field newf4; Should have it.", c1.containsField("newf4"));
+	assertEquals("c1 has more or less than four fields.", 4, c1.getFields().size());
+	
+	// Rename field with wrong length of commands
+	String[] invalidLengthCommand = {"rename", "field", "c1", "newf1", "tooLong", "reallyLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("c1 no longer has newf1; Should still have it after an error.", c1.containsField("newf1"));
+	assertFalse("c1 renamed field newf1; Shouldn't have since parameters are invalid.", c1.containsField("tooLong"));
+	assertFalse("c1 renamed field newf1; Shouldn't have since parameters are invalid.", c1.containsField("reallyLong"));
+	assertEquals("c1 has more or less than four fields.", 4, c1.getFields().size());
+	
+	// Rename field with non-existing class
+	renameFieldCommands[2] = "c3";
+	renameFieldCommands[3] = "newf1";
+	renameFieldCommands[4] = "wrongf1";
+	cli.evaluateCommand(renameFieldCommands);
+	assertTrue("c1 no longer has newf1; Should still have it after an error.", c1.containsField("newf1"));
+	assertFalse("c1 contains wrongf1; Shouldn't have since class c3 doesn't exist.", c1.containsField("wrongf1"));
+	assertEquals("CLI has more or less than one classes.", 1, model.getEntities().size());
+	assertEquals("c1 has more or less than four fields.", 4, c1.getFields().size());
+	
+	// Rename field with non-existing field
+	renameFieldCommands[2] = "c1";
+	renameFieldCommands[3] = "f5";
+	cli.evaluateCommand(renameFieldCommands);
+	assertFalse("CLI broke; Should not have", c1.containsField("f5"));
+	assertFalse("c1 contains wrongf1; Should not since f5 doesn't exist", c1.containsField("wrongf1"));
+	assertEquals("c1 has more or less than 4 fields.", 4, c1.getFields().size());	
+
+	// Rename field in separate classes (with different or same name fields)
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	createFieldCommands[2] = "c2";
+	createFieldCommands[4] = "newf1";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f5";
+	cli.evaluateCommand(createFieldCommands);
+	renameFieldCommands[2] = "c2";
+	renameFieldCommands[3] = "f5";
+	renameFieldCommands[4] = "newf5";
+	cli.evaluateCommand(renameFieldCommands);
+	assertFalse("c2 has a field named f5.", c2.containsField("f5"));
+	assertTrue("c2 does not have a field named newf5.", c2.containsField("newf5"));
+	assertEquals("c1 made more or less than four fields.", 4, c1.getFields().size());
+	assertEquals("c2 made more or less than two fields.", 2, c2.getFields().size());
+	renameFieldCommands[3] = "newf1";
+	renameFieldCommands[4] = "newf3";
+	cli.evaluateCommand(renameFieldCommands);
+	assertFalse("c2 has a field named newf1.", c2.containsField("newf1"));
+	assertTrue("c2 does not have a field named newf3.", c2.containsField("newf3"));
+	assertTrue("c1 does not have a field named newf3.", c1.containsField("newf3"));
+	assertEquals("c1 made more or less than four fields.", 4, c1.getFields().size());
+	assertEquals("c2 made more or less than two fields.", 2, c2.getFields().size());
+	
+	// Rename to an existing field
+	renameFieldCommands[3] = "newf3";
+	renameFieldCommands[4] = "newf5";
+	cli.evaluateCommand(renameFieldCommands);
+	assertTrue("c2 does not have a field named newf5.", c2.containsField("newf5"));
+	assertTrue("c2 does not have a field named newf3.", c2.containsField("newf3"));
+	assertTrue("c1 does not have a field named newf3.", c1.containsField("newf3"));
+	assertEquals("c1 made more or less than four fields.", 4, c1.getFields().size());
+	assertEquals("c2 made more or less than two fields.", 2, c2.getFields().size());
+	
+    }
+    
+    @Test
+    public void deleteFieldTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] createFieldCommands = {"create", "field", "c1", "int", "f1"};
+	cli.evaluateCommand(createFieldCommands);
+	
+	// Delete one field
+	String[] deleteFieldCommands = {"delete", "field", "c1", "f1"};
+	cli.evaluateCommand(deleteFieldCommands);
+	assertFalse("CLI still has a field; Should not have any more fields.", c1.containsField("f1"));
+	assertEquals("c1 has more or less than zero fields.", 0, c1.getFields().size());
+	
+	// Delete multiple fields
+	createFieldCommands[4] = "f2";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f3";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f4";
+	cli.evaluateCommand(createFieldCommands);
+	deleteFieldCommands[3] = "f4";
+	cli.evaluateCommand(deleteFieldCommands);
+	deleteFieldCommands[3] = "f3";
+	cli.evaluateCommand(deleteFieldCommands);
+	deleteFieldCommands[3] = "f2";
+	cli.evaluateCommand(deleteFieldCommands);
+	assertFalse("CLI still has a field; Should not have any more fields.", c1.containsField("f2"));
+	assertFalse("CLI still has a field; Should not have any more fields.", c1.containsField("f3"));
+	assertFalse("CLI still has a field; Should not have any more fields.", c1.containsField("f4"));
+	assertEquals("c1 has more or less than zero fields.", 0, c1.getFields().size());
+	
+	// Delete field with wrong length of commands
+	createFieldCommands[4] = "f5";
+	cli.evaluateCommand(createFieldCommands);
+	String[] invalidLengthCommand = {"delete", "field", "c1", "f5", "tooLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("CLI deleted field f5; Shouldn't have since parameters are invalid.", c1.containsField("f5"));
+	assertEquals("CLI deleted a field; Shouldn't have since too many arguments.", 1, c1.getFields().size());
+	
+	// Delete field with non-existing class
+	deleteFieldCommands[2] = "c3";
+	deleteFieldCommands[3] = "f5";
+	cli.evaluateCommand(deleteFieldCommands);
+	assertTrue("CLI deleted a field in a class that doesn't exist; Should not have", c1.containsField("f5"));
+	assertEquals("c1 has more or less than 1 fields.", 1, c1.getFields().size());
+	
+	// Delete field with non-existing field
+	deleteFieldCommands[2] = "c1";
+	deleteFieldCommands[3] = "f6";
+	cli.evaluateCommand(deleteFieldCommands);
+	assertFalse("CLI broke; Should not have", c1.containsField("f6"));
+	assertTrue("CLI deleted the wrong field when the inserted field doesn't exist", c1.containsField("f5"));
+	assertEquals("c1 has more or less than 1 field", 1, c1.getFields().size());	
+	
+	// Delete field in separate classes
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	createFieldCommands[2] = "c2";
+	createFieldCommands[4] = "f5";
+	cli.evaluateCommand(createFieldCommands);
+	createFieldCommands[4] = "f6";
+	cli.evaluateCommand(createFieldCommands);
+	deleteFieldCommands[2] = "c2";
+	deleteFieldCommands[3] = "f5";
+	cli.evaluateCommand(deleteFieldCommands);
+	assertFalse("CLI did not delete a field; Should have deleted f5 in c2.", c2.containsField("f5"));
+	assertTrue("CLI deleted a field; Should have deleted f5 in c1.", c1.containsField("f5"));
+	assertEquals("c1 made more or less than one field.", 1, c1.getFields().size());
+	assertEquals("c2 made more or less than one field.", 1, c2.getFields().size());
+	
+    }
     
     //**********************************************************************************************//
     //**                                METHOD TESTS                                              **//
@@ -221,7 +484,7 @@ public class CLIViewTest {
 	assertTrue("CLI deleted method m5; m5 should still exist.", c2.containsMethod("m5"));
 	assertEquals("c2 has more or less than two methods.", 2, c2.getMethods().size());
 
-	// Create a method with same name, but different type
+	// Can not create a method with same name, but different type
 	methodCommands[3] = "int";
 	methodCommands[4] = "m5";
 	cli.evaluateCommand(methodCommands);
@@ -266,7 +529,7 @@ public class CLIViewTest {
 	assertTrue("c1 doesn't have method newm2; Should have it.", c1.containsMethod("newm2"));
 	assertTrue("c1 doesn't have method newm3; Should have it.", c1.containsMethod("newm3"));
 	assertTrue("c1 doesn't have method newm4; Should have it.", c1.containsMethod("newm4"));
-	assertEquals("c1 has more or less than zero methods.", 4, c1.getMethods().size());
+	assertEquals("c1 has more or less than four methods.", 4, c1.getMethods().size());
 	
 	// Rename method with wrong length of commands
 	String[] invalidLengthCommand = {"rename", "method", "c1", "newm1", "tooLong", "reallyLong"};
