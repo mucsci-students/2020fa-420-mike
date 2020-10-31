@@ -1,13 +1,9 @@
-package mike.testcases;
+package mike.datastructures;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-
-import mike.datastructures.Entity;
-import mike.datastructures.Field;
-import mike.datastructures.Method;
 
 public class EntityTest {
 
