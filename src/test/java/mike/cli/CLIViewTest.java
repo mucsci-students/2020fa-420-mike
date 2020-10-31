@@ -1,4 +1,4 @@
-package mike.cli;
+package mike.testcases;
 
 import static org.junit.Assert.*;
 
@@ -9,64 +9,59 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mike.datastructures.Model;
-import mike.view.CLIView;
-import mike.view.ViewTemplate;
+import mike.datastructures.Entity;
+import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
 
-public class CLIViewTest {
+import mike.view.CLIView;
+import mike.view.ViewTemplate;
 
-    private Model model;
-    private CLIView cli;
+public class CLIViewTest {
+    
+    Model model;
+    CLIView cli;
 
     @Before
     public void createCLI() throws IOException {
-        model = new Model();
-        cli = (CLIView) new ViewTemplate(ViewTemplate.InterfaceType.CLI, model).getViewinterface();
+	model = new Model();
+	cli = (CLIView) new ViewTemplate(ViewTemplate.InterfaceType.CLI, model).getViewinterface();
     }
-
+    
     @After
     public void cleanCLI() {
-        String[] commands = {"sudo", "clear"};
-        cli.evaluateCommand(commands);
+	String[] commands = {"sudo", "clear"};
+	cli.evaluateCommand(commands);
     }
-
-
+    
     @Test
     public void initClassTest(){
-        assertTrue("CLI is null; Should not be null.", cli != null);
-        assertTrue("CLI's model is not empty; Should be empty.", cli.getCLIModel().empty());
+	assertTrue("CLI is null; Should not be null.", cli != null);
+	assertTrue("CLI's model is not empty; Should be empty.", cli.getCLIModel().empty());
     }
-
-    //**********************************************************************************************//
-    //**                                CLASS TESTS                                               **//
-    //**                            (CREATE, RENAME, DELETE)                                      **//
-    //**********************************************************************************************//
-
+    
     @Test
     public void createClassTest() {
-        // Test making a single class
-        String[] commands = {"create", "class", "c1"};
-        cli.evaluateCommand(commands);
-        assertTrue("CLI did not make a class; Should be one class called c1.", model.containsEntity("c1"));
-        assertEquals("CLI made more or less than one class", 1, model.getEntities().size());
-
-        // Test making multiple classes
-        commands[2] = "c2";
-        cli.evaluateCommand(commands);
-        commands[2] = "c3";
-        cli.evaluateCommand(commands);
-        commands[2] = "c4";
-        cli.evaluateCommand(commands);
-        commands[2] = "c5";
-        cli.evaluateCommand(commands);
-
-        assertTrue("CLI did not make a class; Should be class called c2.", model.containsEntity("c2"));
-        assertTrue("CLI did not make a class; Should be class called c3.", model.containsEntity("c3"));
-        assertTrue("CLI did not make a class; Should be class called c4.", model.containsEntity("c4"));
-        assertTrue("CLI did not make a class; Should be class called c5.", model.containsEntity("c5"));
-        assertEquals("CLI did not make classes; Should be 5 classes.", 5, model.getEntities().size());
-
-        // Test NOT creating with invalid length
+	String[] commands = {"create", "class", "c1"};
+	cli.evaluateCommand(commands);
+	assertTrue("CLI did not make a class; Should be one class called c1.", model.containsEntity("c1"));
+	assertEquals("CLI made more or less than one class", 1, model.getEntities().size());
+	
+	commands[2] = "c2";
+	cli.evaluateCommand(commands);
+	commands[2] = "c3";
+	cli.evaluateCommand(commands);
+	commands[2] = "c4";
+	cli.evaluateCommand(commands);
+	commands[2] = "c5";
+	cli.evaluateCommand(commands);
+	
+	assertTrue("CLI did not make a class; Should be class called c2.", model.containsEntity("c2"));
+	assertTrue("CLI did not make a class; Should be class called c3.", model.containsEntity("c3"));
+	assertTrue("CLI did not make a class; Should be class called c4.", model.containsEntity("c4"));
+	assertTrue("CLI did not make a class; Should be class called c5.", model.containsEntity("c5"));
+	assertEquals("CLI did not make classes; Should be 5 classes.", 5, model.getEntities().size());
+	
+	// Test NOT creating with invalid length
         String[] invalidLengthCommand = {"create", "class", "badLength", "Yes."};
         cli.evaluateCommand(invalidLengthCommand);
 
@@ -77,9 +72,9 @@ public class CLIViewTest {
         commands[2] = "c1";
         cli.evaluateCommand(commands);
 
-        assertFalse("CLI created a class that already existed; Length should be 5.", model.getEntities().size() == 6);
+        assertEquals("CLI created a class that already existed; Length should be 5.", 5, model.getEntities().size());
     }
-
+    
     @Test
     public void renameClassTest() {
         // Test setup of class creation
@@ -125,7 +120,7 @@ public class CLIViewTest {
         assertTrue("CLI renamed a class. c3 should exist.", model.containsEntity("c3"));
         assertEquals("CLI does not have 2 classes. Model should have two entities.", 2, model.getEntities().size());
     }
-
+    
     @Test
     public void deleteClassTest() {
         // Test setup of class creation
@@ -159,7 +154,603 @@ public class CLIViewTest {
         //Ensure relationships are also deleted
 
     }
+    
+    //**********************************************************************************************//
+    //**                                METHOD TESTS                                              **//
+    //**                         (CREATE, RENAME, DELETE)                                         **//
+    //**********************************************************************************************//
+    
+    @Test
+    public void createMethodTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	
+	// Create one method
+	String[] methodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI did not make a method; Should be one method called m1.", c1.containsMethod("m1"));
+	assertEquals("c1 made more or less than one method.", 1, c1.getMethods().size());
+	
+	// Create multiple methods
+	methodCommands[4] = "m2";
+	cli.evaluateCommand(methodCommands);
+	methodCommands[4] = "m3";
+	cli.evaluateCommand(methodCommands);
+	methodCommands[4] = "m4";
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI did not make a method; Should be one method called m2.", c1.containsMethod("m2"));
+	assertTrue("CLI did not make a method; Should be one method called m3.", c1.containsMethod("m3"));
+	assertTrue("CLI did not make a method; Should be one method called m4.", c1.containsMethod("m4"));
+	assertEquals("c1 has more or less than 4 methods", 4, c1.getMethods().size());
+	
+	// Create method with wrong length of commands
+	String[] invalidLengthCommand = {"create", "method", "c1", "int", "tooLong", "badLength"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertFalse("CLI made a method; Shouldn't have since too many arguments.", c1.containsMethod("badLength"));
+	assertFalse("CLI made a method; Shouldn't have since too many arguments.", c1.containsMethod("tooLong"));
+	assertEquals("CLI made a method; Shouldn't have since too many arguments.", 4, c1.getMethods().size());
+	
+	// Create method with non-existing class
+	methodCommands[2] = "c3";
+	methodCommands[4] = "m6";
+	cli.evaluateCommand(methodCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertFalse("CLI made a method in a class that doesn't exist; Should not have", c1.containsMethod("m6"));
+	assertEquals("c1 has more or less than 4 methods.", 4, c1.getMethods().size());
+	
+	// Create method with same name
+	methodCommands[4] = "m1";
+	cli.evaluateCommand(methodCommands);
+	assertEquals("CLI made a method; Method name already existed.", 4, c1.getMethods().size());
+	
+	// Create method in separate classes
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	methodCommands[2] = "c2";
+	methodCommands[4] = "m5";
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI did not make a method; Should be one method called m5.", c2.containsMethod("m5"));
+	assertEquals("c2 has more or less than one method.", 1, c2.getMethods().size());
+	
+	// Can create the same method name in another class
+	methodCommands[4] = "m1";
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI did not make a method; Should be one method called m1.", c2.containsMethod("m1"));
+	assertTrue("CLI deleted method m5; m5 should still exist.", c2.containsMethod("m5"));
+	assertEquals("c2 has more or less than two methods.", 2, c2.getMethods().size());
 
+	// Create a method with same name, but different type
+	methodCommands[3] = "int";
+	methodCommands[4] = "m5";
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI broke", c2.containsMethod("m5"));
+	assertEquals("c2 has more or less than two methods.", 2, c2.getMethods().size());
+    }
+
+    @Test
+    public void renameMethodTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] createMethodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(createMethodCommands);
+	
+	// Rename one method
+	String[] renameMethodCommands = {"rename", "method", "c1", "m1", "newm1"};
+	cli.evaluateCommand(renameMethodCommands);
+	assertFalse("c1 still has a m1; Should not have any more m1.", c1.containsMethod("m1"));
+	assertTrue("c1 still has a m1; Should not have any more m1.", c1.containsMethod("newm1"));
+	assertEquals("c1 has more or less than one methods.", 1, c1.getMethods().size());
+	
+	// Rename multiple methods
+	createMethodCommands[4] = "m2";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m3";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m4";
+	cli.evaluateCommand(createMethodCommands);
+	renameMethodCommands[3] = "m4";
+	renameMethodCommands[4] = "newm4";
+	cli.evaluateCommand(renameMethodCommands);
+	renameMethodCommands[3] = "m3";
+	renameMethodCommands[4] = "newm3";
+	cli.evaluateCommand(renameMethodCommands);
+	renameMethodCommands[3] = "m2";
+	renameMethodCommands[4] = "newm2";
+	cli.evaluateCommand(renameMethodCommands);
+	assertFalse("c1 still has method m2; Should not have it.", c1.containsMethod("m2"));
+	assertFalse("c1 still has method m3; Should not have it.", c1.containsMethod("m3"));
+	assertFalse("c1 still has method m4; Should not have it.", c1.containsMethod("m4"));
+	assertTrue("c1 doesn't have method newm2; Should have it.", c1.containsMethod("newm2"));
+	assertTrue("c1 doesn't have method newm3; Should have it.", c1.containsMethod("newm3"));
+	assertTrue("c1 doesn't have method newm4; Should have it.", c1.containsMethod("newm4"));
+	assertEquals("c1 has more or less than zero methods.", 4, c1.getMethods().size());
+	
+	// Rename method with wrong length of commands
+	String[] invalidLengthCommand = {"rename", "method", "c1", "newm1", "tooLong", "reallyLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("c1 no longer has newm1; Should still have it after an error.", c1.containsMethod("newm1"));
+	assertFalse("c1 renamed method newm1; Shouldn't have since parameters are invalid.", c1.containsMethod("tooLong"));
+	assertFalse("c1 renamed method newm1; Shouldn't have since parameters are invalid.", c1.containsMethod("reallyLong"));
+	assertEquals("c1 has more or less than four methods.", 4, c1.getMethods().size());
+	
+	// Rename method with non-existing class
+	renameMethodCommands[2] = "c3";
+	renameMethodCommands[3] = "newm1";
+	renameMethodCommands[4] = "wrongm1";
+	cli.evaluateCommand(renameMethodCommands);
+	assertTrue("c1 no longer has newm1; Should still have it after an error.", c1.containsMethod("newm1"));
+	assertFalse("c1 contains wrongm1; Shouldn't have since class c3 doesn't exist.", c1.containsMethod("wrongm1"));
+	assertEquals("CLI has more or less than one classes.", 1, model.getEntities().size());
+	assertEquals("c1 has more or less than four methods.", 4, c1.getMethods().size());
+	
+	// Rename method with non-existing method
+	renameMethodCommands[2] = "c1";
+	renameMethodCommands[3] = "m5";
+	cli.evaluateCommand(renameMethodCommands);
+	assertFalse("CLI broke; Should not have", c1.containsMethod("m5"));
+	assertFalse("c1 contains wrongm1; Should not since m5 doesn't exist", c1.containsMethod("wrongm1"));
+	assertEquals("c1 has more or less than 4 method", 4, c1.getMethods().size());	
+
+	// Rename method in separate classes (with different or same name methods)
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	createMethodCommands[2] = "c2";
+	createMethodCommands[4] = "newm1";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m5";
+	cli.evaluateCommand(createMethodCommands);
+	renameMethodCommands[2] = "c2";
+	renameMethodCommands[3] = "m5";
+	renameMethodCommands[4] = "newm5";
+	cli.evaluateCommand(renameMethodCommands);
+	
+	assertFalse("c2 has a method named m5.", c2.containsMethod("m5"));
+	assertTrue("c2 does not have a method named newm5.", c2.containsMethod("newm5"));
+	assertEquals("c1 made more or less than four classes.", 4, c1.getMethods().size());
+	assertEquals("c2 made more or less than two classes.", 2, c2.getMethods().size());
+	renameMethodCommands[3] = "newm1";
+	renameMethodCommands[4] = "newm3";
+	cli.evaluateCommand(renameMethodCommands);
+	assertFalse("c2 has a method named newm1.", c2.containsMethod("newm1"));
+	assertTrue("c2 does not have a method named newm3.", c2.containsMethod("newm3"));
+	assertTrue("c1 does not have a method named newm3.", c1.containsMethod("newm3"));
+	assertEquals("c1 made more or less than four classes.", 4, c1.getMethods().size());
+	assertEquals("c2 made more or less than two classes.", 2, c2.getMethods().size());
+	
+	// Rename to an existing method
+	renameMethodCommands[3] = "newm3";
+	renameMethodCommands[4] = "newm5";
+	cli.evaluateCommand(renameMethodCommands);
+	assertTrue("c2 does not have a method named newm5.", c2.containsMethod("newm5"));
+	assertTrue("c2 does not have a method named newm3.", c2.containsMethod("newm3"));
+	assertTrue("c1 does not have a method named newm3.", c1.containsMethod("newm3"));
+	assertEquals("c1 made more or less than four classes.", 4, c1.getMethods().size());
+	assertEquals("c2 made more or less than two classes.", 2, c2.getMethods().size());
+	
+    }
+    
+    @Test
+    public void deleteMethodTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] createMethodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(createMethodCommands);
+	
+	// Delete one method
+	String[] deleteMethodCommands = {"delete", "method", "c1", "m1"};
+	cli.evaluateCommand(deleteMethodCommands);
+	assertFalse("CLI still has a method; Should not have any more methods.", c1.containsMethod("m1"));
+	assertEquals("c1 has more or less than zero methods.", 0, c1.getMethods().size());
+	
+	// Delete multiple methods
+	createMethodCommands[4] = "m2";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m3";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m4";
+	cli.evaluateCommand(createMethodCommands);
+	deleteMethodCommands[3] = "m4";
+	cli.evaluateCommand(deleteMethodCommands);
+	deleteMethodCommands[3] = "m3";
+	cli.evaluateCommand(deleteMethodCommands);
+	deleteMethodCommands[3] = "m2";
+	cli.evaluateCommand(deleteMethodCommands);
+	assertFalse("CLI still has a method; Should not have any more methods.", c1.containsMethod("m2"));
+	assertFalse("CLI still has a method; Should not have any more methods.", c1.containsMethod("m3"));
+	assertFalse("CLI still has a method; Should not have any more methods.", c1.containsMethod("m4"));
+	assertEquals("c1 has more or less than zero methods.", 0, c1.getMethods().size());
+	
+	// Delete method with wrong length of commands
+	createMethodCommands[4] = "m5";
+	cli.evaluateCommand(createMethodCommands);
+	String[] invalidLengthCommand = {"delete", "method", "c1", "m5", "tooLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("CLI deleted method m5; Shouldn't have since parameters are invalid.", c1.containsMethod("m5"));
+	assertEquals("CLI deleted a method; Shouldn't have since too many arguments.", 1, c1.getMethods().size());
+	
+	// Delete method with non-existing class
+	deleteMethodCommands[2] = "c3";
+	deleteMethodCommands[3] = "m5";
+	cli.evaluateCommand(deleteMethodCommands);
+	assertTrue("CLI deleted a method in a class that doesn't exist; Should not have", c1.containsMethod("m5"));
+	assertEquals("c1 has more or less than 1 methods.", 1, c1.getMethods().size());
+	
+	// Delete method with non-existing method
+	deleteMethodCommands[2] = "c1";
+	deleteMethodCommands[3] = "m6";
+	cli.evaluateCommand(deleteMethodCommands);
+	assertFalse("CLI broke; Should not have", c1.containsMethod("m6"));
+	assertTrue("CLI deleted the wrong method when the inserted method doesn't exist", c1.containsMethod("m5"));
+	assertEquals("c1 has more or less than 1 method", 1, c1.getMethods().size());	
+	
+	// Delete method in separate classes
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	createMethodCommands[2] = "c2";
+	createMethodCommands[4] = "m5";
+	cli.evaluateCommand(createMethodCommands);
+	createMethodCommands[4] = "m6";
+	cli.evaluateCommand(createMethodCommands);
+	deleteMethodCommands[2] = "c2";
+	deleteMethodCommands[3] = "m5";
+	cli.evaluateCommand(deleteMethodCommands);
+	assertFalse("CLI did not delete a method; Should have deleted m5 in c2.", c2.containsMethod("m5"));
+	assertTrue("CLI deleted a method; Should have deleted m5 in c1.", c1.containsMethod("m5"));
+	assertEquals("c1 made more or less than one class.", 1, c1.getMethods().size());
+	assertEquals("c2 made more or less than one class.", 1, c2.getMethods().size());
+	
+    }
+    
+    //**********************************************************************************************//
+    //**                              PARAMETER TESTS                                             **//
+    //**                         (CREATE, RENAME, DELETE)                                         **//
+    //**********************************************************************************************//
+    
+    @Test
+    public void createParameterTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] methodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(methodCommands);
+	Method m1 = c1.getMethods().get(0);
+	
+	// Create one parameter
+	String[] parameterCommands = {"create", "parameter", "c1", "m1", "String", "p1"};
+	cli.evaluateCommand(parameterCommands);
+	assertTrue("CLI did not make a parameter; Should be one parameter called p1.", m1.containsParameter("p1"));
+	assertEquals("c1 made more or less than one methods.", 1, c1.getMethods().size());
+	assertEquals("m1 made more or less than one parameter.", 1, m1.getParameters().size());
+	
+	// Create multiple parameters
+	parameterCommands[5] = "p2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p3";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p4";
+	cli.evaluateCommand(parameterCommands);
+	assertTrue("CLI did not make a parameter; Should be one parameter called p2.", m1.containsParameter("p2"));
+	assertTrue("CLI did not make a parameter; Should be one parameter called p3.", m1.containsParameter("p3"));
+	assertTrue("CLI did not make a parameter; Should be one parameter called p4.", m1.containsParameter("p4"));
+	assertEquals("m1 has more or less than 4 parameters", 4, m1.getParameters().size());
+	
+	// Create parameter with wrong length of commands
+	String[] invalidLengthCommand = {"create", "parameter", "c1", "m1", "int", "p5", "tooLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertFalse("CLI made a method; Shouldn't have since too many arguments.", m1.containsParameter("p5"));
+	assertFalse("CLI made a method; Shouldn't have since too many arguments.", m1.containsParameter("tooLong"));
+	assertEquals("CLI made a method; Shouldn't have since too many arguments.", 4, m1.getParameters().size());
+	
+	// Create parameter with non-existing class
+	parameterCommands[2] = "c3";
+	parameterCommands[5] = "p5";
+	cli.evaluateCommand(parameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertFalse("CLI made a parameter in a class that doesn't exist; Should not have", m1.containsParameter("p5"));
+	assertEquals("m1 has more or less than 4 methods.", 4, m1.getParameters().size());
+	
+	// Create parameter with non-existing method
+	parameterCommands[2] = "c1";
+	parameterCommands[3] = "m2";
+	cli.evaluateCommand(parameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertEquals("CLI has more or less than one class", 1, c1.getMethods().size());
+	assertTrue("c1 no longer contains method m1", c1.containsMethod("m1"));
+	assertFalse("CLI made a parameter in a method that doesn't exist; Should not have", m1.containsParameter("p5"));
+	assertEquals("m1 has more or less than 4 methods.", 4, m1.getParameters().size());
+	
+	// Create parameter with same name
+	parameterCommands[3] = "m1";
+	parameterCommands[5] = "p1";
+	cli.evaluateCommand(methodCommands);
+	assertTrue("CLI broke; should not have", m1.containsParameter("p1"));
+	assertEquals("CLI made a parameter; Parameter name already existed.", 4, m1.getParameters().size());
+	
+	// Create Parameter in separate classes/methods (with same and/or different names)
+	methodCommands[4] = "m2";
+	cli.evaluateCommand(methodCommands);
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	methodCommands[2] = "c2";
+	methodCommands[4] = "m3";
+	cli.evaluateCommand(methodCommands);
+	parameterCommands[3] = "m2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[2] = "c2";
+	parameterCommands[3] = "m3";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "newp1";
+	cli.evaluateCommand(parameterCommands);
+	assertTrue("CLI broke; should not have.", m1.containsParameter("p1"));
+	assertEquals("m1 has more or less than four parameters.", 4, m1.getParameters().size());
+	assertTrue("CLI did not make a parameter in m2; Should be one parameter called p1 in m2.", c1.getMethods().get(1).containsParameter("p1"));
+	assertEquals("m2 has more or less than one parameter.", 1, c1.getMethods().get(1).getParameters().size());
+	assertTrue("CLI did not make a parameter in m3; Should be one parameter called p1 in m3.", c2.getMethods().get(0).containsParameter("p1"));
+	assertTrue("CLI did not make a parameter in m3; Should be one parameter called p1 in m3.", c2.getMethods().get(0).containsParameter("newp1"));
+	assertEquals("m3 has more or less than two parameter.", 2, c2.getMethods().get(0).getParameters().size());
+	
+	// Create a parameter with same name, but different type
+	parameterCommands[4] = "int";
+	parameterCommands[5] = "newp1";
+	cli.evaluateCommand(parameterCommands);
+	assertTrue("CLI did not break", c2.getMethods().get(0).containsParameter("newp1"));
+	assertEquals("m3 has more or less than two parameter.", 2, c2.getMethods().get(0).getParameters().size());
+	
+    }
+    
+    @Test
+    public void renameParameterTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] methodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(methodCommands);
+	Method m1 = c1.getMethods().get(0);
+	String[] parameterCommands = {"create", "parameter", "c1", "m1", "int", "p1"};
+	cli.evaluateCommand(parameterCommands);
+	
+	// Rename one parameter
+	String[] renameParameterCommands = {"rename", "parameter", "c1", "m1", "p1", "newp1"};
+	cli.evaluateCommand(renameParameterCommands);
+	assertTrue("CLI did not rename a parameter; Should be one parameter called newp1.", m1.containsParameter("newp1"));
+	assertFalse("CLI did not get rid of p1.", m1.containsParameter("p1"));
+	assertEquals("c1 made more or less than one methods.", 1, c1.getMethods().size());
+	assertEquals("m1 made more or less than one parameter.", 1, m1.getParameters().size());
+	
+	// Rename back to original name
+	renameParameterCommands[4] = "newp1";
+	renameParameterCommands[5] = "p1";
+	cli.evaluateCommand(renameParameterCommands);
+	assertFalse("CLI did not rename a parameter; Should be one parameter called p1.", m1.containsParameter("newp1"));
+	assertTrue("CLI did not get change to p1.", m1.containsParameter("p1"));
+	assertEquals("c1 made more or less than one methods.", 1, c1.getMethods().size());
+	assertEquals("m1 made more or less than one parameter.", 1, m1.getParameters().size());
+	
+	// Rename multiple parameters
+	parameterCommands[5] = "p2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p3";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p4";
+	cli.evaluateCommand(parameterCommands);
+	renameParameterCommands[4] = "p2";
+	renameParameterCommands[5] = "newp2";
+	cli.evaluateCommand(renameParameterCommands);
+	renameParameterCommands[4] = "p3";
+	renameParameterCommands[5] = "newp3";
+	cli.evaluateCommand(renameParameterCommands);
+	renameParameterCommands[4] = "p4";
+	renameParameterCommands[5] = "newp4";
+	cli.evaluateCommand(renameParameterCommands);
+	assertFalse("CLI did not get rid of p2.", m1.containsParameter("p2"));
+	assertFalse("CLI did not get rid of p3.", m1.containsParameter("p3"));
+	assertFalse("CLI did not get rid of p4.", m1.containsParameter("p4"));
+	assertTrue("CLI did not make a parameter; Should be one parameter called newp2.", m1.containsParameter("newp2"));
+	assertTrue("CLI did not make a parameter; Should be one parameter called newp3.", m1.containsParameter("newp3"));
+	assertTrue("CLI did not make a parameter; Should be one parameter called newp4.", m1.containsParameter("newp4"));
+	assertEquals("m1 has more or less than 4 parameters", 4, m1.getParameters().size());
+	
+	// Rename parameter with wrong length of commands
+	String[] invalidLengthCommand = {"rename", "parameter", "c1", "m1", "newp4", "tooLong", "reallyLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("CLI deleted a parameter; Shouldn't have since too many arguments.", m1.containsParameter("newp4"));
+	assertFalse("CLI made a parameter; Shouldn't have since too many arguments.", m1.containsParameter("tooLong"));
+	assertFalse("CLI made a paremeter; Shouldn't have since too many arguments.", m1.containsParameter("reallyLong"));
+	assertEquals("CLI made a parameter; Shouldn't have since too many arguments.", 4, m1.getParameters().size());
+	
+	// Rename parameter with non-existing class
+	renameParameterCommands[2] = "c3";
+	renameParameterCommands[4] = "newp4";
+	renameParameterCommands[5] = "p5";
+	cli.evaluateCommand(renameParameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertTrue("m1 no longer has new p4.", m1.containsParameter("newp4"));
+	assertFalse("CLI made a parameter in a class that doesn't exist; Should not have", m1.containsParameter("p5"));
+	assertEquals("m1 has more or less than 4 methods.", 4, m1.getParameters().size());
+	
+	// Rename parameter with non-existing method
+	renameParameterCommands[2] = "c1";
+	renameParameterCommands[3] = "m2";
+	cli.evaluateCommand(renameParameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertEquals("CLI has more or less than one method", 1, c1.getMethods().size());
+	assertTrue("c1 no longer contains method m1", c1.containsMethod("m1"));
+	assertTrue("m1 no longer has new p4.", m1.containsParameter("newp4"));
+	assertFalse("CLI made a parameter in a method that doesn't exist; Should not have", m1.containsParameter("p5"));
+	assertEquals("m1 has more or less than 4 methods.", 4, m1.getParameters().size());
+	
+	// Rename parameter with non-existing parameter
+	renameParameterCommands[3] = "m1";
+	renameParameterCommands[4] = "p5";
+	renameParameterCommands[5] = "newp5";
+	cli.evaluateCommand(renameParameterCommands);
+	assertFalse("CLI broke; Should not have", m1.containsParameter("p5"));
+	assertFalse("CLI broke; Should not have", m1.containsParameter("newp5"));
+	assertEquals("m1 has more or less than 4 parameters", 4, m1.getParameters().size());
+	
+	// Rename parameter with same name
+	renameParameterCommands[3] = "m1";
+	renameParameterCommands[4] = "newp2";
+	renameParameterCommands[5] = "p1";
+	cli.evaluateCommand(renameParameterCommands);
+	assertTrue("CLI broke; should not have", m1.containsParameter("p1"));
+	assertTrue("CLI got rid of newp2; should not have", m1.containsParameter("newp2"));
+	assertEquals("CLI made a parameter; Parameter name already existed.", 4, m1.getParameters().size());
+	
+	// Rename Parameter in separate classes/methods (with same and/or different names)
+	methodCommands[4] = "m2";
+	cli.evaluateCommand(methodCommands);
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	methodCommands[2] = "c2";
+	methodCommands[4] = "m3";
+	cli.evaluateCommand(methodCommands);
+	parameterCommands[3] = "m2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[2] = "c2";
+	parameterCommands[3] = "m3";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "newp1";
+	cli.evaluateCommand(parameterCommands);
+	renameParameterCommands[3] = "m2";
+	renameParameterCommands[4] = "p4";
+	renameParameterCommands[5] = "newp4";
+	cli.evaluateCommand(renameParameterCommands);
+	renameParameterCommands[2] = "c2";
+	renameParameterCommands[3] = "m3";
+	renameParameterCommands[4] = "p4";
+	renameParameterCommands[5] = "newp4";
+	cli.evaluateCommand(renameParameterCommands);
+	renameParameterCommands[4] = "newp1";
+	renameParameterCommands[5] = "p5";
+	cli.evaluateCommand(renameParameterCommands);	
+	assertTrue("CLI broke; should not have.", m1.containsParameter("newp4"));
+	assertEquals("m1 has more or less than four parameters.", 4, m1.getParameters().size());
+	assertFalse("CLI did not get rid of a parameter in m2; Should be one parameter called newp4 in m2.", c1.getMethods().get(1).containsParameter("p4"));
+	assertTrue("CLI did not rename a parameter in m2; Should be one parameter called newp4 in m2.", c1.getMethods().get(1).containsParameter("newp4"));
+	assertEquals("m2 has more or less than one parameter.", 1, c1.getMethods().get(1).getParameters().size());
+	assertFalse("CLI did not get rid of a parameter in m3; Should be a parameter called newp4 in m3.", c2.getMethods().get(0).containsParameter("p4"));
+	assertTrue("CLI did not rename a parameter in m3; Should be a parameter called newp4 in m3.", c2.getMethods().get(0).containsParameter("newp4"));
+	assertFalse("CLI did not get rid of a parameter in m3; Should be a parameter called np5 in m3.", c2.getMethods().get(0).containsParameter("newp5"));
+	assertTrue("CLI did not rename a parameter in m3; Should be a parameter called p5 in m3.", c2.getMethods().get(0).containsParameter("p5"));
+	assertEquals("m3 has more or less than two parameter.", 2, c2.getMethods().get(0).getParameters().size());
+	
+    }
+    
+    @Test
+    public void deleteParameterTest() {
+	String[] classCommands = {"create", "class", "c1"};
+	cli.evaluateCommand(classCommands);
+	Entity c1 = model.getEntities().get(0);
+	String[] methodCommands = {"create", "method", "c1", "int", "m1"};
+	cli.evaluateCommand(methodCommands);
+	Method m1 = c1.getMethods().get(0);
+	String[] parameterCommands = {"create", "parameter", "c1", "m1", "int", "p1"};
+	cli.evaluateCommand(parameterCommands);
+	
+	// Delete one parameter
+	String[] deleteParameterCommands = {"delete", "parameter", "c1", "m1", "p1"};
+	cli.evaluateCommand(deleteParameterCommands);
+	assertFalse("CLI did not get rid of p1.", m1.containsParameter("p1"));
+	assertEquals("c1 made more or less than one methods.", 1, c1.getMethods().size());
+	assertEquals("m1 made more or less than zero parameter.", 0, m1.getParameters().size());
+	
+	// Delete multiple parameters
+	parameterCommands[5] = "p1";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "p3";
+	cli.evaluateCommand(parameterCommands);
+	deleteParameterCommands[4] = "p3";
+	cli.evaluateCommand(deleteParameterCommands);
+	deleteParameterCommands[4] = "p2";
+	cli.evaluateCommand(deleteParameterCommands);
+	deleteParameterCommands[4] = "p1";
+	cli.evaluateCommand(deleteParameterCommands);
+	assertFalse("CLI did not get rid of p2.", m1.containsParameter("p1"));
+	assertFalse("CLI did not get rid of p3.", m1.containsParameter("p2"));
+	assertFalse("CLI did not get rid of p4.", m1.containsParameter("p3"));
+	assertEquals("m1 has more or less than zero parameters.", 0, m1.getParameters().size());
+	
+	// Delete parameter with wrong length of commands
+	parameterCommands[5] = "p1";
+	cli.evaluateCommand(parameterCommands);
+	String[] invalidLengthCommand = {"delete", "parameter", "c1", "m1", "p1", "tooLong"};
+	cli.evaluateCommand(invalidLengthCommand);
+	assertTrue("CLI deleted a parameter; Shouldn't have since too many arguments.", m1.containsParameter("p1"));
+	assertFalse("CLI made a parameter; Shouldn't have since too many arguments.", m1.containsParameter("tooLong"));
+	assertEquals("m1 has more or less than one parameter.", 1, m1.getParameters().size());
+	
+	// Delete parameter with non-existing class
+	deleteParameterCommands[2] = "c3";
+	cli.evaluateCommand(deleteParameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertTrue("m1 no longer has a p1.", m1.containsParameter("p1"));
+	assertEquals("m1 has more or less than 1 parameters.", 1, m1.getParameters().size());
+	
+	// Delete parameter with non-existing method
+	deleteParameterCommands[2] = "c1";
+	deleteParameterCommands[3] = "m2";
+	cli.evaluateCommand(deleteParameterCommands);
+	assertEquals("CLI has more or less than one class", 1, model.getEntities().size());
+	assertEquals("CLI has more or less than one method", 1, c1.getMethods().size());
+	assertTrue("c1 no longer contains method m1", c1.containsMethod("m1"));
+	assertTrue("m1 no longer has new p4.", m1.containsParameter("p1"));
+	assertEquals("m1 has more or less than one parameter.", 1, m1.getParameters().size());
+	
+	// Delete parameter with non-existing parameter
+	deleteParameterCommands[3] = "m1";
+	deleteParameterCommands[4] = "p2";
+	cli.evaluateCommand(deleteParameterCommands);
+	assertFalse("CLI broke; Should not have", m1.containsParameter("p2"));
+	assertEquals("m1 has more or less than one parameters", 1, m1.getParameters().size());
+	
+	// Delete parameter in separate classes/methods (with same and/or different names)
+	methodCommands[4] = "m2";
+	cli.evaluateCommand(methodCommands);
+	classCommands[2] = "c2";
+	cli.evaluateCommand(classCommands);
+	Entity c2 = model.getEntities().get(1);
+	methodCommands[2] = "c2";
+	methodCommands[4] = "m3";
+	cli.evaluateCommand(methodCommands);
+	parameterCommands[3] = "m2";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[2] = "c2";
+	parameterCommands[3] = "m3";
+	cli.evaluateCommand(parameterCommands);
+	parameterCommands[5] = "newp1";
+	cli.evaluateCommand(parameterCommands);
+	deleteParameterCommands[2] = "c2";
+	deleteParameterCommands[3] = "m3";
+	deleteParameterCommands[4] = "newp1";
+	cli.evaluateCommand(deleteParameterCommands);
+	deleteParameterCommands[4] = "p1";
+	cli.evaluateCommand(deleteParameterCommands);
+	deleteParameterCommands[2] = "c1";
+	deleteParameterCommands[3] = "m2";
+	cli.evaluateCommand(deleteParameterCommands);
+	deleteParameterCommands[3] = "m1";
+	cli.evaluateCommand(deleteParameterCommands);
+	assertFalse("CLI broke; should not have.", m1.containsParameter("p1"));
+	assertEquals("m1 has more or less than zero parameters.", 0, m1.getParameters().size());
+	assertFalse("CLI did not get rid of a parameter in m2; Should be no more parameters in m2.", c1.getMethods().get(1).containsParameter("p1"));
+	assertEquals("m2 has more or less than zero parameters.", 0, c1.getMethods().get(1).getParameters().size());
+	assertFalse("CLI did not get rid of a parameter in m3; Should be no more parameters in m3.", c2.getMethods().get(0).containsParameter("p1"));
+	assertFalse("CLI did not get rid of a parameter in m3; Should be no more parameters in m3.", c2.getMethods().get(0).containsParameter("newp1"));
+	assertEquals("m3 has more or less than zero parameter.", 0, c2.getMethods().get(0).getParameters().size());
+    	
+    }
+    
     //**********************************************************************************************//
     //**                             RELATIONSHIP TESTS                                           **//
     //**                              (CREATE, DELETE)                                            **//
@@ -339,5 +930,4 @@ public class CLIViewTest {
 
         assertTrue("CLI's model is not empty; CLI's model should be empty.", model.empty());
     }
-
 }
