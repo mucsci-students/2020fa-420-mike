@@ -42,23 +42,23 @@
 
 ### Topbar buttons:
 	
-	##### Save:
+	Save:
 		Saves progress made since last save to the file that was specified using Save As.
 		If Save As was not called beforehand, Save will have the same functionality as Save As.
 
-	##### Save As:
+	Save As:
 		Saves progress to a file name in a specified directory. If no directory is specified, the file is saved
 		in the current working directory. Files can be saved as json with the .json extension.
 
-	##### Load:
+	Load:
 		Loads the saved state of a UML diagram from within a specified filepath. If only the file name is given,
 		the file will try to be found in the current working directory.
 
-	##### Add Class:
+	Add Class:
 		Adds a class with the specified name to the GUI. If a class with the specified name already exists,
 		the user will be alerted so.
 
-	##### Enable/Disable Edit Mode:
+	Enable/Disable Edit Mode:
 		When Enable Edit Mode is clicked, it gives the user the ability to edit a class by clicking on it. More
 		on the buttons and options available with edit mode is listed later in this document. In edit mode,
 		the ability to Save/Save As/Load are disabled to prevent saving changes that are still being made.
