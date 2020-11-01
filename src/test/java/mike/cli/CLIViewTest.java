@@ -1,4 +1,4 @@
-package mike.testcases;
+package mike.cli;
 
 import static org.junit.Assert.*;
 
