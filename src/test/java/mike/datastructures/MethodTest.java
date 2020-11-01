@@ -1,7 +1,4 @@
-package mike.testcases;
-
-import mike.datastructures.Method;
-import mike.datastructures.Parameter;
+package mike.datastructures;
 
 //import junit methods
 import static org.junit.Assert.assertEquals;

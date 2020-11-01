@@ -1,6 +1,4 @@
-package mike.testcases;
-
-import mike.datastructures.Field;
+package mike.datastructures;
 
 //import junit methods
 import static org.junit.Assert.assertEquals;
