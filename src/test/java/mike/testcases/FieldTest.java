@@ -32,7 +32,7 @@ public class FieldTest {
         Field f3 = new Field("f3", "int");
 
         assertFalse("False when comparing null", f.equals(null));
-        assertFalse("False when comparing wrong object types", f.equals("Hello"));
+        assertFalse("False when comparing wrong object types", f.getName().equals("Hello"));
 
         assertTrue("True when name and type match", f.equals(f2));
         assertFalse("False when names do not match", f.equals(f3));
