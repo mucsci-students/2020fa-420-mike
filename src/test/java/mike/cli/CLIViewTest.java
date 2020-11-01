@@ -44,20 +44,32 @@ public class CLIViewTest {
 	String[] commands = {"sudo", "clear"};
 	cli.evaluateCommand(commands);
     }
-    
+	
+    //**********************************************************************************************//
+    //**                                CONSTRUCTOR TEST                                          **//
+    //**                                (INITIALIZATION)                                          **//
+    //**********************************************************************************************//
+	
     @Test
-    public void initClassTest(){
+    public void initTest(){
 	assertTrue("CLI is null; Should not be null.", cli != null);
 	assertTrue("CLI's model is not empty; Should be empty.", cli.getCLIModel().empty());
     }
     
+    //**********************************************************************************************//
+    //**                                CLASS TESTS                                               **//
+    //**                         (CREATE, RENAME, DELETE)                                         **//
+    //**********************************************************************************************//
+	
     @Test
     public void createClassTest() {
+	// Test creating one class
 	String[] commands = {"create", "class", "c1"};
 	cli.evaluateCommand(commands);
 	assertTrue("CLI did not make a class; Should be one class called c1.", model.containsEntity("c1"));
 	assertEquals("CLI made more or less than one class", 1, model.getEntities().size());
 	
+	// Test creating 4 more classes
 	commands[2] = "c2";
 	cli.evaluateCommand(commands);
 	commands[2] = "c3";
@@ -136,10 +148,10 @@ public class CLIViewTest {
     @Test
     public void deleteClassTest() {
         // Test setup of class creation
-        String[] commands = {"create", "class", "c1"};
-        cli.evaluateCommand(commands);
-        commands[2] = "c2";
-        cli.evaluateCommand(commands);
+        String[] createClass = {"create", "class", "c1"};
+        cli.evaluateCommand(createClass);
+        createClass[2] = "c2";
+        cli.evaluateCommand(createClass);
 
         assertTrue("CLI did not make a class; Should be class called c1.", model.containsEntity("c1"));
         assertTrue("CLI did not make a class; Should be class called c2.", model.containsEntity("c2"));
@@ -152,19 +164,54 @@ public class CLIViewTest {
         assertTrue("CLI did something to another class; c2 should be okay.", model.containsEntity("c2"));
 
         // Test NOT deleting with invalid length
-        String[] invalidLengthCommand = {"create", "class", "c2", "badLength"};
+        String[] invalidLengthCommand = {"delete", "class", "c2", "badLength"};
         cli.evaluateCommand(invalidLengthCommand);
 
         assertTrue("CLI deleted a class with bad length; Class named 'c2' should exist.", model.containsEntity("c2"));
 
         // Test NOT deleting a NONEXISTENT class
         cli.evaluateCommand(delete);
+        
+        assertFalse("CLI did not do something weird. c1 should not exist.", model.containsEntity("c1"));
+        assertTrue("CLI deleted a class it wasn't supposed to; Class 'c2' should exist.", model.containsEntity("c2"));
 
-        assertTrue("CLI did deleted a class it wasn't supposed to; Class 'c2' should exist.", model.containsEntity("c2"));
+        // Test deleting classes that have fields
+        createClass[2] = "c1";
+        cli.evaluateCommand(createClass);
+        String[] createField = {"create", "field", "c1", "int", "f1"};
+        cli.evaluateCommand(createField);
+        cli.evaluateCommand(delete);
+        
+        assertFalse("CLI did not delete the class; c1 should not exist.", model.containsEntity("c1"));
+        
+        // Test deleting classes that have methods
+        cli.evaluateCommand(createClass);
+        String[] createMethod = {"create", "method", "c1", "int", "m1"};
+        cli.evaluateCommand(createMethod);
+        cli.evaluateCommand(delete);
+        
+        assertFalse("CLI did not delete the class. c1 should not exist.", model.containsEntity("c1"));
+        
+        // Test deleting classes with methods and parameters
+        cli.evaluateCommand(createClass);
+        String[] createParameter = {"create", "parameter", "c1", "m1", "int", "p1"};
+        cli.evaluateCommand(createMethod);
+        cli.evaluateCommand(createParameter);
+        cli.evaluateCommand(delete);
+        
+        assertFalse("CLI did not delete the class. c1 should not exist.", model.containsEntity("c1"));
 
-        //Test deleting classes that have relationships
-        //Ensure relationships are also deleted
-
+        // Test deleting class with a relationship
+        cli.evaluateCommand(createClass);
+        String[] createRelationship = {"create", "relationship", "realization", "c1", "c2"};
+        cli.evaluateCommand(createRelationship);
+        
+        assertTrue("CLI did not create the relationship. Should be a relationship from c1 to c2.", model.containsRelationship(Type.REALIZATION, "c1", "c2"));
+        
+        cli.evaluateCommand(delete);
+        
+        assertFalse("CLI did not delete the class. c1 should not exist.", model.containsEntity("c1"));
+        assertFalse("CLI did not delete the relationship. Realization from c1 to c2 should not exist.", model.containsRelationship(Type.REALIZATION, "c1", "c2"));
     }
  
     //**********************************************************************************************//
@@ -1128,6 +1175,11 @@ public class CLIViewTest {
         assertEquals("Size of relationship list is wrong", 1, model.getRelationships().size());
     }
 
+    //**********************************************************************************************//
+    //**                                MISC. TESTS                                               **//
+    //**                         	  (CLEAR)                                                 **//
+    //**********************************************************************************************//
+	
     @Test
     public void clearTest() {
         // Make a whole bunch of stuff to be cleared.
