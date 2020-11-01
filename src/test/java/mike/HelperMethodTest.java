@@ -1,4 +1,4 @@
-package mike.testcases;
+package mike;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mike.datastructures.Model;
-import mike.HelperMethods;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
@@ -42,7 +41,7 @@ public class HelperMethodsTest {
 	System.setErr(new PrintStream(err));
 	model = new Model();
 	cli = (CLIView) new ViewTemplate(ViewTemplate.InterfaceType.CLI, model).getViewinterface();
-	path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testcases\\testDemo.json");
+	path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemo.json");
     }
     
     @After
