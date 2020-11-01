@@ -267,7 +267,7 @@ public class CLIView implements ViewInterface {
 		}
 	    } else if (commands[1].equals("parameter")) {
 		if (commands.length != 5) {
-		    System.out.println(errorMessage + commands[11] + "\n");
+		    System.out.println(errorMessage + commandUsage[11] + "\n");
 		    break;
 		}
 		if (classes.deleteParameter(commands[2], commands[3], commands[4])) {
