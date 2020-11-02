@@ -1,13 +1,9 @@
-package mike.testcases;
+package mike.datastructures;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-
-import mike.datastructures.Entity;
-import mike.datastructures.Field;
-import mike.datastructures.Method;
 
 public class EntityTest {
 
@@ -32,7 +28,7 @@ public class EntityTest {
         assertFalse("Null should result in false", e.equals(null));
 
         // Type check
-        assertFalse("Differing object types should result in false", e.equals(s));
+        assertFalse("Differing object types should result in false", e.getName().equals(s));
 
         // Identity check
         assertTrue("Entity should be equal with itself.", e.equals(e));
@@ -46,8 +42,8 @@ public class EntityTest {
     @Test
     public void testCreateField() {
         Entity e = new Entity("e");
+
         e.createField("a1", "int");
-      
         assertTrue("Field a1 was created", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertFalse("False when duplicating field", e.createField("a1", "int"));
@@ -80,7 +76,6 @@ public class EntityTest {
         assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
         e.deleteField("a1");
-      
         assertFalse("a1 field was deleted", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertTrue("a2 field still exists", e.containsField("a2"));
@@ -124,7 +119,6 @@ public class EntityTest {
         assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
 
         e.deleteMethod("a1");
-
         assertFalse("a1 method was deleted", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertTrue("a2 method still exists", e.containsMethod("a2"));

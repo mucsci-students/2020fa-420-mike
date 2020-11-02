@@ -1,7 +1,4 @@
-package mike.testcases;
-
-import mike.datastructures.Method;
-import mike.datastructures.Parameter;
+package mike.datastructures;
 
 //import junit methods
 import static org.junit.Assert.assertEquals;
@@ -34,7 +31,7 @@ public class MethodTest {
         Method m3 = new Method("m3", "int");
 
         assertFalse("False when comparing null", m.equals(null));
-        assertFalse("False when comparing wrong object types", m.equals("Hello"));
+        assertFalse("False when comparing wrong object types", m.getName().equals("Hello"));
 
         assertTrue("True when name and type match", m.equals(m2));
         assertFalse("False when names do not match", m.equals(m3));

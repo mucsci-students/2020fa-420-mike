@@ -1,11 +1,10 @@
-package mike.testcases;
+package mike.datastructures;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
-import mike.datastructures.Relationship;
 import mike.datastructures.Relationship.Type;
 
 public class RelationshipTest {
@@ -19,6 +18,7 @@ public class RelationshipTest {
 		assertEquals("Second class name should be set properly.", "C", r.getSecondClass());
 	}
 
+
 	@Test
 	public void testEquals() {
 		Relationship r1 = new Relationship(Type.REALIZATION, "B", "C");
@@ -26,13 +26,13 @@ public class RelationshipTest {
 		Relationship r3 = new Relationship(Type.INHERITANCE, "B", "C");
 		Relationship r4 = new Relationship(Type.REALIZATION, "D", "C");
 		Relationship r5 = new Relationship(Type.REALIZATION, "B", "D");
-		String s = "";
+		Type s = null;
 
 		// Null check
 		assertFalse("Null should result in false", r1.equals(null));
 
 		// Type check
-		assertFalse("Differing object types should result in false", r1.equals(s));
+		assertFalse("Differing object types should result in false", r1.getName().equals(s));
 
 		// Identity check
 		assertTrue("Relationship should be equal with itself.", r1.equals(r1));
