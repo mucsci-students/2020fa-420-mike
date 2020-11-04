@@ -14,6 +14,9 @@ plugins {
     id 'application'
 
     id 'com.github.johnrengelman.shadow' version '6.0.0'
+
+    //add jacoco for code coverage checks
+    id 'jacoco'
 }
 
 repositories {
@@ -45,5 +48,14 @@ application {
 test {
     testLogging{
         events "passed", "skipped", "failed"
+    }
+    // report is always generated after tests run
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
     }
 }
