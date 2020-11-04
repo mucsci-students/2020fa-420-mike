@@ -66,10 +66,10 @@ public class HelperMethodsTest {
     public void classSaveTest() throws IOException, ParseException {
 	model.createClass("c1");
 	model.createClass("c2");
-	model.createField("c1",  "f1",  "int");
-	model.createField("c1", "f2", "String");
-	model.createMethod("c1", "m1", "String");
-	model.createMethod("c1",  "m2",  "int");
+	model.createField("c1", "f1", "int", "PUBLIC");
+	model.createField("c1", "f2", "String", "PRIVATE");
+	model.createMethod("c1", "m1", "String", "PUBLIC");
+	model.createMethod("c1",  "m2",  "int", "PROTECTED");
 	model.createParameter("c1",  "m2",  "p1", "char");
 	model.createParameter("c1" , "m2",  "p2",  "boolean");
 	
@@ -82,10 +82,12 @@ public class HelperMethodsTest {
 		+ "\"Classes\":["
 			+ "{\"xPosition\":0,"
 			+ "\"methods\":["
-				+ "{\"methodType\":\"String\","
+				+ "{\"methodVis\":\"PUBLIC\","
+				+ "\"methodType\":\"String\","
 					+ "\"Parameters\":[],"
 				+ "\"methodName\":\"m1\"},"
-				+ "{\"methodType\":\"int\","
+				+ "{\"methodVis\":\"PROTECTED\","
+				+ "\"methodType\":\"int\","
 					+ "\"Parameters\":["
 						+ "{\"paramType\":\"char\","
 						+ "\"paramName\":\"p1\"},"
@@ -96,8 +98,10 @@ public class HelperMethodsTest {
 			+ "\"className\":\"c1\","
 			+ "\"fields\":["
 				+ "{\"fieldName\":\"f1\","
+				+ "\"fieldVis\":\"PUBLIC\","
 				+ "\"fieldType\":\"int\"},"
 				+ "{\"fieldName\":\"f2\","
+				+ "\"fieldVis\":\"PRIVATE\","
 				+ "\"fieldType\":\"String\"}]},"
 			+ "{\"xPosition\":0,"
 			+ "\"methods\":[],"
@@ -164,10 +168,10 @@ public class HelperMethodsTest {
     public void classLoadTest() throws IOException, java.text.ParseException, ParseException {
 	model.createClass("c1");
 	model.createClass("c2");
-	model.createField("c1",  "f1",  "int");
-	model.createField("c1", "f2", "String");
-	model.createMethod("c1", "m1", "String");
-	model.createMethod("c1",  "m2",  "int");
+	model.createField("c1",  "f1",  "int", "PUBLIC");
+	model.createField("c1", "f2", "String", "PRIVATE");
+	model.createMethod("c1", "m1", "String", "PROTECTED");
+	model.createMethod("c1",  "m2",  "int", "PROTECTED");
 	model.createParameter("c1",  "m2",  "p1", "char");
 	model.createParameter("c1" , "m2",  "p2",  "boolean");
 	

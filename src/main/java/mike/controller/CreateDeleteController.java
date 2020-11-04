@@ -28,7 +28,7 @@ public class CreateDeleteController {
 				  return;
 			  }
 			  Entity entity = editBox.getEntity();
-			  control.getModel().createField(entity.getName(),  name.getText(),  type.getText());
+			  //control.getModel().createField(entity.getName(),  name.getText(),  type.getText());
 			  JLabel newview = editBox.getBox();
 			  
 			  int spot = entity.getFields().size() + 2;
@@ -54,7 +54,7 @@ public class CreateDeleteController {
 				  return;
 			  }
 			  Entity entity = editBox.getEntity();
-			  control.getModel().createMethod(entity.getName(),  name.getText(),  type.getText());
+			  //control.getModel().createMethod(entity.getName(),  name.getText(),  type.getText());
 			  JLabel newview = editBox.getBox();
 			  
 			  int spot = newview.getComponentCount() - 1;

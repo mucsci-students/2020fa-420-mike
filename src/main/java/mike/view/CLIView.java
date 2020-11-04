@@ -169,22 +169,22 @@ public class CLIView implements ViewInterface {
 		    System.out.println("\nCreate class failed. Make sure the class name doesn't already exist.\n");
 		}
 	    } else if (commands[1].equals("field")) {
-		if (commands.length != 5) {
+		if (commands.length != 6) {
 		    System.out.println(errorMessage + commandUsage[3] + "\n");
 		    break;
 		}
-		if (classes.createField(commands[2], commands[4], commands[3])) {
+		if (classes.createField(commands[2], commands[5], commands[4], commands[3])) {
 		    prompt = true;
 		} else {
 		    System.out.println(
 			    "\nCreate field failed. Make sure the field doesn't already exist and the class name does exist.\n");
 		}
 	    } else if (commands[1].equals("method")) {
-		if (commands.length != 5) {
+		if (commands.length != 6) {
 		    System.out.println(errorMessage + commandUsage[4] + "\n");
 		    break;
 		}
-		if (classes.createMethod(commands[2], commands[4], commands[3])) {
+		if (classes.createMethod(commands[2], commands[5], commands[4], commands[3])) {
 		    prompt = true;
 		} else {
 		    System.out.println(
@@ -426,8 +426,8 @@ public class CLIView implements ViewInterface {
 		"\n  save <name>.json (optional <path>)",
 		"\n  load <path>",
 		"\n  create class <name>",
-		"\n  create field <class name> <field type> <field name>",
-		"\n  create method <class name> <method type> <method name>",
+		"\n  create field <class name> <field visibility> <field type> <field name>",
+		"\n  create method <class name> <method visibility> <method type> <method name>",
 		"\n  create relationship <type> <class name1> <class name2>",
 		"\n  create parameter <class name> <method> <parameter type> <parameter name>",
 		"\n  delete class <name>",
@@ -500,9 +500,9 @@ public class CLIView implements ViewInterface {
 		+ commandUsage[2]
 		+ " - create a class with title <name>"
 		+ commandUsage[3]
-		+ " - create a field in <class name> with type <field type> titled <field name>"
+		+ " - create a field in <class name> with visibility <type visibility>, type <field type> titled <field name>"
 		+ commandUsage[4]
-		+ " - create a method in <class name> with type <method type> titled <method name>"
+		+ " - create a method in <class name> with visibility <method visibility>, type <method type> titled <method name>"
 		+ commandUsage[5]
 		+ " - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance)"
 		+ commandUsage[6]

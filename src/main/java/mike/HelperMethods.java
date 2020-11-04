@@ -70,8 +70,9 @@ public class HelperMethods {
 		JSONObject field = (JSONObject) classFields.get(y);
 		String fieldName = field.get("fieldName").toString();
 		String fieldType = field.get("fieldType").toString();
+		String fieldVis = field.get("fieldVis").toString();
 
-		userClasses.createField(className, fieldName, fieldType);
+		userClasses.createField(className, fieldName, fieldType, fieldVis);
 	    }
 
 	    // Extract all methods of associated class, add to loadFile
@@ -80,8 +81,9 @@ public class HelperMethods {
 		JSONObject method = (JSONObject) classMethods.get(y);
 		String methodName = method.get("methodName").toString();
 		String methodType = method.get("methodType").toString();
+		String methodVis = method.get("methodVis").toString();
 
-		userClasses.createMethod(className, methodName, methodType);
+		userClasses.createMethod(className, methodName, methodType, methodVis);
 		JSONArray methodParam = (JSONArray) method.get("Parameters");
 		for (int z = 0; z < methodParam.size(); ++z) {
 		    JSONObject param = (JSONObject) methodParam.get(z);
@@ -158,6 +160,7 @@ public class HelperMethods {
 	    JSONArray fields = new JSONArray();
 	    for (Field field : entity.getFields()) {
 		JSONObject oneField = new JSONObject();
+		oneField.put("fieldVis", field.getVisibility().toString());
 		oneField.put("fieldType", field.getType());
 		oneField.put("fieldName", field.getName());
 		fields.add(oneField);
@@ -168,6 +171,7 @@ public class HelperMethods {
 	    JSONArray methods = new JSONArray();
 	    for (Method method : entity.getMethods()) {
 		JSONObject oneMethod = new JSONObject();
+		oneMethod.put("methodVis", method.getVisibility().toString());
 		oneMethod.put("methodType", method.getType());
 		oneMethod.put("methodName", method.getName());
 
@@ -238,7 +242,7 @@ public class HelperMethods {
 	    ArrayList<Field> fields = curEntity.getFields();
 	    for (int x = 0; x < fields.size(); x++) {
 
-		System.out.print("(" + fields.get(x).getType() + ") " + fields.get(x).getName());
+		System.out.print("(" + fields.get(x).getVisibility().toString().toLowerCase() + ") " + fields.get(x).getType() + " " + fields.get(x).getName());
 		if (x != fields.size() - 1) {
 		    System.out.print(", ");
 		}
@@ -249,7 +253,7 @@ public class HelperMethods {
 	    System.out.print("		methods: [ ");
 	    for (int x = 0; x < curEntity.getMethods().size(); x++) {
 		Method curMethod = curEntity.getMethods().get(x);
-		System.out.print("(" + curMethod.getType() + ") " + curMethod.getName() + " -- {");
+		System.out.print("(" + curMethod.getVisibility().toString().toLowerCase() + ") " + curMethod.getType() + " " + curMethod.getName() + " -- {");
 
 		// Loop through parameters of method
 		ArrayList<Parameter> parameters = curMethod.getParameters();
