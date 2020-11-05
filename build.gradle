@@ -49,7 +49,7 @@ test {
     testLogging{
         events "passed", "skipped", "failed"
     }
-    // report is always generated after tests run
+    // generate report after running tests
     finalizedBy jacocoTestReport
 }
 
