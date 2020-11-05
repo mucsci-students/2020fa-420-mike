@@ -97,7 +97,7 @@ public class Entity {
 		if(containsField(name)){
 			return false; //already contains field
 		}
-		return fields.add(new Field(name, type, convertStringToVis(visType)));
+		return fields.add(new Field(name, type, checkVis(visType)));
 	}
 	
 	public boolean renameField(String target, String newfield) {
@@ -130,7 +130,7 @@ public class Entity {
 		if(containsMethod(method)){
 			return false; //already contains method
 		}
-		return methods.add(new Method(method, type, convertStringToVis(visType)));
+		return methods.add(new Method(method, type, checkVis(visType)));
 	}	
 
 	public boolean renameMethod(String target, String newmethod) {
@@ -237,7 +237,7 @@ public class Entity {
 		return null;
 	}
 	
-	private visibility convertStringToVis(String visType) {
+	private visibility checkVis(String visType) {
 	    visType = visType.toUpperCase();
 	    switch (visType) {
 	    case "PUBLIC":

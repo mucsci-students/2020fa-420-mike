@@ -17,6 +17,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import mike.datastructures.Model;
+import mike.datastructures.Entity.visibility;
 import mike.datastructures.Relationship.Type;
 import mike.HelperMethods;
 
@@ -172,6 +173,9 @@ public class CLIView implements ViewInterface {
 		if (commands.length != 6) {
 		    System.out.println(errorMessage + commandUsage[3] + "\n");
 		    break;
+		} else if (checkVis(commands[3]) == null) {
+		    System.out.println("\nInvalid visibility type. Valid types are public, private, or protected.\n");
+		    break;
 		}
 		if (classes.createField(commands[2], commands[5], commands[4], commands[3])) {
 		    prompt = true;
@@ -182,6 +186,9 @@ public class CLIView implements ViewInterface {
 	    } else if (commands[1].equals("method")) {
 		if (commands.length != 6) {
 		    System.out.println(errorMessage + commandUsage[4] + "\n");
+		    break;
+		} else if (checkVis(commands[3]) == null) {
+		    System.out.println("\nInvalid visibility type. Valid types are public, private, or protected.\n");
 		    break;
 		}
 		if (classes.createMethod(commands[2], commands[5], commands[4], commands[3])) {
@@ -540,38 +547,53 @@ public class CLIView implements ViewInterface {
     // False if they wish to continue
     // True if they want to return
     private static boolean savePrompt(boolean prompt, LineReader reader) {
-    	while (prompt == true) {
-    
-    	    String line = reader.readLine("", "", (MaskingCallback) null, null);
-    	    line = line.trim();
-    
-    	    if (line.equals("yes")) {
-    		System.out.println("Proceeding.\n");
-    		prompt = false;
-    		break;
-    	    } else if (line.equals("no")) {
-    		System.out.println("Stopping.\n");
-    		prompt = true;
-    		break;
-    	    }
-    	    System.out.println("Invalid command. Type 'yes' to proceed, or 'no' to go back.");
-    	}
-    	return prompt;
-    	}
-    
-    	// Return enum type that user requested, null if invalid
+	while (prompt == true) {
+
+	    String line = reader.readLine("", "", (MaskingCallback) null, null);
+	    line = line.trim();
+
+	    if (line.equals("yes")) {
+		System.out.println("Proceeding.\n");
+		prompt = false;
+		break;
+	    } else if (line.equals("no")) {
+		System.out.println("Stopping.\n");
+		prompt = true;
+		break;
+	    }
+	    	System.out.println("Invalid command. Type 'yes' to proceed, or 'no' to go back.");
+	}
+	return prompt;
+    }
+
+    // Return enum type that user requested, null if invalid
     private static Type checkEnum(String command) {
 	switch (command) {
-    	case "REALIZATION":
-    	    return Type.REALIZATION;
-    	case "AGGREGATION":
-    	    return Type.AGGREGATION;
-    	case "COMPOSITION":
-    	    return Type.COMPOSITION;
-    	case "INHERITANCE":
-    	    return Type.INHERITANCE;
-    	default:
-    	    return null;
-    	}
+	case "REALIZATION":
+	    return Type.REALIZATION;
+	case "AGGREGATION":
+	    return Type.AGGREGATION;
+	case "COMPOSITION":
+	    return Type.COMPOSITION;
+	case "INHERITANCE":
+	    return Type.INHERITANCE;
+	default:
+	    return null;
+	}
+    }
+
+    // Return enum type of visibility user requested, null if invalid
+    private visibility checkVis(String visType) {
+	visType = visType.toUpperCase();
+	switch (visType) {
+	case "PUBLIC":
+	    return visibility.PUBLIC;
+	case "PRIVATE":
+	    return visibility.PRIVATE;
+	case "PROTECTED":
+	    return visibility.PROTECTED;
+	default:
+	    return null;
+	}
     }
 }
