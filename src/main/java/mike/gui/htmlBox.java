@@ -49,7 +49,7 @@ public class htmlBox {
 		if (fields.size() > 0) {
 			html += "<hr>Fields:<br/>";
 			for (Field f : fields) {
-				html += "&emsp " + f.getType() + " " + f.getName() + "<br/>";
+				html += "&emsp " + f.getVisibility().toString().toLowerCase() + " " + f.getType() + " " + f.getName() + "<br/>";
 			}
 		}
 
@@ -59,7 +59,7 @@ public class htmlBox {
 
 			for (Method m : methods) {
 				ArrayList<Parameter> parameters = m.getParameters();
-				html += "&emsp " + m.getType() + " " + m.getName() + "(";
+				html += "&emsp " + m.getVisibility().toString().toLowerCase() + " " + m.getType() + " " + m.getName() + "(";
 				if (parameters.size() == 1) {
 					html += parameters.get(0).getType() + " " + parameters.get(0).getName();
 				}

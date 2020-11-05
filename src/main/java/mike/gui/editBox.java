@@ -44,10 +44,10 @@ public class editBox {
 			adding.setXLocation(entity.getXLocation());
 			adding.setYLocation(entity.getYLocation());
 			  for(Field field : entity.getFields()){
-				  adding.createField(field.getName(), field.getType());
+				  adding.createField(field.getName(), field.getType(), field.getVisibility().toString());
 			  }
 			  for(Method method : entity.getMethods()){
-				  adding.createMethod(method.getName(), method.getType());
+				  adding.createMethod(method.getName(), method.getType(), method.getVisibility().toString());
 				  for(Parameter param : method.getParameters()){
 					  adding.createParameter(method.getName(), param.getName(), param.getType());
 				  }
