@@ -1,5 +1,7 @@
 # Team mike's UML Editor
 
+[![codecov](https://codecov.io/gh/mucsci-students/2020fa-420-mike/branch/develop/graph/badge.svg)](https://codecov.io/gh/mucsci-students/2020fa-420-mike)
+
 Team mike's UML Editor is an application that allows the user to add, delete, and edit UML
 classes. Each UML class can hold different fields and methods, which can be added, deleted,
 and renamed. Relationships between classes may be created and deleted. The user can also 
