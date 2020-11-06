@@ -101,10 +101,10 @@ public class ModelTest {
         assertTrue("Two entities with no fields/methods are equal after copyEntity call", model.getEntities().get(0).equals(e1copy));
 
         //add attributes to entity
-        model.createField("E1", "att1", "int");
-        model.createField("E1", "att2", "int");
-        model.createMethod("E1", "m1", "int");
-        model.createMethod("E1", "m2", "int");
+        model.createField("E1", "att1", "int", "PUBLIC");
+        model.createField("E1", "att2", "int", "PROTECTED");
+        model.createMethod("E1", "m1", "int", "PRIVATE");
+        model.createMethod("E1", "m2", "int", "PUBLIC");
 
         Entity new_e1copy = model.copyEntity("E1");
         assertTrue("Entity with fields and Methods was copied correctly", model.getEntities().get(0).equals(new_e1copy));
@@ -217,8 +217,8 @@ public class ModelTest {
 
         assertFalse("renameClass returned false after renaming to already existing class", model.renameClass("E1", "E2"));
 
-        model.createField("E1", "f", "int");
-        model.createMethod("E1", "m", "int");
+        model.createField("E1", "f", "int", "PUBLIC");
+        model.createMethod("E1", "m", "int", "PUBLIC");
 
         Entity e1_copy = model.copyEntity("E1");
         model.renameClass("E1", "e");
@@ -262,8 +262,8 @@ public class ModelTest {
 
         /*Deleting model that contain fields and methods*/
         model.createClass("cla");
-        model.createField("cla", "f", "int");
-        model.createMethod("cla", "m", "int");
+        model.createField("cla", "f", "int", "PUBLIC");
+        model.createMethod("cla", "m", "int", "PUBLIC");
 
         assertTrue("Class 'cla' has been deleted", model.deleteClass("cla"));
         assertFalse("Class 'cla' no longer exists", model.containsEntity("cla"));
@@ -304,13 +304,13 @@ public class ModelTest {
         Model model = new Model();
         model.createClass("e");
 
-        assertFalse("False when creating field for non-existent class", model.createField("fake", "a", "int"));
+        assertFalse("False when creating field for non-existent class", model.createField("fake", "a", "int", "PUBLIC"));
 
-        assertTrue("Added field 'a' for class 'e'", model.createField("e", "a", "int"));
+        assertTrue("Added field 'a' for class 'e'", model.createField("e", "a", "int", "PUBLIC"));
         assertTrue("e's field list contains 'a'", model.getEntities().get(0).containsField("a"));
         assertEquals("e's field list size is 1", 1, model.getEntities().get(0).getFields().size());
 
-        assertFalse("False when creating field that already exists", model.createField("e", "a", "int"));
+        assertFalse("False when creating field that already exists", model.createField("e", "a", "int", "PUBLIC"));
         assertEquals("e's field list size is still 1", 1, model.getEntities().get(0).getFields().size());
     }
 
@@ -322,8 +322,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createField("e", "a", "int");
-        model.createField("e", "a2", "int");
+        model.createField("e", "a", "int", "PUBLIC");
+        model.createField("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when renaming Field from non-existent class", model.renameField("fake", "a", "aa"));
         assertFalse("False when renaming non-existent Field", model.renameField("e", "fake", "aa"));
@@ -343,8 +343,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createField("e", "a", "int");
-        model.createField("e", "a2", "int");
+        model.createField("e", "a", "int", "PUBLIC");
+        model.createField("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when deleting Field from non-existent class", model.deleteField("fake", "a"));
         assertFalse("False when deleting non-existent Field", model.deleteField("e", "fake"));
@@ -363,13 +363,13 @@ public class ModelTest {
         Model model = new Model();
         model.createClass("e");
 
-        assertFalse("False when creating method for non-existent class", model.createMethod("fake", "a", "int"));
+        assertFalse("False when creating method for non-existent class", model.createMethod("fake", "a", "int", "PUBLIC"));
 
-        assertTrue("Added method 'a' for class 'e'", model.createMethod("e", "a", "int"));
+        assertTrue("Added method 'a' for class 'e'", model.createMethod("e", "a", "int", "PUBLIC"));
         assertTrue("e's methods list contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("e's method list size is 1", 1, model.getEntities().get(0).getMethods().size());
 
-        assertFalse("False when creating method that already exists", model.createMethod("e", "a", "int"));
+        assertFalse("False when creating method that already exists", model.createMethod("e", "a", "int", "PUBLIC"));
         assertEquals("e's method list size is still 1", 1, model.getEntities().get(0).getMethods().size());
     }
 
@@ -381,8 +381,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createMethod("e", "a", "int");
-        model.createMethod("e", "a2", "int");
+        model.createMethod("e", "a", "int", "PUBLIC");
+        model.createMethod("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when renaming method from non-existent class", model.renameMethod("fake", "a", "aa"));
         assertFalse("False when renaming non-existent method", model.renameMethod("e", "fake", "aa"));
@@ -402,8 +402,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createMethod("e", "a", "int");
-        model.createMethod("e", "a2", "int");
+        model.createMethod("e", "a", "int", "PUBLIC");
+        model.createMethod("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when deleting Method from non-existent method", model.deleteMethod("fake", "a"));
         assertFalse("False when deleting non-existent method", model.deleteMethod("e", "fake"));

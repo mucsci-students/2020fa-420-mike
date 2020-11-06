@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
+import mike.datastructures.Entity.visibility;
+
 /** Run tests on Method Data Structure
  *
  * @author Stefan Gligorevic
@@ -16,7 +18,7 @@ public class MethodTest {
     @Test
     public void initMethod()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         assertEquals("name set correctly", "m", m.getName());
         assertEquals("return type set correctly", "int", m.getType());
         assertTrue("parameters list initialized and empty", m.getParameters().isEmpty());
@@ -26,9 +28,9 @@ public class MethodTest {
     @Test
     public void testEquals()
     {
-        Method m = new Method("m", "int");
-        Method m2 = new Method("m", "int");
-        Method m3 = new Method("m3", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
+        Method m2 = new Method("m", "int", visibility.PRIVATE);
+        Method m3 = new Method("m3", "int", visibility.PROTECTED);
 
         assertFalse("False when comparing null", m.equals(null));
         assertFalse("False when comparing wrong object types", m.getName().equals("Hello"));
@@ -44,7 +46,7 @@ public class MethodTest {
     @Test
     public void testCreateParameter()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         m.createParameter("p", "int");
 
         assertEquals("Parameters list size is 1", 1, m.getParameters().size());
@@ -57,7 +59,7 @@ public class MethodTest {
     @Test
     public void testRenameParameter()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         m.createParameter("p", "int");
         m.createParameter("p2", "int");
 
@@ -73,7 +75,7 @@ public class MethodTest {
     @Test
     public void testDeleteParameter()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         m.createParameter("p", "int");
 
         assertFalse("False when deleting non-existent parameter", m.deleteParameter("fake"));
@@ -88,7 +90,7 @@ public class MethodTest {
     @Test
     public void testContainsParameter()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         m.createParameter("p", "int");
 
         assertTrue("p found", m.containsParameter("p"));
@@ -99,7 +101,7 @@ public class MethodTest {
     @Test
     public void testCopyParameter()
     {
-        Method m = new Method("m", "int");
+        Method m = new Method("m", "int", visibility.PUBLIC);
         m.createParameter("p", "int");
 
         assertEquals("Null when copying non-existent parameter", null, m.copyParameter("fake"));

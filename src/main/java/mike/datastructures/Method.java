@@ -2,11 +2,15 @@ package mike.datastructures;
 
 import java.util.ArrayList;
 
+import mike.datastructures.Entity.visibility;
+
 public class Method extends Formal{
     private ArrayList<Parameter> parameters;
+    private visibility visType;
 
-    public Method(String name, String type){
+    public Method(String name, String type, visibility visType){
         super(name, type);
+        this.setVisibility(visType);
         parameters = new ArrayList<Parameter>();
     }
 
@@ -14,8 +18,15 @@ public class Method extends Formal{
         return parameters;
     }
 
-    /* CREATE, RENAME, DELETE parameter methods */
+    public visibility getVisibility() {
+	return visType;
+    }
 
+    public void setVisibility(visibility newVisType) {
+	this.visType = newVisType;
+    }
+    
+    /* CREATE, RENAME, DELETE parameter methods */
     public boolean createParameter(String name, String type){
         if(containsParameter(name)){
             return false; //parameter already exists

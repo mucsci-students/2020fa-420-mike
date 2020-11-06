@@ -1,6 +1,7 @@
 package mike.datastructures;
 
 import java.util.Objects;
+
 import java.util.ArrayList;
 
 public class Entity {
@@ -9,6 +10,12 @@ public class Entity {
 	private ArrayList<Method> methods;
 	private int xLocation;
 	private int yLocation;
+	
+	public enum visibility {
+	    PUBLIC,
+	    PRIVATE,
+	    PROTECTED
+	}
 
 	//*********************************************************//
 	// Constructor //
@@ -86,11 +93,11 @@ public class Entity {
 	// Field Functions //
 	//*********************************************************//
 	
-	public boolean createField(String name, String type) {
+	public boolean createField(String name, String type, String visType) {
 		if(containsField(name)){
 			return false; //already contains field
 		}
-		return fields.add(new Field(name, type));
+		return fields.add(new Field(name, type, checkVis(visType)));
 	}
 	
 	public boolean renameField(String target, String newfield) {
@@ -112,18 +119,18 @@ public class Entity {
 	}
 	
 	public boolean deleteField(String target) {
-		return fields.remove(new Field(target, "int"));
+		return fields.remove(copyField(target));
 	}
 	
 	//*********************************************************//
 	// Method Functions //
 	//*********************************************************//
 	
-	public boolean createMethod(String method, String type) {
+	public boolean createMethod(String method, String type, String visType) {
 		if(containsMethod(method)){
 			return false; //already contains method
 		}
-		return methods.add(new Method(method, type));
+		return methods.add(new Method(method, type, checkVis(visType)));
 	}	
 
 	public boolean renameMethod(String target, String newmethod) {
@@ -145,7 +152,7 @@ public class Entity {
 	}
 	
 	public boolean deleteMethod(String target) {
-		return methods.remove(new Method(target, "int"));
+		return methods.remove(copyMethod(target));
 	}
 
 	//*********************************************************//
@@ -228,6 +235,20 @@ public class Entity {
 			}
 		}
 		return null;
+	}
+	
+	private visibility checkVis(String visType) {
+	    visType = visType.toUpperCase();
+	    switch (visType) {
+	    case "PUBLIC":
+		return visibility.PUBLIC;
+	    case "PRIVATE":
+		return visibility.PRIVATE;
+	    case "PROTECTED":
+		return visibility.PROTECTED;
+	    default:
+		return null;
+	    }
 	}
 }
 
