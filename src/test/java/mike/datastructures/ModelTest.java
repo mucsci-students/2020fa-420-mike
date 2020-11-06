@@ -143,7 +143,7 @@ public class ModelTest {
         model.createRelationship(Type.INHERITANCE, "e", "e2");
 
         assertTrue("Found relationship 'r, e, e2'", model.containsRelationship(Type.INHERITANCE, "e", "e2"));
-        assertFalse("False when given non-existent relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
+        assertFalse("False when given incorrect relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
         assertFalse("False for non-existent class1 name", model.containsRelationship(Type.INHERITANCE, "fake", "e2"));
         assertFalse("False for non-existent class2 name", model.containsRelationship(Type.INHERITANCE, "e", "fake"));
         assertFalse("False when pairs are in wrong order", model.containsRelationship(Type.INHERITANCE, "e2", "e"));
@@ -172,7 +172,12 @@ public class ModelTest {
         assertEquals("Relationship types are equal", Type.COMPOSITION, r.getName());
         assertEquals("Class1 names are equal", "e", r.getFirstClass());
         assertEquals("Class2 names are equal", "e2", r.getSecondClass());
-
+        
+        assertEquals("Null when given incorrect relationship type", null, model.getRelationship(Type.AGGREGATION, "e", "e2"));
+        assertEquals("Null for non-existent class1 name", null, model.getRelationship(Type.COMPOSITION, "fake", "e2"));
+        assertEquals("Null for non-existent class2 name", null, model.getRelationship(Type.COMPOSITION, "e", "fake"));
+        assertEquals("Null when pairs are in wrong order", null, model.getRelationship(Type.COMPOSITION, "e2", "e"));
+        
         assertEquals("Null when relationship is not found", null, model.getRelationship(Type.AGGREGATION, "fake", "stillFake"));
     }
 

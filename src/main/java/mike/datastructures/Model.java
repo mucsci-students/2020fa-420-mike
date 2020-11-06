@@ -276,7 +276,7 @@ public class Model {
     }
 
     public boolean empty(){
-        return entities.isEmpty() && relationships.isEmpty();
+        return entities.isEmpty();
     }
 
     // *********************************************************//
