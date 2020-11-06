@@ -118,6 +118,23 @@ public class Entity {
 		return false;
 	}
 	
+	public boolean changeFieldVis(String target, String newVis) {
+	    for (Field f : fields) {
+		// If target found
+		if (f.getName().equals(target)) {
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			f.setVisibility(vis);
+			return true;
+		    }
+		}
+	    }
+	    // Target not found
+	    return false;
+	}
+	
 	public boolean deleteField(String target) {
 		return fields.remove(copyField(target));
 	}
@@ -149,6 +166,23 @@ public class Entity {
 		}
 		// Target not found.
 		return false;
+	}
+	
+	public boolean changeMethodVis(String target, String newVis) {
+	    for (Method m : methods) {
+		// If target found
+		if (m.getName().equals(target)) {
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			m.setVisibility(vis);
+			return true;
+		    }
+		}
+	    }
+	    // Target not found
+	    return false;
 	}
 	
 	public boolean deleteMethod(String target) {

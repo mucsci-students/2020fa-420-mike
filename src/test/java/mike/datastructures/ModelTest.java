@@ -82,7 +82,11 @@ public class ModelTest {
         assertTrue("New model instance is empty", model.empty());
 
         model.createClass("E1");
-        assertFalse("Model instance is not empty", model.empty());
+        assertFalse("Model instance with class is not empty", model.empty());
+        
+        model.createClass("E2");
+        model.createRelationship(Type.REALIZATION, "E1", "E2");
+        assertFalse("Model instance with classes and relationship is not empty.", model.empty());
 
         model.clear();
         assertTrue("empty() returns true after clear() is called", model.empty());
@@ -110,6 +114,8 @@ public class ModelTest {
         assertTrue("Entity with fields and Methods was copied correctly", model.getEntities().get(0).equals(new_e1copy));
         assertTrue("Fields are the same", model.getEntities().get(0).getFields().equals(new_e1copy.getFields()));
         assertTrue("Methods are the same", model.getEntities().get(0).getMethods().equals(new_e1copy.getMethods()));
+        
+        assertEquals("Returns null if non-existant entity given.", null, model.copyEntity("E2"));
     }
 
     /** test containsEntity
@@ -137,7 +143,7 @@ public class ModelTest {
         model.createRelationship(Type.INHERITANCE, "e", "e2");
 
         assertTrue("Found relationship 'r, e, e2'", model.containsRelationship(Type.INHERITANCE, "e", "e2"));
-        assertFalse("False when given non-existent relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
+        assertFalse("False when given incorrect relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
         assertFalse("False for non-existent class1 name", model.containsRelationship(Type.INHERITANCE, "fake", "e2"));
         assertFalse("False for non-existent class2 name", model.containsRelationship(Type.INHERITANCE, "e", "fake"));
         assertFalse("False when pairs are in wrong order", model.containsRelationship(Type.INHERITANCE, "e2", "e"));
@@ -166,7 +172,12 @@ public class ModelTest {
         assertEquals("Relationship types are equal", Type.COMPOSITION, r.getName());
         assertEquals("Class1 names are equal", "e", r.getFirstClass());
         assertEquals("Class2 names are equal", "e2", r.getSecondClass());
-
+        
+        assertEquals("Null when given incorrect relationship type", null, model.getRelationship(Type.AGGREGATION, "e", "e2"));
+        assertEquals("Null for non-existent class1 name", null, model.getRelationship(Type.COMPOSITION, "fake", "e2"));
+        assertEquals("Null for non-existent class2 name", null, model.getRelationship(Type.COMPOSITION, "e", "fake"));
+        assertEquals("Null when pairs are in wrong order", null, model.getRelationship(Type.COMPOSITION, "e2", "e"));
+        
         assertEquals("Null when relationship is not found", null, model.getRelationship(Type.AGGREGATION, "fake", "stillFake"));
     }
 
@@ -194,6 +205,8 @@ public class ModelTest {
         assertEquals("Entities list size is 3", 3, model.getEntities().size());
         assertTrue("Entities list contains E2", model.containsEntity("E2"));
         assertTrue("Entities list contains E3", model.containsEntity("E3"));
+        
+        assertFalse("Entity list created class with null name", model.createClass(null));
     }
 
     /** test the renameClass method
@@ -334,6 +347,22 @@ public class ModelTest {
         assertFalse("Field list no longer contains 'a'", model.getEntities().get(0).containsField("a"));
         assertEquals("Field list size is still 2", 2, model.getEntities().get(0).getFields().size());
     }
+    
+    /** test changeFieldVis
+     * 
+     */
+    @Test
+    public void testChangeFieldVis()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createField("c", "f1", "int", "PUBLIC");
+	model.changeFieldVis("c", "f1", "PROTECTED");
+	
+	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyField("f1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid class", model.changeFieldVis("c2", "f1", "PRIVATE"));
+
+    }
 
     /** test deleteField
      *
@@ -392,6 +421,21 @@ public class ModelTest {
         assertTrue("Methods list contains 'aa'", model.getEntities().get(0).containsMethod("aa"));
         assertFalse("Methods list no longer contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("Methods list size is still 2", 2, model.getEntities().get(0).getMethods().size());
+    }
+    
+    /** test changeMethodVis
+     * 
+     */
+    @Test
+    public void testChangeMethodVis()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c", "m1", "int", "PUBLIC");
+	model.changeMethodVis("c", "m1", "PROTECTED");
+	
+	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyMethod("m1").getVisibility().toString());
+	assertFalse("False when changing visibility on non-existent class", model.changeMethodVis("c2", "m1", "PRIVATE"));
     }
 
     /** test deleteMethod

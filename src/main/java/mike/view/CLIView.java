@@ -344,15 +344,42 @@ public class CLIView implements ViewInterface {
 			+ commandUsage[15] + "\n");
 	    }
 	    break;
+	case "setvis":
+	    if (commands.length != 5) {
+		System.out.println(errorMessage + commandUsage[16] + commandUsage[17] + "\n");
+		break;
+	    }
+	    if (checkVis(commands[4]) == null) {
+		System.out.println("\nsetvis failed due to invalid visibility type. Valid visibility types are: public, private, and protected.\n");
+		break;
+	    }
+	    if (commands[1].equals("field")) {
+		if (classes.changeFieldVis(commands[2], commands[3], commands[4])) {
+		    prompt = true;
+		} else {
+		    System.out.println("\nsetvis field failed. Make sure the class and field both exist, and you passed a valid visibility.\n");
+		    break;
+		}
+	    } else if (commands[1].equals("method")) {
+		if (classes.changeMethodVis(commands[2], commands[3], commands[4])) {
+		    prompt = true;
+		} else {
+		    System.out.println("\nsetvis method failed. Make sure the class and method both exist, and you passed a valid visibility.\n");
+		    break;
+		}
+	    } else {
+		System.out.println(errorMessage + commandUsage[16] + commandUsage[17] + "\n");
+	    }
+	    break;
 	// Call list class or relationship based on length and user input
 	case "list":
 	    if (commands.length < 2) {
-		System.out.println(errorMessage + commandUsage[16] + commandUsage[17] + commandUsage[18] + "\n");
+		System.out.println(errorMessage + commandUsage[18] + commandUsage[19] + commandUsage[20] + "\n");
 		break;
 	    }
 	    if (commands[1].equals("classes")) {
 		if (commands.length != 2) {
-		    System.out.println(errorMessage + commandUsage[16] + "\n");
+		    System.out.println(errorMessage + commandUsage[18] + "\n");
 		} else {
 		    System.out.println();
 		    HelperMethods.listClasses(classes);
@@ -360,7 +387,7 @@ public class CLIView implements ViewInterface {
 		}
 	    } else if (commands[1].equals("relationships")) {
 		if (commands.length != 2) {
-		    System.out.println(errorMessage + commandUsage[17] + "\n");
+		    System.out.println(errorMessage + commandUsage[19] + "\n");
 		} else {
 		    System.out.println();
 		    HelperMethods.listRelationships(classes);
@@ -368,7 +395,7 @@ public class CLIView implements ViewInterface {
 		}
 	    } else if (commands[1].equals("all")) {
 		if (commands.length != 2) {
-		    System.out.println(errorMessage + commandUsage[18] + "\n");
+		    System.out.println(errorMessage + commandUsage[20] + "\n");
 		} else {
 		    System.out.println();
 		    HelperMethods.listClasses(classes);
@@ -377,13 +404,13 @@ public class CLIView implements ViewInterface {
 		    System.out.println();
 		}
 	    } else {
-		System.out.println(errorMessage + commandUsage[16] + commandUsage[17] + commandUsage[18] + "\n");
+		System.out.println(errorMessage + commandUsage[18] + commandUsage[19] + commandUsage[20] + "\n");
 	    }
 	    break;
 	// Calls clear
 	case "clear":
 	    if (commands.length != 1) {
-		System.out.println(errorMessage + commandUsage[19] + "\n");
+		System.out.println(errorMessage + commandUsage[21] + "\n");
 	    } else if (!classes.empty()) {
 		System.out.println("\nAre you sure you want to delete everything?");
 		System.out.println("Type 'yes' to delete, or 'no' to go back.");
@@ -446,6 +473,8 @@ public class CLIView implements ViewInterface {
 		"\n  rename field <class name> <field name> <newname>",
 		"\n  rename method <class name> <method name> <newname>",
 		"\n  rename parameter <class name> <method name> <parameter name> <parameter newname>",
+		"\n  setvis field <class name> <field name> <visibility>",
+		"\n  setvis method <class name> <method name> <visibility>",
 		"\n  list classes",
 		"\n  list relationships",
 		"\n  list all",
@@ -486,6 +515,11 @@ public class CLIView implements ViewInterface {
 		new ArgumentCompleter(
 			new StringsCompleter("rename"),
 			new StringsCompleter("class", "field", "method", "parameter"),
+			new NullCompleter()
+		),
+		new ArgumentCompleter(
+			new StringsCompleter("setvis"),
+			new StringsCompleter("field", "method"),
 			new NullCompleter()
 		),
 		new ArgumentCompleter(
@@ -533,12 +567,16 @@ public class CLIView implements ViewInterface {
 		+ commandUsage[15]
 		+ " - rename parameter in <class name> for <method> titled <parameter name> to <parameter newname>\n"
 		+ commandUsage[16]
-		+ " - List all existing classes"
+		+ " - set visibility of field <field name> in <class name> to <visibility>"
 		+ commandUsage[17]
-		+ " - List all existing relationships"
+		+ " - set visibility of method <method name> in <class name> to <visibility>\n"
 		+ commandUsage[18]
-		+ " - List all existing classes and relationships\n"
+		+ " - List all existing classes"
 		+ commandUsage[19]
+		+ " - List all existing relationships"
+		+ commandUsage[20]
+		+ " - List all existing classes and relationships\n"
+		+ commandUsage[21]
 		+ " - Clear all classes and relationships\n"
 		+ "  quit - exits the program\n");
 	    }

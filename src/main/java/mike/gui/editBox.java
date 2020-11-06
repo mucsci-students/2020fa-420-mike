@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 //import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -160,14 +161,26 @@ public class editBox {
 	public static JPanel editSection(String sectionType, String sectionName, Boolean parameter, int spot) {
 		JPanel editSection = setUpJPanel();
 		
+		String[] visTypesArray = {"public", "private", "protected"};
+		JComboBox<String>visTypes = new JComboBox<>(visTypesArray);
+		
+		if(e.containsField(sectionName)) {
+		    visTypes.setSelectedItem(e.copyField(sectionName).getVisibility().toString().toLowerCase());
+		} else if(e.containsMethod(sectionName)) {
+		    visTypes.setSelectedItem(e.copyMethod(sectionName).getVisibility().toString().toLowerCase());
+		}
 		JButton xButton = new JButton("X");
 		JLabel Type = new JLabel(sectionType);
 		JTextField Name = new JTextField(sectionName);
+		
 		if(parameter) {
 			JLabel Tab = new JLabel("------");
 			editSection.add(Tab);
 		}
 		editSection.add(xButton);
+		if(!parameter) {
+		    editSection.add(visTypes);
+		}
 		editSection.add(Type);
 		editSection.add(Name);
 		
@@ -178,18 +191,23 @@ public class editBox {
 	
 	
 	public static JPanel newSection(Boolean parameter, int spot) {
-		JPanel newSection = setUpJPanel();
-		
-		JTextField Type = new JTextField();
-        JTextField Name = new JTextField();
-        JButton xButton = new JButton("+");
+	JPanel newSection = setUpJPanel();
+	
+	JTextField Type = new JTextField(7);
+        JTextField Name = new JTextField(7);
+        
+        JButton plusButton = new JButton("+");
         if(parameter){
         	JLabel Tab = new JLabel("------");
 			newSection.add(Tab);
+        } else {
+    		String[] visTypesArray = {"public", "private", "protected"};
+    		JComboBox<String>visTypes = new JComboBox<>(visTypesArray);
+    		newSection.add(visTypes);
         }
         newSection.add(Type);
         newSection.add(Name);
-        newSection.add(xButton);
+        newSection.add(plusButton);
         
         newBox.add(newSection, spot);
        
