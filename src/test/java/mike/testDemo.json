@@ -1,1 +1,1 @@
-{"Relationships":[],"Classes":[]}
+{"Relationships":[],"Classes":[{"xPosition":0,"methods":[{"methodVis":"PROTECTED","methodType":"String","Parameters":[],"methodName":"m1"},{"methodVis":"PROTECTED","methodType":"int","Parameters":[{"paramType":"char","paramName":"p1"},{"paramType":"boolean","paramName":"p2"}],"methodName":"m2"}],"yPosition":0,"className":"c1","fields":[{"fieldName":"f1","fieldVis":"PUBLIC","fieldType":"int"},{"fieldName":"f2","fieldVis":"PRIVATE","fieldType":"String"}]},{"xPosition":0,"methods":[],"yPosition":0,"className":"c2","fields":[]}]}

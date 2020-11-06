@@ -121,6 +121,18 @@ public class Model {
         // Target not found.
         return false;
     }
+    
+    public boolean changeFieldVis(String targetclass, String targetfield, String newVis) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the visibility.
+		return e.changeFieldVis(targetfield, newVis);
+	    }
+	}
+	// Target not found
+	return false;
+    }
 
     public boolean deleteField(String targetclass, String targetfield) {
         for (Entity e : entities) {
@@ -160,6 +172,18 @@ public class Model {
         }
         // Target not found.
         return false;
+    }
+    
+    public boolean changeMethodVis(String targetclass, String targetmethod, String newVis) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the visibility.
+		return e.changeMethodVis(targetmethod, newVis);
+	    }
+	}
+	// Target not found
+	return false;
     }
 
     public boolean deleteMethod(String targetclass, String targetmethod) {

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,7 +25,8 @@ public class SaveCancel {
 	protected static void saveClass(JButton saveButton, Controller control) {
 		saveButton.addActionListener(new ActionListener()
 		{
-		  public void actionPerformed(ActionEvent e)
+		  @SuppressWarnings("unchecked")
+		public void actionPerformed(ActionEvent e)
 		  {
 			  JButton editModeButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(4);
 			  JButton addClassButton = (JButton)  ((GUIView) control.getView()).getMenuBar().getComponent(3);
@@ -39,19 +41,24 @@ public class SaveCancel {
 			  
 			  for (int x = 3; x < entity.getFields().size()+3; ++x){
 				  JPanel panelField = (JPanel) newBox.getComponent(x);
-				  JTextField textField = (JTextField) panelField.getComponent(2);
+				  JTextField textField = (JTextField) panelField.getComponent(3);
+				  JComboBox<String> visTypes = (JComboBox<String>) panelField.getComponent(1);
 				  
 				  control.getModel().renameField(entity.getName(), entity.getFields().get(x-3).getName(), textField.getText());
+				  control.getModel().changeFieldVis(entity.getName(), entity.getFields().get(x-3).getName(), visTypes.getSelectedItem().toString());
 			  }
 			  
 			  int methodNum = -1;
 			  Method m;
 			  for (int x = entity.getFields().size()+5; x < newBox.getComponentCount()-1; x+=m.getParameters().size()+2){
 				  JPanel panelMethod = (JPanel) newBox.getComponent(x);
-				  JTextField textMethod = (JTextField) panelMethod.getComponent(2);
+				  JTextField textMethod = (JTextField) panelMethod.getComponent(3);
+				  JComboBox<String> visTypes = (JComboBox<String>) panelMethod.getComponent(1);
 				  ++methodNum;
 				  m = entity.getMethods().get(methodNum);
+				  
 				  control.getModel().renameMethod(entity.getName(), m.getName(), textMethod.getText());
+				  control.getModel().changeMethodVis(entity.getName(), m.getName(), visTypes.getSelectedItem().toString());
 				  
 				  for (int y = x+1; y < m.getParameters().size()+x+1; ++y){
 					  JPanel panelParam = (JPanel) newBox.getComponent(y);
@@ -94,10 +101,10 @@ public class SaveCancel {
 			      control.getModel().getEntities().get(x).setXLocation(entity.getXLocation());
 			      control.getModel().getEntities().get(x).setYLocation(entity.getYLocation());
 				  for(Field field : entity.getFields()){
-				      //control.getModel().createField(entity.getName(), field.getName(), field.getType());
+				      control.getModel().createField(entity.getName(), field.getName(), field.getType(), field.getVisibility().toString());
 				  }
 				  for(Method method : entity.getMethods()){
-				      //control.getModel().createMethod(entity.getName(), method.getName(), method.getType());
+				      control.getModel().createMethod(entity.getName(), method.getName(), method.getType(), method.getVisibility().toString());
 					  for(Parameter param : method.getParameters()){
 					      control.getModel().createParameter(entity.getName(), method.getName(), param.getName(), param.getType());
 					  }
