@@ -355,7 +355,8 @@ public class ModelTest {
 	model.changeFieldVis("c", "f1", "PROTECTED");
 	
 	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyField("f1").getVisibility().toString());
-	assertFalse("False when changing visibility on non-existent field", model.changeFieldVis("c", "f2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid class", model.changeFieldVis("c2", "f1", "PRIVATE"));
+
     }
 
     /** test deleteField
@@ -429,7 +430,7 @@ public class ModelTest {
 	model.changeMethodVis("c", "m1", "PROTECTED");
 	
 	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyMethod("m1").getVisibility().toString());
-	assertFalse("False when changing visibility on non-existent method", model.changeMethodVis("c", "m2", "PRIVATE"));
+	assertFalse("False when changing visibility on non-existent class", model.changeMethodVis("c2", "m1", "PRIVATE"));
     }
 
     /** test deleteMethod
