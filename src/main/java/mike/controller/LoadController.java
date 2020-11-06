@@ -49,7 +49,6 @@ public class LoadController {
 
 				  if (result == 0) {
 					  JLayeredPane pane =  ((GUIView) control.getView()).getPane();
-					  control.getModel().empty();
 					  pane.removeAll();
 					  pane.repaint();
 					  
@@ -61,7 +60,7 @@ public class LoadController {
 						  control.setPath(Paths.get(System.getProperty("user.dir") + "\\" + directory.getText()));  
 					  }
 					  
-					  HelperMethods.load(control.getPath(), control.getModel(), control,  ((GUIView) control.getView()));
+					  HelperMethods.load(control.getPath(), control.getModel(), control, ((GUIView) control.getView()));
 					  control.setChanged(false);
 					  pane.validate();
 				  }
