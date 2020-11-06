@@ -94,10 +94,10 @@ public class SaveCancel {
 			      control.getModel().getEntities().get(x).setXLocation(entity.getXLocation());
 			      control.getModel().getEntities().get(x).setYLocation(entity.getYLocation());
 				  for(Field field : entity.getFields()){
-				      control.getModel().createField(entity.getName(), field.getName(), field.getType());
+				      //control.getModel().createField(entity.getName(), field.getName(), field.getType());
 				  }
 				  for(Method method : entity.getMethods()){
-				      control.getModel().createMethod(entity.getName(), method.getName(), method.getType());
+				      //control.getModel().createMethod(entity.getName(), method.getName(), method.getType());
 					  for(Parameter param : method.getParameters()){
 					      control.getModel().createParameter(entity.getName(), method.getName(), param.getName(), param.getType());
 					  }

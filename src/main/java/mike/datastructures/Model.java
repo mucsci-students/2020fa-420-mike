@@ -6,7 +6,7 @@ import mike.datastructures.Relationship.Type;
 public class Model {
     private static ArrayList<Entity> entities;
     private static ArrayList<Relationship> relationships;
-
+    
     // *********************************************************//
     // Constructor //
     // *********************************************************//
@@ -98,12 +98,12 @@ public class Model {
     // Field Functions //
     // *********************************************************//
 
-    public boolean createField(String targetclass, String field, String type) {
+    public boolean createField(String targetclass, String field, String type, String visType) {
         for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createField(field, type);
+                return e.createField(field, type, visType);
             }
         }
         // Target not found.
@@ -138,12 +138,12 @@ public class Model {
     // Method Functions //
     // *********************************************************//
 
-    public boolean createMethod(String targetclass, String method, String type) {
+    public boolean createMethod(String targetclass, String method, String type, String visType) {
         for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createMethod(method, type);
+                return e.createMethod(method, type, visType);
             }
         }
         // Target not found.
