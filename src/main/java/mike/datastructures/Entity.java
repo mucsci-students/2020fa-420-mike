@@ -122,8 +122,13 @@ public class Entity {
 	    for (Field f : fields) {
 		// If target found
 		if (f.getName().equals(target)) {
-		    f.setVisibility(checkVis(newVis));
-		    return true;
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			f.setVisibility(vis);
+			return true;
+		    }
 		}
 	    }
 	    // Target not found
@@ -167,8 +172,13 @@ public class Entity {
 	    for (Method m : methods) {
 		// If target found
 		if (m.getName().equals(target)) {
-		    m.setVisibility(checkVis(newVis));
-		    return true;
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			m.setVisibility(vis);
+			return true;
+		    }
 		}
 	    }
 	    // Target not found
