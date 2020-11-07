@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import mike.datastructures.Relationship.Type;
 
 public class Model {
-    private static ArrayList<Entity> entities;
-    private static ArrayList<Relationship> relationships;
+    private ArrayList<Entity> entities;
+    private ArrayList<Relationship> relationships;
     
     // *********************************************************//
     // Constructor //
@@ -14,6 +14,18 @@ public class Model {
     public Model() {
         entities = new ArrayList<Entity>();
         relationships = new ArrayList<Relationship>();
+    }
+    
+    public Model(Model modelToCopy) {
+	entities = new ArrayList<Entity>();
+        relationships = new ArrayList<Relationship>();
+	for(Entity e : modelToCopy.entities) {
+	    Entity thisE = new Entity(e);
+	    this.entities.add(thisE);
+	}
+	for(Relationship r : modelToCopy.relationships) {
+	    this.relationships.add(r);
+	}
     }
 
     // *********************************************************//
