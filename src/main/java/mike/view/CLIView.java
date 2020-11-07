@@ -2,22 +2,14 @@ package mike.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 import mike.datastructures.*;
-import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
 import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.AggregateCompleter;
-import org.jline.reader.impl.completer.ArgumentCompleter;
-import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
@@ -42,14 +34,14 @@ public class CLIView implements ViewInterface {
 
         terminal = TerminalBuilder.builder().system(true).build();
 
-        AggregateCompleter completer = getAggregateCompleter();
+        TabCompleter completer = new TabCompleter();
 
         StringsCompleter savePromptCompleter = new StringsCompleter("yes", "no");
 
         parser = new DefaultParser();
         parser.setEscapeChars(new char[]{});
 
-        reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
+        reader = LineReaderBuilder.builder().terminal(terminal).completer(completer.updateCompleter(classes))
                 .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
         savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter)
                 .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
@@ -74,11 +66,12 @@ public class CLIView implements ViewInterface {
             String[] commands = line.split(" ");
 
             evaluateCommand(commands);
+                 
             //update completer
-            AggregateCompleter completer = updateMainCompleter();
-
+            TabCompleter completer = new TabCompleter();
+            
             //rebuild reader
-            reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
+            reader = LineReaderBuilder.builder().terminal(terminal).completer(completer.updateCompleter(classes))
                     .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
         }
     }
@@ -494,156 +487,6 @@ public class CLIView implements ViewInterface {
         };
         return CommandUsage;
     }
-
-    private static AggregateCompleter getAggregateCompleter() {
-        return new AggregateCompleter(
-                new ArgumentCompleter(
-                        new StringsCompleter("save"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("load"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("quit"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("clear"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("create"),
-                        new StringsCompleter("class", "field", "method", "parameter"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("create", "delete"),
-                        new StringsCompleter("relationship"),
-                        new StringsCompleter("aggregation", "composition", "inheritance", "realization"),
-                        new NullCompleter()
-                ),
-                new ArgumentCompleter(
-                        new StringsCompleter("list"),
-                        new StringsCompleter("classes", "relationships", "all"),
-                        new NullCompleter()
-                )
-        );
-    }
-
-	private AggregateCompleter updateMainCompleter() {
-		//start with base completers
-		Collection<Completer> completers = getAggregateCompleter().getCompleters();
-		completers = new ArrayList<>(completers);
-
-		//array list to hold class names (to use for completer later)
-		ArrayList<String> UMLclasses = new ArrayList<>();
-
-		//array lists of enums
-        ArrayList<String> visTypes = new ArrayList<>(Arrays.asList("public", "private", "protected"));
-        ArrayList<String> relTypes = new ArrayList<>(Arrays.asList("aggregation", "composition", "inheritance", "realization"));
-
-		//loop through classes and create completers for fields/methods/parameters
-		for(int i = 0; i < classes.getEntities().size(); ++i) {
-			//get current class
-			Entity currClass = classes.getEntities().get(i);
-			String className = currClass.getName();
-			//add to list of class names
-            UMLclasses.add(className);
-
-            //get fields for completer
-            ArrayList<String> classFields = new ArrayList<>();
-            for(Field f : currClass.getFields()) {
-                classFields.add(f.getName());
-                //add completer for setvis
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("setvis"),
-                        new StringsCompleter("field"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(f.getName()),
-                        new StringsCompleter(visTypes),
-                        new NullCompleter()
-                ));
-
-                //add completers that deal with fields
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("delete", "rename"),
-                        new StringsCompleter("field"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(classFields),
-                        new NullCompleter()
-                ));
-            }
-
-            //get methods for completer
-            ArrayList<String> classMethods = new ArrayList<>();
-            for(Method m : currClass.getMethods()) {
-                classMethods.add(m.getName());
-                //add completer for setvis
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("setvis"),
-                        new StringsCompleter("method"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(m.getName()),
-                        new StringsCompleter(visTypes),
-                        new NullCompleter()
-                ));
-
-                //add completers for methods
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("delete", "rename"),
-                        new StringsCompleter("method"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(classMethods),
-                        new NullCompleter()
-                ));
-
-                //add completer for create parameter
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("create"),
-                        new StringsCompleter("parameter"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(m.getName()),
-                        new NullCompleter()
-                ));
-
-                //add completer for method's parameters
-                ArrayList<String> parameters = new ArrayList<>();
-                for(Parameter p : m.getParameters()) {
-                    parameters.add(p.getName());
-                }
-                completers.add(new ArgumentCompleter(
-                        new StringsCompleter("rename", "delete"),
-                        new StringsCompleter("parameter"),
-                        new StringsCompleter(className),
-                        new StringsCompleter(m.getName()),
-                        new StringsCompleter(parameters),
-                        new NullCompleter()
-                ));
-            }
-
-		}
-
-        //add completer for tab completing classes for create/rename/delete
-        completers.add(new ArgumentCompleter(
-                new StringsCompleter("rename", "delete"),
-                new StringsCompleter("class"),
-                new StringsCompleter(UMLclasses),
-                new NullCompleter()
-        ));
-
-		//add completer for creating fields/methods/parameters with existing class names
-        completers.add(new ArgumentCompleter(
-                new StringsCompleter("create"),
-                new StringsCompleter("field", "method"),
-                new StringsCompleter(UMLclasses),
-                new StringsCompleter(visTypes),
-                new NullCompleter()
-        ));
-
-		return new AggregateCompleter(completers);
-	}
 
     // Prints out how to use all the commands in the CLI
     private static void help(String[] commandUsage) {
