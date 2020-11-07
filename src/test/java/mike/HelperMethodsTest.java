@@ -52,6 +52,109 @@ public class HelperMethodsTest {
 	cli.evaluateCommand(commands);
     }
     
+    private void resetStreams() {
+        out.reset();
+        err.reset();
+    }
+    
+    @Test
+    public void HelperMethodConstructor() {
+	HelperMethods test = new HelperMethods();
+    }
+    
+    @Test
+    public void listClassesTest() {
+	// Easy
+	System.out.println("Classes:");
+	String expected = out.toString();
+	resetStreams();
+        HelperMethods.listClasses(model);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	model.createClass("c1");
+	model.createField("c1", "f1", "int", "public");
+	model.createMethod("c1", "m1", "boolean", "private");
+	model.createParameter("c1",  "m1",  "p1",  "String");
+	resetStreams();
+	
+	// Medium
+	System.out.println("Classes:");
+	System.out.println("\tc1:");
+	System.out.println("\t\tfields:  [ (public) int f1 ]");
+	System.out.println("\t\tmethods: [ (private) boolean m1 -- {(String) p1} ]");
+	expected = out.toString();
+	resetStreams();
+        HelperMethods.listClasses(model);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	model.createClass("c2");
+	model.createField("c1", "f2", "int", "public");
+	model.createMethod("c1", "m2", "boolean", "private");
+	model.createParameter("c1",  "m1",  "p2",  "String");
+	resetStreams();
+	
+	// Hard
+	System.out.println("Classes:");
+	System.out.println("\tc1:");
+	System.out.println("\t\tfields:  [ (public) int f1, (public) int f2 ]");
+	// Isn't println because brackets screw up byteArrayOutputStream
+	System.out.print("\t\tmethods: [ (private) boolean m1 -- {(String) p1, (String) p2},\n");
+	System.out.println("\t\t\t   (private) boolean m2 -- {} ]");
+	System.out.println("\tc2:");
+	System.out.println("\t\tfields:  [  ]");
+	System.out.println("\t\tmethods: [  ]");
+	expected = out.toString();
+	resetStreams();
+	HelperMethods.listClasses(model);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+    }
+    
+    @Test
+    public void listRelationshipTest() {
+	// Easy
+	System.out.println("Relationships:");
+	String expected = out.toString();
+	resetStreams();
+	HelperMethods.listRelationships(model);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	model.createClass("c1");
+	model.createClass("c2");
+	model.createRelationship(Type.INHERITANCE, "c1", "c2");
+	resetStreams();
+	
+	// Medium
+	System.out.println("Relationships:");
+	System.out.println("   -- INHERITANCE: c1--c2");
+	expected = out.toString();
+	resetStreams();
+	HelperMethods.listRelationships(model);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	model.createClass("c3");
+	model.createRelationship(Type.AGGREGATION, "c1", "c1");
+	model.createRelationship(Type.COMPOSITION, "c3", "c1");
+	model.createRelationship(Type.REALIZATION, "c2",  "c3");
+	resetStreams();
+	
+	// Hard
+	System.out.println("Relationships:");
+	System.out.println("   -- INHERITANCE: c1--c2");
+	System.out.println("   -- AGGREGATION: c1--c1");
+	System.out.println("   -- COMPOSITION: c3--c1");
+	System.out.println("   -- REALIZATION: c2--c3");
+	expected = out.toString();
+	resetStreams();
+	HelperMethods.listRelationships(model);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+    }
+    
     @Test
     public void intialSaveTest() throws IOException, ParseException {	
 	HelperMethods.save(path, model);
@@ -211,7 +314,8 @@ public class HelperMethodsTest {
 	model.createRelationship(Type.AGGREGATION, "c1", "c2");
 	model.createRelationship(Type.INHERITANCE, "c3", "c1");
 	model.createRelationship(Type.COMPOSITION, "c2", "c2");
-
+	model.createRelationship(Type.REALIZATION, "c1", "c1");	
+	
 	HelperMethods.save(path, model);
 	Model loadModel = new Model();
 	HelperMethods.load(path, loadModel, null, null);
@@ -223,10 +327,13 @@ public class HelperMethodsTest {
 	assertTrue("loadModel does not contain class c3", loadModel.containsEntity("c3"));
 
 	// Relationships
-	assertEquals("loadModel contains more or less than three relationships.", 3, loadModel.getRelationships().size());
+	assertEquals("loadModel contains more or less than four relationships.", 4, loadModel.getRelationships().size());
 	assertTrue("loadModel does not contain relationship c1--c2", loadModel.containsRelationship(Type.AGGREGATION, "c1", "c2"));
 	assertTrue("loadModel does not contain relationship c3--c1", loadModel.containsRelationship(Type.INHERITANCE, "c3", "c1"));
 	assertTrue("loadModel does not contain relationship c2--c2", loadModel.containsRelationship(Type.COMPOSITION, "c2", "c2"));
+	assertTrue("loadModel does not contain relationship c1--c1", loadModel.containsRelationship(Type.REALIZATION, "c1", "c1"));
     }
+    
+    
     
 }

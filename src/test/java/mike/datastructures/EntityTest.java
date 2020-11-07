@@ -15,6 +15,29 @@ public class EntityTest {
         assertTrue("Fields list was initialized", e.getFields().isEmpty());
         assertTrue("Methods list was initialized", e.getMethods().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+	Entity initEntity = new Entity("c1");
+	Entity copyEntityOne = new Entity(initEntity);
+        assertTrue("Fields list is empty", copyEntityOne.getFields().isEmpty());
+        assertTrue("Methods list is empty", copyEntityOne.getMethods().isEmpty());
+        assertEquals("copyEntityOne has same name as initEntity", initEntity.getName(), copyEntityOne.getName());
+        
+        copyEntityOne.createField("f1", "String", "public");
+        copyEntityOne.createMethod("m1", "boolean", "private");
+        copyEntityOne.createParameter("m1", "p1", "int");
+        Entity copyEntityTwo = new Entity(copyEntityOne);
+        assertFalse("initEntity list is empty", initEntity.containsField("f1"));
+        assertFalse("initEntity list is empty", initEntity.containsMethod("m1"));
+        assertEquals("initEntity has more or less than zero field", 0, initEntity.getFields().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsField("f1"));
+        assertEquals("c1 has more or less than one method", 1, copyEntityTwo.getMethods().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsMethod("m1"));
+        assertEquals("m1 has more or less than one field", 1, copyEntityTwo.copyMethod("m1").getParameters().size());
+        assertTrue("Method list is empty", copyEntityTwo.copyMethod("m1").containsParameter("p1"));
+    }
 
     /* test equals */
     @Test
@@ -65,6 +88,19 @@ public class EntityTest {
         assertFalse("a1 field no longer exists", e.containsField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
     }
+    
+    /* test changeFieldVis */
+    @Test
+    public void testChangeFieldVis()
+    {
+	Entity e = new Entity("e");
+	e.createField("f1", "int", "PUBLIC");
+	e.changeFieldVis("f1", "PROTECTED");
+	
+	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", e.copyField("f1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid field", e.changeFieldVis("f2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeFieldVis("f1", "WRONG"));
+    }
 
     /* test deleteField */
     @Test
@@ -107,6 +143,19 @@ public class EntityTest {
 
         assertFalse("a1 method no longer exists", e.containsMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
+    }
+    
+    /* test changeMethodVis */
+    @Test
+    public void testChangeMethodVis()
+    {
+	Entity e = new Entity("e");
+	e.createMethod("m1", "int", "PUBLIC");
+	e.changeMethodVis("m1", "PROTECTED");
+	
+	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", e.copyMethod("m1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid method", e.changeMethodVis("m2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeMethodVis("m1", "WRONG"));
     }
 
     /* test deleteMethod */

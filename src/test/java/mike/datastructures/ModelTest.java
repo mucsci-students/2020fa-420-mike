@@ -26,6 +26,43 @@ public class ModelTest {
         assertTrue("Relationships list is empty", initClass.getRelationships().isEmpty());
         assertTrue("Entities list is empty", initClass.getEntities().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+        Model initClass = new Model();
+        Model copyClassOne = new Model(initClass);
+        assertTrue("Relationships list is empty", copyClassOne.getRelationships().isEmpty());
+        assertTrue("Entities list is empty", copyClassOne.getEntities().isEmpty());
+        
+        copyClassOne.createClass("c1");
+        Entity c1 = copyClassOne.copyEntity("c1");
+        copyClassOne.createClass("c2");
+        copyClassOne.createRelationship(Type.AGGREGATION, "c1", "c2");
+        Model copyClassTwo = new Model(copyClassOne);
+        assertFalse("c1 list is empty", initClass.containsEntity("c1"));
+        assertFalse("c1 list is empty", initClass.containsEntity("c2"));
+        assertFalse("c1 has more or less than one field", initClass.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+        assertEquals("Model has more or less than one relationship", 1, copyClassTwo.getRelationships().size());
+        assertTrue("Model does not contain relationship c1-c2", copyClassTwo.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+        assertEquals("Model has more or less than two entities", 2, copyClassTwo.getEntities().size());
+        assertTrue("Entities list is empty", copyClassTwo.containsEntity("c1"));
+        assertTrue("Entities list is empty", copyClassTwo.containsEntity("c2"));
+        
+        copyClassTwo.createField("c1", "f1", "String", "public");
+        copyClassTwo.createMethod("c1", "m1", "boolean", "private");
+        copyClassTwo.createParameter("c1", "m1", "p1", "int");
+        Model copyClassThree = new Model(copyClassTwo);
+        Entity c1Copy = copyClassThree.copyEntity("c1");
+        assertFalse("c1 list is empty", c1.containsField("f1"));
+        assertFalse("c1 list is empty", c1.containsMethod("m1"));
+        assertEquals("c1 has more or less than one field", 1, c1Copy.getFields().size());
+        assertTrue("c1 list is empty", c1Copy.containsField("f1"));
+        assertEquals("c1 has more or less than one method", 1, c1Copy.getMethods().size());
+        assertTrue("c1 list is empty", c1Copy.containsMethod("m1"));
+        assertEquals("m1 has more or less than one field", 1, c1Copy.copyMethod("m1").getParameters().size());
+        assertTrue("Method list is empty", c1Copy.copyMethod("m1").containsParameter("p1"));
+    }
 
     /* ------------------------------------------------------------------------------ */
     /*                          TEST HELPER/MEMBER FUNCTIONS                          */
@@ -296,7 +333,7 @@ public class ModelTest {
         assertFalse("Class e no longer exists", model.containsEntity("e"));
         assertEquals("Entities list size is 2", 2, model.getEntities().size());
 
-        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2") && model.containsRelationship(Type.COMPOSITION, "e3", "e");
+        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2");
         assertFalse("Relationships associated with class e were deleted", deletedRels);
         assertTrue("Relationships not associated with class e still exist", model.containsRelationship(Type.COMPOSITION, "e2", "e3"));
 
