@@ -296,7 +296,7 @@ public class ModelTest {
         assertFalse("Class e no longer exists", model.containsEntity("e"));
         assertEquals("Entities list size is 2", 2, model.getEntities().size());
 
-        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2") && model.containsRelationship(Type.COMPOSITION, "e3", "e");
+        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2");
         assertFalse("Relationships associated with class e were deleted", deletedRels);
         assertTrue("Relationships not associated with class e still exist", model.containsRelationship(Type.COMPOSITION, "e2", "e3"));
 
