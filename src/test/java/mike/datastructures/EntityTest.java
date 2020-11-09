@@ -65,6 +65,19 @@ public class EntityTest {
         assertFalse("a1 field no longer exists", e.containsField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
     }
+    
+    /* test changeFieldVis */
+    @Test
+    public void testChangeFieldVis()
+    {
+	Entity e = new Entity("e");
+	e.createField("f1", "int", "PUBLIC");
+	e.changeFieldVis("f1", "PROTECTED");
+	
+	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", e.copyField("f1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid field", e.changeFieldVis("f2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeFieldVis("f1", "WRONG"));
+    }
 
     /* test deleteField */
     @Test
@@ -107,6 +120,19 @@ public class EntityTest {
 
         assertFalse("a1 method no longer exists", e.containsMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
+    }
+    
+    /* test changeMethodVis */
+    @Test
+    public void testChangeMethodVis()
+    {
+	Entity e = new Entity("e");
+	e.createMethod("m1", "int", "PUBLIC");
+	e.changeMethodVis("m1", "PROTECTED");
+	
+	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", e.copyMethod("m1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid method", e.changeMethodVis("m2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeMethodVis("m1", "WRONG"));
     }
 
     /* test deleteMethod */
