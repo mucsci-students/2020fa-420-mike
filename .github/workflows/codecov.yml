@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     status:
       patch: off
+      if_not_found: success
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 11
