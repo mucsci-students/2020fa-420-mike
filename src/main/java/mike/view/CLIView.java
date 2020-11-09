@@ -10,6 +10,7 @@ import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
 import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
@@ -68,10 +69,10 @@ public class CLIView implements ViewInterface {
             evaluateCommand(commands);
                  
             //update completer
-            TabCompleter completer = new TabCompleter();
+            AggregateCompleter completer = new TabCompleter().updateCompleter(classes);
             
             //rebuild reader
-            reader = LineReaderBuilder.builder().terminal(terminal).completer(completer.updateCompleter(classes))
+            reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
                     .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
         }
     }
