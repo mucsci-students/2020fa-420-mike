@@ -6,12 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import mike.datastructures.*;
+import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -23,6 +25,7 @@ public class CLIView implements ViewInterface {
     private Model classes;
     private boolean prompt;
     private Terminal terminal;
+    private History history;
     private DefaultParser parser;
     private LineReader savePromptReader;
     private LineReader reader;
@@ -35,15 +38,17 @@ public class CLIView implements ViewInterface {
 
         terminal = TerminalBuilder.builder().system(true).build();
 
-        TabCompleter completer = new TabCompleter();
+        AggregateCompleter completer = new TabCompleter().updateCompleter(classes);
 
         StringsCompleter savePromptCompleter = new StringsCompleter("yes", "no");
+
+        history = new DefaultHistory();
 
         parser = new DefaultParser();
         parser.setEscapeChars(new char[]{});
 
-        reader = LineReaderBuilder.builder().terminal(terminal).completer(completer.updateCompleter(classes))
-                .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+        reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
+                .history(history).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
         savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter)
                 .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
 
@@ -73,7 +78,7 @@ public class CLIView implements ViewInterface {
             
             //rebuild reader
             reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
-                    .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+                    .history(history).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
         }
     }
 
