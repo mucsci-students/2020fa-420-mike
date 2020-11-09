@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import mike.datastructures.*;
+
 import org.jline.reader.Completer;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.ArgumentCompleter;
@@ -178,18 +179,18 @@ public class TabCompleter {
         );
 
         for(Relationship r : classes.getRelationships()) {
-			//add completers for deleting a relationship
-			completers.add(
-					new ArgumentCompleter(
-							new StringsCompleter("delete"),
-							new StringsCompleter("relationship"),
-							new StringsCompleter(r.getName().toString()),
-							new StringsCompleter(r.getFirstClass()),
-							new StringsCompleter(r.getSecondClass()),
-							new NullCompleter()
-					)
-			);
-		}
+          //add completers for deleting a relationship
+          completers.add(
+              new ArgumentCompleter(
+                  new StringsCompleter("delete"),
+                  new StringsCompleter("relationship"),
+                  new StringsCompleter(r.getName().toString()),
+                  new StringsCompleter(r.getFirstClass()),
+                  new StringsCompleter(r.getSecondClass()),
+                  new NullCompleter()
+              )
+          );
+        }
 
         return new AggregateCompleter(completers);
     }

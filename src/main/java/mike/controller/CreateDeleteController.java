@@ -12,153 +12,100 @@ import javax.swing.JTextField;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
+import mike.datastructures.Model;
 import mike.gui.editBox;
 import mike.view.GUIView;
 
 public class CreateDeleteController {
 
-    protected static void createField(JPanel panel, Controller control) {
-	JButton creation = (JButton) panel.getComponent(3);
-	creation.addActionListener(new ActionListener() {
-	    @SuppressWarnings("unchecked")
-	    public void actionPerformed(ActionEvent e) {
-		JComboBox<String>visTypes = (JComboBox<String>) panel.getComponent(0);
-		JTextField type = (JTextField) panel.getComponent(1);
-		JTextField name = (JTextField) panel.getComponent(2);
-		if (type.getText().isEmpty() || name.getText().isEmpty()) {
-		    return;
-		}
-		Entity entity = editBox.getEntity();
-		control.getModel().createField(entity.getName(), name.getText(), type.getText(), visTypes.getSelectedItem().toString());
-		JLabel newview = editBox.getBox();
-
-		int spot = entity.getFields().size() + 2;
-		control.deleteField(editBox.editSection(type.getText(), name.getText(), false, spot));
-		Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-		newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-		type.setText("");
-		name.setText("");
-		visTypes.setSelectedItem("public");
-		((GUIView) control.getView()).validateRepaint();
-	    }
-	});
-    }
-
-    protected static void createMethod(JPanel panel, Controller control) {
-	JButton creation = (JButton) panel.getComponent(3);
-	creation.addActionListener(new ActionListener() {
-	    @SuppressWarnings("unchecked")
-	    public void actionPerformed(ActionEvent e) {
-		JComboBox<String>visTypes = (JComboBox<String>) panel.getComponent(0);
-		JTextField type = (JTextField) panel.getComponent(1);
-		JTextField name = (JTextField) panel.getComponent(2);
-		if (type.getText().isEmpty() || name.getText().isEmpty()) {
-		    return;
-		}
-		Entity entity = editBox.getEntity();
-		control.getModel().createMethod(entity.getName(), name.getText(), type.getText(), visTypes.getSelectedItem().toString());
-		JLabel newview = editBox.getBox();
-
-		int spot = newview.getComponentCount() - 1;
-		control.deleteMethod(editBox.editSection(type.getText(), name.getText(), false, spot));
-		control.createParam(editBox.newSection(true, spot + 1), name.getText());
-		Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-		newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-		type.setText("");
-		name.setText("");
-		visTypes.setSelectedItem("public");
-		((GUIView) control.getView()).validateRepaint();
-	    }
-	});
-    }
-
-    protected static void createParam(JPanel panel, String methodName, Controller control) {
+    @SuppressWarnings("unchecked")
+    protected static void createFunction(JPanel panel, Controller control, String attribute, String methodName) {
 	JButton creation = (JButton) panel.getComponent(3);
 	creation.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		JTextField type = (JTextField) panel.getComponent(1);
-		JTextField name = (JTextField) panel.getComponent(2);
-		if (type.getText().isEmpty() || name.getText().isEmpty()) {
+		String visType = null;
+		if (attribute != "parameter") {
+		    visType = ((JComboBox<String>) panel.getComponent(0)).getSelectedItem().toString();
+		}
+		String newType = ((JTextField) panel.getComponent(1)).getText();
+		String newName = ((JTextField) panel.getComponent(2)).getText();
+
+		if (newType.isEmpty() || newName.isEmpty()) {
 		    return;
 		}
 		Entity entity = editBox.getEntity();
-		control.getModel().createParameter(entity.getName(), methodName, name.getText(), type.getText());
 		JLabel newview = editBox.getBox();
-
-		int spot = entity.getFields().size() + 4;
-		for (Method m : entity.getMethods()) {
-		    spot += m.getParameters().size() + 2;
-		    if (m.getName() == methodName) {
-			break;
-		    }
-		}
-		--spot;
-
-		control.deleteParam(editBox.editSection(type.getText(), name.getText(), true, spot), methodName);
-
-		Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-		newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-		type.setText("");
-		name.setText("");
-		((GUIView) control.getView()).validateRepaint();
-	    }
-	});
-    }
-
-    protected static void deleteField(JPanel panel, Controller control) {
-	JButton deletion = (JButton) panel.getComponent(0);
-	deletion.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		Entity entity = editBox.getEntity();
-		control.getModel().deleteField(entity.getName(), ((JTextField) panel.getComponent(3)).getText());
-		JLabel newview = editBox.getBox();
-		newview.remove(deletion.getParent());
-		Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-		newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-		((GUIView) control.getView()).validateRepaint();
-	    }
-	});
-    }
-
-    protected static void deleteMethod(JPanel panel, Controller control) {
-	JButton deletion = (JButton) panel.getComponent(0);
-	deletion.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		Entity entity = editBox.getEntity();
-		for (Method m : entity.getMethods()) {
-		    String methodName = ((JTextField) panel.getComponent(3)).getText();
-		    if (m.getName().equals(methodName)) {
-			JLabel newview = editBox.getBox();
-			int methodSpot = newview.getComponentZOrder(panel);
-			int numParams = m.getParameters().size();
-			for (int x = 0; x < numParams + 2; ++x) {
-			    newview.remove(methodSpot);
+		
+		// Create attribute in model and view (makes controllers at the same time)
+		if (attribute == "field") {
+		    control.getModel().createField(entity.getName(), newName, newType, visType);
+		    int spot = entity.getFields().size() + 2;
+		    control.deleteField(editBox.editSection(newType, newName, false, spot));
+		} else if (attribute == "method") {
+		    control.getModel().createMethod(entity.getName(), newName, newType, visType);
+		    int spot = newview.getComponentCount() - 1;
+		    control.deleteMethod(editBox.editSection(newType, newName, false, spot));
+		    control.createParam(editBox.newSection(true, spot + 1), newName);
+		} else if (attribute == "parameter") {
+		    control.getModel().createParameter(entity.getName(), methodName, newName, newType);
+		    int spot = entity.getFields().size() + 4;
+		    for (Method m : entity.getMethods()) {
+			spot += m.getParameters().size() + 2;
+			if (m.getName().equals(methodName)) {
+			    --spot;
+			    break;
 			}
-			control.getModel().deleteMethod(entity.getName(), methodName);
-			Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-			newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-			((GUIView) control.getView()).validateRepaint();
-			return;
 		    }
+		    control.deleteParam(editBox.editSection(newType, newName, true, spot), methodName);
 		}
+		((JTextField) panel.getComponent(1)).setText("");
+		((JTextField) panel.getComponent(2)).setText("");
+		ending(control, newview, entity);
 	    }
 	});
     }
 
-    protected static void deleteParam(JPanel panel, String methodName, Controller control) {
-	JButton deletion = (JButton) panel.getComponent(1);
+    protected static void deleteFunction(JPanel panel, Controller control, String attribute, String methodName) {
+	JButton deletion;
+	if (attribute.equals("parameter")) {
+	    deletion = (JButton) panel.getComponent(1);
+	} else {
+	    deletion = (JButton) panel.getComponent(0);
+	}
 	deletion.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		Entity entity = editBox.getEntity();
-		control.getModel().deleteParameter(entity.getName(), methodName,
-			((JTextField) panel.getComponent(3)).getText());
 		JLabel newview = editBox.getBox();
+		Entity entity = editBox.getEntity();
+		String deleteAtt = ((JTextField) panel.getComponent(3)).getText();
+		Model model = control.getModel();
+		
+		// Delete attribute from model 
+		if (attribute.equals("field")) {
+		    model.deleteField(entity.getName(), deleteAtt);
+		} else if (attribute.equals("method")) {
+		    // Delete parameters in view as well
+		    int methodSpot = newview.getComponentZOrder(panel);
+		    int numParams = entity.copyMethod(deleteAtt).getParameters().size();
+		    for (int x = 0; x < numParams + 1; ++x) {
+			newview.remove(methodSpot + 1);
+		    }
+		    
+		    model.deleteMethod(entity.getName(), deleteAtt);
+		} else if (attribute.equals("parameter")) {
+		    model.deleteParameter(entity.getName(), methodName, deleteAtt);
+		}
+		
+		// Delete attribute from view
 		newview.remove(deletion.getParent());
-		Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-		newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-		((GUIView) control.getView()).validateRepaint();
+		ending(control, newview, entity);
 	    }
 	});
+    }
+
+    private static void ending(Controller control, JLabel newview, Entity entity) {
+	Dimension dim = newview.getLayout().preferredLayoutSize(newview);
+	newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
+	((GUIView) control.getView()).validateRepaint();
     }
 
 }

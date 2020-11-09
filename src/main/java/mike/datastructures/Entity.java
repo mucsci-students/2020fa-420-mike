@@ -29,6 +29,21 @@ public class Entity {
 		yLocation = 0;
 	}
 	
+	public Entity(Entity copyEntity) {
+		name = copyEntity.name;
+		fields = new ArrayList<Field>();
+		methods = new ArrayList<Method>();
+		xLocation = 0;
+		yLocation = 0;
+		
+		for(Field f : copyEntity.getFields()) {
+		    this.fields.add(f);
+		}
+		for(Method m : copyEntity.getMethods()) {
+		    this.methods.add(m);
+		}
+	}
+	
 	//*********************************************************//
 	// Accessors & Mutator //
 	//*********************************************************//

@@ -13,6 +13,15 @@ public class Method extends Formal{
         this.setVisibility(visType);
         parameters = new ArrayList<Parameter>();
     }
+    
+    public Method(Method copyMethod){
+        super(copyMethod.getName(), copyMethod.getType());
+        this.setVisibility(copyMethod.visType);
+        parameters = new ArrayList<Parameter>();
+        for (Parameter p : copyMethod.getParameters()) {
+            this.parameters.add(p);
+        }
+    }
 
     public ArrayList<Parameter> getParameters() {
         return parameters;

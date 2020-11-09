@@ -15,6 +15,29 @@ public class EntityTest {
         assertTrue("Fields list was initialized", e.getFields().isEmpty());
         assertTrue("Methods list was initialized", e.getMethods().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+	Entity initEntity = new Entity("c1");
+	Entity copyEntityOne = new Entity(initEntity);
+        assertTrue("Fields list is empty", copyEntityOne.getFields().isEmpty());
+        assertTrue("Methods list is empty", copyEntityOne.getMethods().isEmpty());
+        assertEquals("copyEntityOne has same name as initEntity", initEntity.getName(), copyEntityOne.getName());
+        
+        copyEntityOne.createField("f1", "String", "public");
+        copyEntityOne.createMethod("m1", "boolean", "private");
+        copyEntityOne.createParameter("m1", "p1", "int");
+        Entity copyEntityTwo = new Entity(copyEntityOne);
+        assertFalse("initEntity list is empty", initEntity.containsField("f1"));
+        assertFalse("initEntity list is empty", initEntity.containsMethod("m1"));
+        assertEquals("initEntity has more or less than zero field", 0, initEntity.getFields().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsField("f1"));
+        assertEquals("c1 has more or less than one method", 1, copyEntityTwo.getMethods().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsMethod("m1"));
+        assertEquals("m1 has more or less than one field", 1, copyEntityTwo.copyMethod("m1").getParameters().size());
+        assertTrue("Method list is empty", copyEntityTwo.copyMethod("m1").containsParameter("p1"));
+    }
 
     /* test equals */
     @Test

@@ -23,6 +23,21 @@ public class MethodTest {
         assertEquals("return type set correctly", "int", m.getType());
         assertTrue("parameters list initialized and empty", m.getParameters().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+	Method initMethod = new Method("m1", "int", visibility.PROTECTED);
+	Method copyMethod = new Method(initMethod);
+        assertTrue("Parameter list is empty", copyMethod.getParameters().isEmpty());
+        assertEquals("copyMethod has same name as initMethod", initMethod.getName(), copyMethod.getName());
+        
+        copyMethod.createParameter("p1", "String");
+        Method copyMethodTwo = new Method(copyMethod);
+        assertTrue("Parameter list is empty", initMethod.getParameters().isEmpty());
+        assertEquals("Parameter list is more or less than one", 1, copyMethodTwo.getParameters().size());
+        assertTrue("copyMethod does not contain p1", copyMethodTwo.containsParameter("p1"));
+    }
 
     /* test equals */
     @Test

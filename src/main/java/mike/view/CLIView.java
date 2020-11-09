@@ -49,6 +49,7 @@ public class CLIView implements ViewInterface {
 
         reader = LineReaderBuilder.builder().terminal(terminal).completer(completer)
                 .history(history).variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+
         savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter)
                 .variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
 
