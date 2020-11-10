@@ -3,14 +3,21 @@ package mike.cli;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import mike.datastructures.Model;
+import mike.HelperMethods;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
@@ -43,6 +50,11 @@ public class CLIViewTest {
 	System.setErr(origErr);
 	String[] commands = {"sudo", "clear"};
 	cli.evaluateCommand(commands);
+    }
+    
+    private void resetStreams() {
+        out.reset();
+        err.reset();
     }
 	
     //**********************************************************************************************//
@@ -1105,7 +1117,19 @@ public class CLIViewTest {
 
         cli.evaluateCommand(relationships);
         assertTrue("Inheritance relationship between c1 and c3 not found", model.containsRelationship(Type.INHERITANCE, "c1", "c3"));
-
+        
+        // Create relationship wrong length
+        resetStreams();
+        System.out.println("\n"
+        	+ "Error in parsing command. Proper command usage is: \n"
+        	+ "  create relationship <type> <class name1> <class name2>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] createErr = { "create", "relationship", "WRONG" };
+	cli.evaluateCommand(createErr);
+	assertEquals("relationship error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+        
         //recursive relationship
         relationships[2] = "realization";
         relationships[3] = "c2";
@@ -1245,4 +1269,210 @@ public class CLIViewTest {
 
         assertTrue("CLI's model is not empty; CLI's model should be empty.", model.empty());
     }
+    
+    @Test
+    public void helpTest() {
+	String[] help = {"help"};
+	ByteArrayOutputStream out = new ByteArrayOutputStream();
+	ByteArrayOutputStream err = new ByteArrayOutputStream();
+	
+	System.setOut(new PrintStream(out));
+	System.setErr(new PrintStream(err));
+	
+	System.out.println("\n"
+		+ "Here is a list of available commands:\n"
+		+ "  save <name>.json (optional <path>) - Save file to specific path\n"
+		+ "  load <path> - Loads a file at a specific path\n"
+		+ "\n"
+		+ "  create class <name> - create a class with title <name>\n"
+		+ "  create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <type visibility>, type <field type> titled <field name>\n"
+		+ "  create method <class name> <method visibility> <method type> <method name> - create a method in <class name> with visibility <method visibility>, type <method type> titled <method name>\n"
+		+ "  create relationship <type> <class name1> <class name2> - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance)\n"
+		+ "  create parameter <class name> <method> <parameter type> <parameter name> - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>\n"
+		+ "\n"
+		+ "  delete class <name> - delete a class with title <name>\n"
+		+ "  delete field <class name> <field name> - delete field <field name> in class titled <class name>\n"
+		+ "  delete method <class name> <method name> - delete method <method name> in class titled <class name>\n"
+		+ "  delete relationship <type> <class name1> <class name2> - delete a relationship with type <type> (Aggregation, Realization, Composition, Inheritance) between <class name1> and <class name2>\n"
+		+ "  delete parameter <class name> <method name>, <parameter name> - delete a parameter in <class name> for <method name> with  <parameter name>\n"
+		+ "\n"
+		+ "  rename class <name> <newname> - rename class <name> to <new name>\n"
+		+ "  rename field <class name> <field name> <newname> - rename field <field name> to <newname> in class titled <class name>\n"
+		+ "  rename method <class name> <method name> <newname> - rename method <method name> to <newname> in class titled <class name>\n"
+		+ "  rename parameter <class name> <method name> <parameter name> <parameter newname> - rename parameter in <class name> for <method> titled <parameter name> to <parameter newname>\n"
+		+ "\n"
+		+ "  settype field <class name> <field name> <newtype> - set type of field <field name> in <class name> to <type>\n"
+		+ "  settype method <class name> <method name> <newtype> - set type of method <method name> in <class name> to <type>\n"
+		+ "  settype parameter <class name> <method name> <parameter name> <newtype> - set type of parameter <class name> in <method name> titled <parameter name> to <type>\n"
+		+ "\n"
+		+ "  setvis field <class name> <field name> <visibility> - set visibility of field <field name> in <class name> to <visibility>\n"
+		+ "  setvis method <class name> <method name> <visibility> - set visibility of method <method name> in <class name> to <visibility>\n"
+		+ "\n"
+		+ "  list classes - List all existing classes\n"
+		+ "  list relationships - List all existing relationships\n"
+		+ "  list all - List all existing classes and relationships\n"
+		+ "\n"
+		+ "  clear - Clear all classes and relationships\n"
+		+ "  quit - exits the program"
+		+ "\n");
+	String expected = out.toString();
+	out.reset();
+	err.reset();
+        cli.evaluateCommand(help);
+	assertEquals("Initial print all does not equal printout", expected, out.toString());
+    }
+
+    @Test
+    public void saveTest() throws IOException, ParseException {
+	// Test relative Path error length 4
+	System.out.println("\n"
+		+ "Error in parsing command. Proper command usage is: \n"
+		+ "  save <name>.json (optional <path>)\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] saveErr2 = {"save", "testDemoCLI.json", "\\src\\test\\java\\mike", "WRONG"};
+	cli.evaluateCommand(saveErr2);
+	assertEquals("save error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	
+	// Test relative Path error length 3
+	System.out.println("Failed to parse directory. Exiting.");
+	expected = out.toString();
+	resetStreams();
+	String[] saveErr3 = {"save", "\\src\\test\\java\\mike\\testDemoCLI.json", "WRONG"};
+	cli.evaluateCommand(saveErr3);
+	assertEquals("save error message did not appear correctly.", expected, out.toString());
+	
+	// Test relative Path
+	String[] save = {"save", "\\src\\test\\java\\mike\\testDemoCLI.json"};
+	cli.evaluateCommand(save);
+	Path path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
+	saveWorked(path);
+	
+	// Test absolute Path
+	save[1] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+	cli.evaluateCommand(save);
+	path = Paths.get(save[1]);
+	saveWorked(path);
+	
+	// Test giving relative directory
+	String[] saveDir = {"save", "testDemoCLI.json", "\\src\\test\\java\\mike" };
+	cli.evaluateCommand(saveDir);
+	Path pathDir = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
+	saveWorked(pathDir);
+	
+	// Test giving absolute directory
+	saveDir[2] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+	cli.evaluateCommand(saveDir);
+	pathDir = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
+	saveWorked(pathDir);
+	
+    }
+    
+    @Test
+    public void loadTest() throws IOException, ParseException, java.text.ParseException {
+	// Test relative Path error length 3
+	System.out.println("\n"
+		+ "Error in parsing command. Proper command usage is: \n"
+		+ "  load <path>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] loadErr2 = {"load", "testDemo.json", "WRONG"};
+	cli.evaluateCommand(loadErr2);
+	assertEquals("load error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	
+	// Test relative Path error length 2
+	System.out.println("Failed to parse directory. Exiting.");
+	expected = out.toString();
+	resetStreams();
+	String[] loadErr3 = {"load", "\\src\\test\\java\\mike\\testDemo2.json"};
+	cli.evaluateCommand(loadErr3);
+	assertEquals("load error message did not appear correctly.", expected, out.toString());
+	
+	// Test relative Path
+	String[] load = {"load", "\\src\\test\\java\\mike\\testDemoCLI.json"};
+	cli.evaluateCommand(load);
+	Path path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
+	loadWorked(path);
+	
+	// Test absolute Path
+	load[1] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+	cli.evaluateCommand(load);
+	path = Paths.get(load[1]);
+	loadWorked(path);
+	
+    }
+    
+    @Test
+    public void createErr() {
+	System.out.println("\n"
+		+ "Error in parsing command. Proper command usage is: \n"
+		+ "  create class <name>\n"
+		+ "  create field <class name> <field visibility> <field type> <field name>\n"
+		+ "  create method <class name> <method visibility> <method type> <method name>\n"
+		+ "  create relationship <type> <class name1> <class name2>\n"
+		+ "  create parameter <class name> <method> <parameter type> <parameter name>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] createErr2 = {"create"};
+	cli.evaluateCommand(createErr2);
+	assertEquals("load error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	
+	System.out.println("\n"
+		+ "Invalid visibility type. Valid types are public, private, or protected.\n");
+	expected = out.toString();
+	resetStreams();
+	String[] createErr = { "create", "field", "c1", "wrong", "int", "f1" };
+	cli.evaluateCommand(createErr);
+	assertEquals("load error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	
+	System.out.println("\n"
+		+ "Invalid visibility type. Valid types are public, private, or protected.\n");
+	expected = out.toString();
+	resetStreams();
+	createErr[1] = "method";
+	createErr[5] = "m1";
+	cli.evaluateCommand(createErr);
+	assertEquals("load error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	/*
+	System.out.println("\n"
+		+ "Error in parsing command. Proper command usage is: \n"
+		+ "  create class <name>\n"
+		+ "  create field <class name> <field visibility> <field type> <field name>\n"
+		+ "  create method <class name> <method visibility> <method type> <method name>\n"
+		+ "  create relationship <type> <class name1> <class name2>\n"
+		+ "  create parameter <class name> <method> <parameter type> <parameter name>\n");
+	expected = out.toString();
+	resetStreams();
+	String[] createErr3 = { "create", "Error" };
+	cli.evaluateCommand(createErr3);
+	assertEquals("Error message did not appear correctly.", expected, out.toString());
+	resetStreams();
+	*/
+    }
+    
+    private void saveWorked(Path path) throws IOException, ParseException {
+	HelperMethods.save(path, model);
+	File directory = new File(path.toString());
+	Object obj = new JSONParser().parse(new FileReader(directory));
+	
+	String emptyModelFile = "{\"Relationships\":[],\"Classes\":[]}";
+	assertEquals("CLI is null; Should not be null.", emptyModelFile, obj.toString());
+    }
+    
+    private void loadWorked(Path path) throws IOException, ParseException, java.text.ParseException {
+	HelperMethods.save(path, model);
+	Model loadModel = new Model();
+	HelperMethods.load(path, loadModel, null, null);
+	
+	assertEquals("loadModel contains a class.", 0, loadModel.getEntities().size());
+	assertEquals("loadModel contains a relationship.", 0, loadModel.getRelationships().size());
+    }
+    
+    
+    
 }

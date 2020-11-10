@@ -145,7 +145,7 @@ public class editBox {
 	    visTypes.setSelectedItem(e.copyMethod(sectionName).getVisibility().toString().toLowerCase());
 	}
 	JButton xButton = new JButton("X");
-	JLabel Type = new JLabel(sectionType);
+	JTextField Type = new JTextField(sectionType);
 	JTextField Name = new JTextField(sectionName);
 
 	if (parameter) {
