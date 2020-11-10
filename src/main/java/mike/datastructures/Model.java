@@ -134,6 +134,18 @@ public class Model {
         return false;
     }
     
+    public boolean changeFieldType(String targetclass, String targetfield, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeFieldType(targetfield, newType);
+	    }
+	}
+	// Target not found
+	return false;
+    }
+    
     public boolean changeFieldVis(String targetclass, String targetfield, String newVis) {
 	for (Entity e: entities) {
 	    // If target found.
@@ -184,6 +196,18 @@ public class Model {
         }
         // Target not found.
         return false;
+    }
+    
+    public boolean changeMethodType(String targetclass, String targetmethod, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeMethodType(targetmethod, newType);
+	    }
+	}
+	// Target not found
+	return false;
     }
     
     public boolean changeMethodVis(String targetclass, String targetmethod, String newVis) {
@@ -264,6 +288,18 @@ public class Model {
         }
         // Target not found.
         return false;
+    }
+    
+    public boolean changeParameterType(String targetclass, String method, String targetparameter, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeParameterType(method, targetparameter, newType);
+	    }
+	}
+	// Target not found
+	return false;
     }
 
     public boolean deleteParameter(String className, String method, String name){

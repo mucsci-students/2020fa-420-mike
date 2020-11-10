@@ -60,6 +60,19 @@ public class Method extends Formal{
         // Target not found.
         return false;
     }
+    
+    public boolean changeParameterType(String name, String newType){
+        for (Parameter p : parameters) {
+            // If target found.
+            if (p.getName().equals(name)) {
+                //rename parameter type.
+                p.setType(newType);
+                return true;
+            }
+        }
+        // Target not found.
+        return false;
+    }
 
     public boolean deleteParameter(String name){
         return parameters.remove(new Parameter(name, "int"));
