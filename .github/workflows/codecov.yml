@@ -1,0 +1,10 @@
+name: Code Coverage with Gradle
+
+on: [ push, pull_request ]
+
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  status:
+    patch: off
