@@ -33,8 +33,8 @@ public class Entity {
 		name = copyEntity.name;
 		fields = new ArrayList<Field>();
 		methods = new ArrayList<Method>();
-		xLocation = 0;
-		yLocation = 0;
+		xLocation = copyEntity.xLocation;
+		yLocation = copyEntity.yLocation;
 		
 		for(Field f : copyEntity.getFields()) {
 		    this.fields.add(f);
