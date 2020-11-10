@@ -88,6 +88,17 @@ public class TabCompleter {
                         )
                 );
 
+                //add completer for settype
+                completers.add(
+                        new ArgumentCompleter(
+                                new StringsCompleter("settype"),
+                                new StringsCompleter("field"),
+                                new StringsCompleter(className),
+                                new StringsCompleter(f.getName()),
+                                new NullCompleter()
+                        )
+                );
+
                 // add completers that deal with fields
                 completers.add(
                         new ArgumentCompleter(
@@ -116,6 +127,17 @@ public class TabCompleter {
                         )
                 );
 
+                //add completer for settype
+                completers.add(
+                        new ArgumentCompleter(
+                                new StringsCompleter("settype"),
+                                new StringsCompleter("method"),
+                                new StringsCompleter(className),
+                                new StringsCompleter(m.getName()),
+                                new NullCompleter()
+                        )
+                );
+
                 // add completers for methods
                 completers.add(
                         new ArgumentCompleter(
@@ -138,11 +160,23 @@ public class TabCompleter {
                         )
                 );
 
-                // add completer for method's parameters
+                //get parameters for completer
                 ArrayList<String> parameters = new ArrayList<>();
                 for (Parameter p : m.getParameters()) {
                     parameters.add(p.getName());
+                    //add completer for settype
+                    completers.add(
+                            new ArgumentCompleter(
+                                    new StringsCompleter("settype"),
+                                    new StringsCompleter("parameter"),
+                                    new StringsCompleter(className),
+                                    new StringsCompleter(m.getName()),
+                                    new StringsCompleter(p.getName()),
+                                    new NullCompleter()
+                            )
+                    );
                 }
+                // add completer for method's parameters
                 completers.add(
                         new ArgumentCompleter(
                                 new StringsCompleter("rename", "delete"),
