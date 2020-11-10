@@ -1335,14 +1335,6 @@ public class CLIViewTest {
 	assertEquals("save error message did not appear correctly.", expected, out.toString());
 	resetStreams();
 	
-	// Test relative Path error length 3
-	System.out.println("Failed to parse directory. Exiting.");
-	expected = out.toString();
-	resetStreams();
-	String[] saveErr3 = {"save", "\\src\\test\\java\\mike\\testDemoCLI.json", "WRONG"};
-	cli.evaluateCommand(saveErr3);
-	assertEquals("save error message did not appear correctly.", expected, out.toString());
-	
 	// Test relative Path
 	String[] save = {"save", "\\src\\test\\java\\mike\\testDemoCLI.json"};
 	cli.evaluateCommand(save);
