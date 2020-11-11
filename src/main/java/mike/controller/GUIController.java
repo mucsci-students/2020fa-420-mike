@@ -18,22 +18,12 @@ public class GUIController extends ControllerType {
     GUIView view;
     private boolean changed;
     private Path path;
-    private ControllerType control;
     private JLabel inClass;
 
     public GUIController(Model model, ViewTemplate view) {
 	super();
 	this.model = model;
 	this.view = (GUIView) view.getViewinterface();
-
-	JMenuBar menubar = ((GUIView) view).getMenuBar();
-	SaveController.saveListener((JButton) menubar.getComponent(0), this);
-	SaveController.saveAsListener((JButton) menubar.getComponent(1), this);
-	LoadController.loadListener((JButton) menubar.getComponent(2), this);
-	FrameController.addClassListener((JButton) menubar.getComponent(3), this);
-	ClassController.editModeListener((JButton) menubar.getComponent(4), this);
-	FrameController.exitListener(this.view, this);
-	FrameController.resizeListener(this.view);
     }
 
     public void classControls(JLabel box, Entity e) {
@@ -51,7 +41,14 @@ public class GUIController extends ControllerType {
     }
 
     public void init() {
-	control.init();
+	JMenuBar menubar = ((GUIView) view).getMenuBar();
+	SaveController.saveListener((JButton) menubar.getComponent(0), this);
+	SaveController.saveAsListener((JButton) menubar.getComponent(1), this);
+	LoadController.loadListener((JButton) menubar.getComponent(2), this);
+	FrameController.addClassListener((JButton) menubar.getComponent(3), this);
+	ClassController.editModeListener((JButton) menubar.getComponent(4), this);
+	FrameController.exitListener(this.view, this);
+	FrameController.resizeListener(this.view);
     }
 
     public void createField(JPanel panel) {
