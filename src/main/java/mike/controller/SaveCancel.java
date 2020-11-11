@@ -40,29 +40,35 @@ public class SaveCancel {
 		for (int x = 0; x < fieldSize; ++x) {
 		    JPanel panelField = (JPanel) newBox.getComponent(x + 3);
 		    String textField = ((JTextField) panelField.getComponent(3)).getText();
+		    String typeField = ((JTextField) panelField.getComponent(2)).getText();
 		    String visType = ((JComboBox<String>) panelField.getComponent(1)).getSelectedItem().toString();
 		    String fieldName = entity.getFields().get(x).getName();
 
 		    model.renameField(eName, fieldName, textField);
+		    model.changeFieldType(eName, fieldName, typeField);
 		    model.changeFieldVis(eName, fieldName, visType);
 		}
 
 		for (int x = fieldSize + 5; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
 		    JPanel panelMethod = (JPanel) newBox.getComponent(x);
 		    String textMethod = ((JTextField) panelMethod.getComponent(3)).getText();
+		    String typeMethod = ((JTextField) panelMethod.getComponent(2)).getText();
 		    String visType = ((JComboBox<String>) panelMethod.getComponent(1)).getSelectedItem().toString();
 
 		    Method m = entity.getMethods().get(methodNum);
 		    paramSize = m.getParameters().size();
 
 		    model.renameMethod(eName, m.getName(), textMethod);
+		    model.changeMethodType(eName, m.getName(), typeMethod);
 		    model.changeMethodVis(eName, m.getName(), visType);
 
 		    for (int y = 0; y < paramSize; ++y) {
 			JPanel panelParam = (JPanel) newBox.getComponent(x + y + 1);
+			String typeParam = ((JTextField) panelParam.getComponent(2)).getText();
 			String textParam = ((JTextField) panelParam.getComponent(3)).getText();
 
-			model.renameParameter(eName, m.getName(), m.getParameters().get(y).getName(), textParam);
+			m.renameParameter(m.getParameters().get(y).getName(), textParam);
+			m.changeParameterType(textParam, typeParam);
 		    }
 		}
 
