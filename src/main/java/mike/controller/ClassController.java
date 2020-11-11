@@ -33,7 +33,7 @@ public class ClassController {
     private static int x_pressed = 0;
     private static int y_pressed = 0;
 
-    protected static void addRelationListener(JButton addRelation, Controller control) {
+    protected static void addRelationListener(JButton addRelation, GUIController control) {
 	addRelation.addMouseListener(new MouseAdapter() {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
@@ -48,7 +48,7 @@ public class ClassController {
 	});
     }
 
-    protected static void deleteRelationListener(JButton deleteRelation, Controller control) {
+    protected static void deleteRelationListener(JButton deleteRelation, GUIController control) {
 	deleteRelation.addMouseListener(new MouseAdapter() {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
@@ -58,7 +58,7 @@ public class ClassController {
 	});
     }
 
-    protected static void clickClass(JLabel newview, Controller control) {
+    protected static void clickClass(JLabel newview, GUIController control) {
 	newview.addMouseListener(new MouseAdapter() {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
@@ -100,7 +100,7 @@ public class ClassController {
 	});
     }
 
-    protected static void editModeListener(JButton editButton, Controller control) {
+    protected static void editModeListener(JButton editButton, GUIController control) {
 	editButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		GUIView view = (GUIView) control.getView();

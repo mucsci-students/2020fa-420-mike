@@ -23,7 +23,7 @@ import mike.view.GUIView;
 
 public class SaveCancel {
 
-    protected static void saveClass(JButton saveButton, Controller control) {
+    protected static void saveClass(JButton saveButton, GUIController control) {
 	saveButton.addActionListener(new ActionListener() {
 	    @SuppressWarnings("unchecked")
 	    public void actionPerformed(ActionEvent e) {
@@ -79,7 +79,7 @@ public class SaveCancel {
 	});
     }
 
-    protected static void cancelClass(JButton cancelButton, Controller control, Model backup) {
+    protected static void cancelClass(JButton cancelButton, GUIController control, Model backup) {
 	cancelButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		GUIView view = entering (control);
@@ -100,7 +100,7 @@ public class SaveCancel {
 	});
     }
 
-    protected static void deleteEntity(JButton deletion, Controller control) {
+    protected static void deleteEntity(JButton deletion, GUIController control) {
 	deletion.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		int n = JOptionPane.showConfirmDialog(((GUIView) control.getView()).getFrame(),
@@ -116,7 +116,7 @@ public class SaveCancel {
 	});
     }
 
-    private static GUIView entering(Controller control) {
+    private static GUIView entering(GUIController control) {
 	GUIView view = (GUIView) control.getView();
 	JMenuBar menuBar = view.getMenuBar();
 	menuBar.getComponent(4).setBackground(Color.RED);
@@ -125,7 +125,7 @@ public class SaveCancel {
 	return view;
     }
     
-    private static void exiting(JMenuBar menuBar, Controller control, JFrame frame) {
+    private static void exiting(JMenuBar menuBar, GUIController control, JFrame frame) {
 	control.setinClass(null);
 	editBox.setBox(null);
 	menuBar.remove(6);

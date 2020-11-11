@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -9,13 +9,14 @@ import org.jline.reader.MaskingCallback;
 
 import mike.HelperMethods;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 
 public class MiscCommand extends CommandObj {
 
     private static LineReader savePromptReader;
 
-    public MiscCommand(Model m, String[] com, boolean p, LineReader reader) {
-	super(m, com, p);
+    public MiscCommand(Model m, CLIView v, String[] com, boolean p, LineReader reader) {
+	super(m, v, com, p);
 	prompt = p;
 	savePromptReader = reader;
     }
@@ -37,7 +38,7 @@ public class MiscCommand extends CommandObj {
 	    return prompt;
 	case "clear":
 	    if (commands.length != 1) {
-		System.out.println(errorMessage + commandUsage[24] + "\n");
+		view.printError(errorMessage + commandUsage[24] + "\n");
 		return prompt;
 	    } else if (!model.empty()) {
 		System.out.println("\nAre you sure you want to delete everything?");

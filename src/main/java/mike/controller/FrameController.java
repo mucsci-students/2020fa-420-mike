@@ -24,7 +24,7 @@ import mike.view.ViewTemplate;
 
 public class FrameController {
 	
-	protected static void exitListener(ViewTemplate view, Controller control) throws HeadlessException {	
+	protected static void exitListener(ViewTemplate view, GUIController control) throws HeadlessException {	
 	    ((GUIView) view).getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	    ((GUIView) view).getFrame().addWindowListener(new WindowAdapter()
 	    {
@@ -49,7 +49,7 @@ public class FrameController {
 	    });
 	}
 	
-	protected static void addClassListener(JButton addClass, Controller control) {
+	protected static void addClassListener(JButton addClass, GUIController control) {
 		addClass.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)

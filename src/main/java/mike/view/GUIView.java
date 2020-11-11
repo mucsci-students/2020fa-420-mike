@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 
-import mike.controller.Controller;
+import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.gui.Line;
 import mike.gui.editBox;
@@ -26,7 +26,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private JFrame frame = new JFrame("Team mike UML Editor");
     private JMenuBar menuBar = new JMenuBar();
 
-    public GUIView(Model model) {
+    public GUIView() {
 	super();
 
 	// Creating the menu bar and its options
@@ -75,7 +75,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.repaint();
     }
     
-    public htmlBox showClass(Entity entity, Controller control) {
+    public htmlBox showClass(Entity entity, GUIController control) {
 	htmlBox newview = new htmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
 	entitylabels.put(entity.getName(), newview.getBox());
@@ -151,7 +151,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.validate();
     }
 
-    public JLabel htmlBoxToEditBox(JLabel label, Controller control, Model model) {
+    public JLabel htmlBoxToEditBox(JLabel label, GUIController control, Model model) {
 	pane.remove(label);
 
 	new editBox(label, control, model, this);
@@ -162,7 +162,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	return editBox.getBox();
     }
 
-    public void exitEditingClass(JLabel inClass, Controller control, Model model) {
+    public void exitEditingClass(JLabel inClass, GUIController control, Model model) {
 	pane.remove(inClass);
 	Entity e = model.copyEntity(inClass.getName());
 

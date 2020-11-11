@@ -18,7 +18,7 @@ import mike.view.GUIView;
 public class SaveController {
 
     // Listen to any function calls
-    protected static void saveListener(JButton save, Controller control) {
+    protected static void saveListener(JButton save, GUIController control) {
 	save.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		try {
@@ -35,7 +35,7 @@ public class SaveController {
 	});
     }
 
-    protected static void saveAsListener(JButton saveAs, Controller control) {
+    protected static void saveAsListener(JButton saveAs, GUIController control) {
 	saveAs.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		saveWithInput(control);
@@ -43,7 +43,7 @@ public class SaveController {
 	});
     }
 
-    private static void saveWithInput(Controller control) {
+    private static void saveWithInput(GUIController control) {
 	try {
 	    JTextField fileName = new JTextField(20);
 	    JTextField directory = new JTextField(40);

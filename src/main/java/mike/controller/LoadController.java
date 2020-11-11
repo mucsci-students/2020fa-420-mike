@@ -19,7 +19,7 @@ import mike.view.GUIView;
 public class LoadController {
 
 	// Listen to any function calls
-	protected static void loadListener(JButton load, Controller control) {
+	protected static void loadListener(JButton load, GUIController control) {
 		load.addActionListener(new ActionListener()
 		{
 		  public void actionPerformed(ActionEvent e)

@@ -9,7 +9,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import mike.controller.Controller;
+import mike.controller.GUIController;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
@@ -19,7 +19,7 @@ public class htmlBox {
 	
 	private JLabel newBox;
 	
-	public htmlBox (Entity entity, Controller control) {
+	public htmlBox (Entity entity, GUIController control) {
 		// Create JLabel and basic settings
 		this.newBox = new JLabel(entityToHTML(entity));
 		newBox.setName(entity.getName());

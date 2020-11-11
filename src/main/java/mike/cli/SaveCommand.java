@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,11 +7,12 @@ import java.nio.file.Paths;
 
 import mike.HelperMethods;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 
 public class SaveCommand extends CommandObj {
     
-    public SaveCommand(Model m, String[] com, boolean p) {
-	super(m, com, p);
+    public SaveCommand(Model m, CLIView v, String[] com, boolean p) {
+	super(m, v, com, p);
     }
 
     public boolean execute() {
@@ -27,7 +28,7 @@ public class SaveCommand extends CommandObj {
 		HelperMethods.save(path, model);
 		System.out.println("File saved at: " + path.toString());
 	    } catch (IOException e) {
-		System.out.println("Failed to parse directory. Exiting.");
+		view.printError("Failed to parse directory. Exiting.");
 		return prompt;
 	    }
 	} else if (commands.length == 3) {
@@ -42,11 +43,11 @@ public class SaveCommand extends CommandObj {
 		HelperMethods.save(path, model);
 		System.out.println("File saved at: " + path.toString());
 	    } catch (IOException e) {
-		System.out.println("Failed to parse directory. Exiting.");
+		view.printError("Failed to parse directory. Exiting.");
 		return prompt;
 	    }
 	} else {
-	    System.out.println(errorMessage + commandUsage[0] + "\n");
+	    view.printError(errorMessage + commandUsage[0] + "\n");
 	    return prompt;
 	}
 	return false;

@@ -2,8 +2,6 @@ package mike.view;
 
 import java.io.IOException;
 
-import mike.datastructures.Model;
-
 public class ViewTemplate {
 
     public enum InterfaceType {
@@ -16,13 +14,13 @@ public class ViewTemplate {
     public ViewTemplate() {
     }
 
-    public ViewTemplate(InterfaceType newtype, Model model) throws IOException {
+    public ViewTemplate(InterfaceType newtype) throws IOException {
 	viewtype = newtype;
 
 	if (viewtype.equals(InterfaceType.GUI)) {
-	    setViewinterface(new GUIView(model));
+	    setViewinterface(new GUIView());
 	} else {
-	    setViewinterface(new CLIView(model));
+	    setViewinterface(new CLIView());
 	}
     }
 

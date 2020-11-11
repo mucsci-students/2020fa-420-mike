@@ -19,7 +19,7 @@ import mike.view.GUIView;
 public class CreateDeleteController {
 
     @SuppressWarnings("unchecked")
-    protected static void createFunction(JPanel panel, Controller control, String attribute, String methodName) {
+    protected static void createFunction(JPanel panel, GUIController control, String attribute, String methodName) {
 	JButton creation = (JButton) panel.getComponent(3);
 	creation.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
@@ -65,7 +65,7 @@ public class CreateDeleteController {
 	});
     }
 
-    protected static void deleteFunction(JPanel panel, Controller control, String attribute, String methodName) {
+    protected static void deleteFunction(JPanel panel, GUIController control, String attribute, String methodName) {
 	JButton deletion;
 	if (attribute.equals("parameter")) {
 	    deletion = (JButton) panel.getComponent(1);
@@ -102,7 +102,7 @@ public class CreateDeleteController {
 	});
     }
 
-    private static void ending(Controller control, JLabel newview, Entity entity) {
+    private static void ending(GUIController control, JLabel newview, Entity entity) {
 	Dimension dim = newview.getLayout().preferredLayoutSize(newview);
 	newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
 	((GUIView) control.getView()).validateRepaint();
