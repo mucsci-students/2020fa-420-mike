@@ -14,16 +14,16 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import cli.CreateCommand;
-import cli.DeleteCommand;
-import cli.ListCommand;
-import cli.LoadCommand;
-import cli.MiscCommand;
-import cli.RenameCommand;
-import cli.SaveCommand;
-import cli.SettypeCommand;
-import cli.SetvisCommand;
-import cli.TabCompleter;
+import mike.cli.CreateCommand;
+import mike.cli.DeleteCommand;
+import mike.cli.ListCommand;
+import mike.cli.LoadCommand;
+import mike.cli.MiscCommand;
+import mike.cli.RenameCommand;
+import mike.cli.SaveCommand;
+import mike.cli.SettypeCommand;
+import mike.cli.SetvisCommand;
+import mike.cli.TabCompleter;
 
 public class CLIView implements ViewInterface {
     private Model classes;
