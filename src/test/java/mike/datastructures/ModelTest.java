@@ -385,6 +385,22 @@ public class ModelTest {
         assertEquals("Field list size is still 2", 2, model.getEntities().get(0).getFields().size());
     }
     
+    /** test changeFieldType
+     * 
+     */
+    @Test
+    public void testChangeFieldType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createField("c", "f1", "int", "PUBLIC");
+	model.changeFieldType("c", "f1", "String");
+	
+	assertEquals("Field f1 should have type of String", "String", model.copyEntity("c").copyField("f1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeFieldType("c2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid field", model.changeFieldType("c", "f2", "int"));
+    }
+    
     /** test changeFieldVis
      * 
      */
@@ -460,6 +476,22 @@ public class ModelTest {
         assertEquals("Methods list size is still 2", 2, model.getEntities().get(0).getMethods().size());
     }
     
+    /** test changeMethodType
+     * 
+     */
+    @Test
+    public void testChangeMethodType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c", "m1", "int", "PUBLIC");
+	model.changeMethodType("c", "m1", "String");
+	
+	assertEquals("Method m1 should have type of String", "String", model.copyEntity("c").copyMethod("m1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeMethodType("c2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid method", model.changeMethodType("c", "m2", "int"));
+    }
+    
     /** test changeMethodVis
      * 
      */
@@ -492,6 +524,25 @@ public class ModelTest {
         assertTrue("Deleted method 'a'", model.deleteMethod("e", "a"));
         assertFalse("Methods list no longer contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("Methods list size is 1", 1, model.getEntities().get(0).getMethods().size());
+    }
+    
+    
+    /** test changeParameterType
+     * 
+     */
+    @Test
+    public void testChangeParameterType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c",  "m1", "int", "PRIVATE");
+	model.createParameter("c", "m1", "p1", "int");
+	model.changeParameterType("c", "m1", "p1", "String");
+	
+	assertEquals("Parameter p1 should have type of String", "String", model.copyEntity("c").copyMethod("m1").copyParameter("p1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeParameterType("c2", "m1", "f1", "int"));
+	assertFalse("False when changing type with a non-valid method", model.changeParameterType("c", "m2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid parameter", model.changeParameterType("c", "m1", "f2", "int"));
     }
 
     /* ------------------------------------------------------------------------------ */
