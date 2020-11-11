@@ -1,5 +1,6 @@
 package mike.controller;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import javax.swing.JLabel;
@@ -10,7 +11,10 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.MaskingCallback;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.completer.AggregateCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import mike.cli.CreateCommand;
 import mike.cli.DeleteCommand;
@@ -36,10 +40,27 @@ public class CLIController extends ControllerType {
     private LineReader savePromptReader;
     private LineReader reader;
 
-    public CLIController(Model model, ViewTemplate view) {
+    public CLIController(Model model, ViewTemplate view) throws IOException {
 	super();
 	this.model = model;
 	this.view = (CLIView) view.getViewinterface();
+
+	terminal = TerminalBuilder.builder().system(true).build();
+
+	AggregateCompleter completer = new TabCompleter().updateCompleter(model);
+
+	StringsCompleter savePromptCompleter = new StringsCompleter("yes", "no");
+
+	history = new DefaultHistory();
+
+	parser = new DefaultParser();
+	parser.setEscapeChars(new char[] {});
+
+	reader = LineReaderBuilder.builder().terminal(terminal).completer(completer).history(history)
+		.variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
+
+	savePromptReader = LineReaderBuilder.builder().terminal(terminal).completer(savePromptCompleter)
+		.variable(LineReader.MENU_COMPLETE, true).parser(parser).build();
     }
 
     public void init() {
