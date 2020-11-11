@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import mike.datastructures.Model;
 import mike.datastructures.Entity.visibility;
@@ -82,7 +82,7 @@ public class CreateCommand extends CommandObj {
 	}
 	return prompt;
     }
-    
+
     // Return enum type that user requested, null if invalid
     private static Type checkEnum(String command) {
 	switch (command) {

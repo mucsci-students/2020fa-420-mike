@@ -1,9 +1,9 @@
-package cli;
+package mike.cli;
 
 import mike.datastructures.Model;
 
 public abstract class CommandObj {
-    
+
     protected Model model;
     protected String[] commands;
     protected String errorMessage = "\nError in parsing command. Proper command usage is: ";
@@ -16,7 +16,7 @@ public abstract class CommandObj {
 	commandUsage = getCommandUsage();
 	prompt = p;
     }
-    
+
     private static String[] getCommandUsage() {
 	String[] commandUsage = { "\n  save <name>.json (optional <path>)", "\n  load <path>",
 		"\n  create class <name>", "\n  create field <class name> <field visibility> <field type> <field name>",
@@ -38,6 +38,6 @@ public abstract class CommandObj {
 		"\n  list relationships", "\n  list all", "\n  clear" };
 	return commandUsage;
     }
-    
+
     protected abstract boolean execute();
 }

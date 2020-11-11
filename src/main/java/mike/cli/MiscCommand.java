@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.nio.file.Path;

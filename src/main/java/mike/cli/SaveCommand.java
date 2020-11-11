@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import mike.HelperMethods;
 import mike.datastructures.Model;
 
 public class SaveCommand extends CommandObj {
-    
+
     public SaveCommand(Model m, String[] com, boolean p) {
 	super(m, com, p);
     }

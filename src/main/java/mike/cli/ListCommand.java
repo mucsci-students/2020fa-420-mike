@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import mike.HelperMethods;
 import mike.datastructures.Model;

@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -13,7 +13,7 @@ import mike.datastructures.Model;
 public class LoadCommand extends CommandObj {
 
     private static LineReader savePromptReader;
-    
+
     public LoadCommand(Model m, String[] com, boolean p, LineReader reader) {
 	super(m, com, p);
 	savePromptReader = reader;

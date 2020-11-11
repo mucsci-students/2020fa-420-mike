@@ -1,10 +1,10 @@
-package cli;
+package mike.cli;
 
 import mike.datastructures.Model;
 import mike.datastructures.Relationship.Type;
 
 public class DeleteCommand extends CommandObj {
-    
+
     public DeleteCommand(Model m, String[] com, boolean p) {
 	super(m, com, p);
     }
