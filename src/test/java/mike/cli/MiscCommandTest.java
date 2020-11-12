@@ -72,7 +72,7 @@ public class MiscCommandTest {
 	CreateCommand create = new CreateCommand(model, view, commands, prompt);
 	prompt = create.execute();
     }
-
+    
     @Test
     public void helpTest() {
 	String[] help = { "help" };
