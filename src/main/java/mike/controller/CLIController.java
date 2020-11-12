@@ -1,9 +1,7 @@
 package mike.controller;
 
 import java.io.IOException;
-import java.nio.file.Path;
-
-import javax.swing.JLabel;
+import java.util.ArrayList;
 
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
@@ -26,24 +24,30 @@ import mike.cli.SaveCommand;
 import mike.cli.SettypeCommand;
 import mike.cli.SetvisCommand;
 import mike.cli.TabCompleter;
+import mike.datastructures.Memento;
 import mike.datastructures.Model;
 import mike.view.CLIView;
 import mike.view.ViewTemplate;
 
 public class CLIController extends ControllerType {
-    Model model;
-    CLIView view;
+    private Model model;
+    private CLIView view;
     private boolean prompt;
     private Terminal terminal;
     private History history;
     private DefaultParser parser;
     private LineReader savePromptReader;
     private LineReader reader;
+    private ArrayList<Memento> mementos;
+    protected int currMeme;
 
     public CLIController(Model model, ViewTemplate view) throws IOException {
 	super();
 	this.model = model;
 	this.view = (CLIView) view.getViewinterface();
+	currMeme = 0;
+	mementos = new ArrayList<Memento>();
+	mementos.add(new Memento(this.model));
 
 	terminal = TerminalBuilder.builder().system(true).build();
 
@@ -86,6 +90,7 @@ public class CLIController extends ControllerType {
     }
 
     public void evaluateCommand(String[] commands) {
+	Memento meme = new Memento(new Model(this.model));
 	switch (commands[0]) {
 	case "quit":
 	    MiscCommand quit = new MiscCommand(model, view, commands, prompt, savePromptReader);
@@ -103,33 +108,39 @@ public class CLIController extends ControllerType {
 	    break;
 	// Call load given a directory+filename
 	case "load":
-	    LoadCommand load = new LoadCommand(model, view, commands, prompt, savePromptReader);
+	    LoadCommand load = new LoadCommand(meme.getModel(), view, commands, prompt, savePromptReader);
 	    prompt = load.execute();
+	    newMeme(meme);
 	    break;
 	// Call create class, field, method, or relationship based on length and user
 	// input
 	case "create":
-	    CreateCommand create = new CreateCommand(model, view, commands, prompt);
+	    CreateCommand create = new CreateCommand(meme.getModel(), view, commands, prompt);
 	    prompt = create.execute();
+	    newMeme(meme);
 	    break;
 	// Call delete class, field, method, or relationship based on length and user
 	// input
 	case "delete":
-	    DeleteCommand delete = new DeleteCommand(model, view, commands, prompt);
+	    DeleteCommand delete = new DeleteCommand(meme.getModel(), view, commands, prompt);
 	    prompt = delete.execute();
+	    newMeme(meme);
 	    break;
 	// Call rename class, field, or method depending on user input and length
 	case "rename":
-	    RenameCommand rename = new RenameCommand(model, view, commands, prompt);
+	    RenameCommand rename = new RenameCommand(meme.getModel(), view, commands, prompt);
 	    prompt = rename.execute();
+	    newMeme(meme);
 	    break;
 	case "settype":
-	    SettypeCommand settype = new SettypeCommand(model, view, commands, prompt);
+	    SettypeCommand settype = new SettypeCommand(meme.getModel(), view, commands, prompt);
 	    prompt = settype.execute();
+	    newMeme(meme);
 	    break;
 	case "setvis":
-	    SetvisCommand setvis = new SetvisCommand(model, view, commands, prompt);
+	    SetvisCommand setvis = new SetvisCommand(meme.getModel(), view, commands, prompt);
 	    prompt = setvis.execute();
+	    newMeme(meme);
 	    break;
 	// Call list class or relationship based on length and user input
 	case "list":
@@ -138,8 +149,9 @@ public class CLIController extends ControllerType {
 	    break;
 	// Calls clear
 	case "clear":
-	    MiscCommand clear = new MiscCommand(model, view, commands, prompt, savePromptReader);
+	    MiscCommand clear = new MiscCommand(meme.getModel(), view, commands, prompt, savePromptReader);
 	    prompt = clear.execute();
+	    newMeme(meme);
 	    break;
 	// Mostly for testing. Undocumented addition to allow for doing things without
 	// prompting.
@@ -148,9 +160,51 @@ public class CLIController extends ControllerType {
 	    prompt = sudo.execute();
 	    break;
 	// Proper command not detected, print an error
+	case "undo":
+	    undo();
+	    break;
+	case "redo":
+	    redo();
+	    break;
 	default:
 	    view.printInvalidCommand();
 	}
+    }
+
+    private void undo() {
+	if (currMeme > 0) {
+	    --currMeme;
+	    this.model = mementos.get(currMeme).getModel();
+	    prompt = true;
+	} else {
+	    System.out.println("No actions to undo.");
+
+	}
+    }
+
+    private void redo() {
+	if (currMeme < mementos.size() - 1) {
+	    ++currMeme;
+	    this.model = mementos.get(currMeme).getModel();
+	    prompt = true;
+	} else {
+	    System.out.println("No actions to redo.");
+	}
+    }
+
+    private void truncateMemes() {
+	if (currMeme < mementos.size() - 1) {
+	    for (int i = mementos.size() - 1; i > currMeme; --i) {
+		mementos.remove(i);
+	    }
+	}
+    }
+
+    private void newMeme(Memento meme) {
+	truncateMemes();
+	mementos.add(meme);
+	this.model = meme.getModel();
+	++currMeme;
     }
 
     public Model getModel() {

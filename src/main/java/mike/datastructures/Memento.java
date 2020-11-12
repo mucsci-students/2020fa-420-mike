@@ -1,4 +1,4 @@
-package mike;
+package mike.datastructures;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,32 +7,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.json.simple.parser.JSONParser;
 
-import mike.controller.ControllerType;
-import mike.controller.GUIController;
-import mike.datastructures.*;
-import mike.datastructures.Relationship.Type;
-import mike.view.GUIView;
-import mike.view.ViewTemplate;
-
-import java.util.ArrayList;
-
-import javax.swing.JLabel;
+import mike.HelperMethods;
 
 @SuppressWarnings("unchecked")
-public class HelperMethods {
+public class Memento {
+    private Model m;
 
-    // Main load function. Calls loadClasses and loadRelationships
-    public static void load(Path userPath, Model userClasses, ControllerType control, ViewTemplate view)
+    public Memento() {
+    }
+
+    public Memento(Model m) {
+	set(m);
+    }
+
+    public void set(Model m) {
+	this.m = m;
+    }
+
+    public Model getModel() {
+	return this.m;
+    }
+
+    public void load(Path path)
 	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
-	userClasses.clear();
+	m.clear();
 
-	File directory = new File(userPath.toString());
+	File directory = new File(path.toString());
 
 	// Parse the JSON file and get an array of the classes
 	Object obj = new JSONParser().parse(new FileReader(directory));
@@ -42,19 +49,16 @@ public class HelperMethods {
 	JSONArray list = (JSONArray) javaObj.get("Classes");
 	ArrayList<JSONObject> objList = new ArrayList<JSONObject>();
 
-	loadClasses(userClasses, javaObj, list, objList, (GUIController)control, view);
+	loadClasses(javaObj, list, objList);
 
 	// Clear out variables for reuse
 	list = (JSONArray) javaObj.get("Relationships");
 	objList.clear();
 
-	loadRelationships(userClasses, javaObj, list, objList, view);
+	loadRelationships(javaObj, list, objList);
     }
 
-    // Takes all of the information from the classes in the JSON file,
-    // and inserts them to the currently running program
-    private static void loadClasses(Model userClasses, JSONObject javaObj, JSONArray list,
-	    ArrayList<JSONObject> objList, ControllerType control, ViewTemplate view) {
+    private void loadClasses(JSONObject javaObj, JSONArray list, ArrayList<JSONObject> objList) {
 	// Add class names and attributes from JSONArray list to loadFile
 	for (int x = 0; x < list.size(); ++x) {
 	    // Get class from JSONArray list, add to ArrayList objList (type conversions)
@@ -63,7 +67,7 @@ public class HelperMethods {
 
 	    // Extract name of class, add to loadFile
 	    String className = (String) objList.get(x).get("className");
-	    userClasses.createClass(className);
+	    m.createClass(className);
 
 	    // Extract all fields of associated class, add to loadFile
 	    JSONArray classFields = (JSONArray) objList.get(x).get("fields");
@@ -73,7 +77,7 @@ public class HelperMethods {
 		String fieldType = field.get("fieldType").toString();
 		String fieldVis = field.get("fieldVis").toString();
 
-		userClasses.createField(className, fieldName, fieldType, fieldVis);
+		m.createField(className, fieldName, fieldType, fieldVis);
 	    }
 
 	    // Extract all methods of associated class, add to loadFile
@@ -84,39 +88,26 @@ public class HelperMethods {
 		String methodType = method.get("methodType").toString();
 		String methodVis = method.get("methodVis").toString();
 
-		userClasses.createMethod(className, methodName, methodType, methodVis);
+		m.createMethod(className, methodName, methodType, methodVis);
 		JSONArray methodParam = (JSONArray) method.get("Parameters");
 		for (int z = 0; z < methodParam.size(); ++z) {
 		    JSONObject param = (JSONObject) methodParam.get(z);
 		    String paramName = param.get("paramName").toString();
 		    String paramType = param.get("paramType").toString();
 
-		    userClasses.createParameter(className, methodName, paramName, paramType);
+		    m.createParameter(className, methodName, paramName, paramType);
 		}
 	    }
 	    // Extract name of class, add to loadFile
-	    Entity e = userClasses.getEntities().get(x);
+	    Entity e = m.getEntities().get(x);
 	    Long location = (Long) objList.get(x).get("xPosition");
 	    e.setXLocation(Math.toIntExact(location));
 	    location = (Long) objList.get(x).get("yPosition");
 	    e.setYLocation(Math.toIntExact(location));
-	    if (ViewTemplate.isGUI()) {
-		((GUIView) view).showClass(e, (GUIController)control);
-	    }
 	}
-	if (ViewTemplate.isGUI()) {
-	    for (Entity curEntity : userClasses.getEntities()) {
-		JLabel curLabel = ((GUIView) view).getEntityLabels().get(curEntity.getName());
-		curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
-	    }
-	}
-
     }
 
-    // Takes all of the information from the relationships in the JSON file,
-    // and inserts them into the currently running program
-    private static void loadRelationships(Model userClasses, JSONObject javaObj, JSONArray list,
-	    ArrayList<JSONObject> objList, ViewTemplate view) {
+    private void loadRelationships(JSONObject javaObj, JSONArray list, ArrayList<JSONObject> objList) {
 	// Add relationship and class names from JSONArray list to loadFile
 	for (int x = 0; x < list.size(); ++x) {
 
@@ -129,30 +120,24 @@ public class HelperMethods {
 	    String relationName = (String) objList.get(x).get("relationName");
 	    String classOne = (String) objList.get(x).get("ClassOne");
 	    String classTwo = (String) objList.get(x).get("ClassTwo");
-	    userClasses.createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo);
-	    if (ViewTemplate.isGUI()) {
-		((GUIView) view).createRelationship(checkEnum(relationName.toUpperCase()), classOne, classTwo,
-			userClasses);
-	    }
+	    m.createRelationship(HelperMethods.checkEnum(relationName.toUpperCase()), classOne, classTwo);
 
 	}
     }
 
-    // Main save function. Calls saveClasses and saveRelationships
-    public static void save(Path directory, Model userClasses) throws IOException {
+    public void save(Path directory) throws IOException {
 	JSONObject saveFile = new JSONObject();
 
-	saveFile = saveClasses(saveFile, userClasses);
-	saveFile = saveRelationships(saveFile, userClasses);
+	saveFile = saveClasses(saveFile);
+	saveFile = saveRelationships(saveFile);
 
 	writeFile(saveFile, directory);
     }
 
-    // Creates a JSONObject for the classes and saves it to the saveFile
-    private static JSONObject saveClasses(JSONObject saveFile, Model userClasses) {
+    private JSONObject saveClasses(JSONObject saveFile) {
 	JSONArray allClasses = new JSONArray();
 
-	for (Entity entity : userClasses.getEntities()) {
+	for (Entity entity : m.getEntities()) {
 	    JSONObject singleClass = new JSONObject();
 
 	    singleClass.put("className", entity.getName());
@@ -199,11 +184,10 @@ public class HelperMethods {
 	return saveFile;
     }
 
-    // Creates a JSONObject for the relationships and saves it to the saveFile
-    private static JSONObject saveRelationships(JSONObject saveFile, Model userClasses) {
+    private JSONObject saveRelationships(JSONObject saveFile) {
 	JSONArray allRelationships = new JSONArray();
 
-	for (Relationship relation : userClasses.getRelationships()) {
+	for (Relationship relation : m.getRelationships()) {
 	    // Create JSONObject for a single relationship
 	    JSONObject relationObj = new JSONObject();
 
@@ -220,8 +204,7 @@ public class HelperMethods {
 	return saveFile;
     }
 
-    // Creates a file if it does not exist and writes saveFile to the file
-    private static void writeFile(JSONObject saveFile, Path directory) throws IOException {
+    private void writeFile(JSONObject saveFile, Path directory) throws IOException {
 	File fileDirectory = new File(directory.toString());
 	fileDirectory.createNewFile();
 
@@ -231,73 +214,4 @@ public class HelperMethods {
 	myWriter.write(fullJSONString);
 	myWriter.close();
     }
-
-    // Lists all of the classes and their respective attributes
-    public static void listClasses(Model userClasses) {
-	System.out.println("Classes:");
-	for (Entity curEntity : userClasses.getEntities()) {
-	    System.out.println("	" + curEntity.getName() + ":");
-	    System.out.print("		fields:  [ ");
-
-	    // Prints out all of the fields
-	    ArrayList<Field> fields = curEntity.getFields();
-	    for (int x = 0; x < fields.size(); x++) {
-
-		System.out.print("(" + fields.get(x).getVisibility().toString().toLowerCase() + ") " + fields.get(x).getType() + " " + fields.get(x).getName());
-		if (x != fields.size() - 1) {
-		    System.out.print(", ");
-		}
-	    }
-	    System.out.println(" ]");
-
-	    // Prints out all of the methods
-	    System.out.print("		methods: [ ");
-	    for (int x = 0; x < curEntity.getMethods().size(); x++) {
-		Method curMethod = curEntity.getMethods().get(x);
-		System.out.print("(" + curMethod.getVisibility().toString().toLowerCase() + ") " + curMethod.getType() + " " + curMethod.getName() + " -- {");
-
-		// Loop through parameters of method
-		ArrayList<Parameter> parameters = curMethod.getParameters();
-		for (Parameter p : parameters) {
-		    System.out.print("(" + p.getType() + ") " + p.getName());
-		    // Print comma if not last parameter
-		    if (!p.equals(parameters.get(parameters.size() - 1))) {
-			System.out.print(", ");
-		    }
-		}
-		System.out.print("}");
-
-		// Print comma if not last method
-		if (x != curEntity.getMethods().size() - 1) {
-		    System.out.print(",\n			   ");
-		}
-	    }
-	    System.out.println(" ]");
-	}
-    }
-
-    // Lists all of the relationships and the classes they are pointing to
-    public static void listRelationships(Model userClasses) {
-	System.out.println("Relationships:");
-	for (Relationship relation : userClasses.getRelationships()) {
-	    System.out.println(
-		    "   -- " + relation.getName() + ": " + relation.getFirstClass() + "--" + relation.getSecondClass());
-	}
-    }
-
-    public static Type checkEnum(String command) {
-	switch (command) {
-	case "REALIZATION":
-	    return Type.REALIZATION;
-	case "AGGREGATION":
-	    return Type.AGGREGATION;
-	case "COMPOSITION":
-	    return Type.COMPOSITION;
-	case "INHERITANCE":
-	    return Type.INHERITANCE;
-	default:
-	    return null;
-	}
-    }
-
 }
