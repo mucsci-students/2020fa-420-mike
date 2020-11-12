@@ -3,31 +3,18 @@ package mike.cli;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import mike.datastructures.Entity.visibility;
-import mike.datastructures.Model;
-import mike.HelperMethods;
-import mike.controller.CLIController;
-
-import mike.view.ViewTemplate;
+import mike.view.CLIView;
 
 public class CLIViewTest {
     
-    Model model;
-    ViewTemplate view;
-    CLIController control;
+    CLIView view;
     
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -39,17 +26,13 @@ public class CLIViewTest {
     public void createCLI() throws IOException {
 	System.setOut(new PrintStream(out));
 	System.setErr(new PrintStream(err));
-	model = new Model();
-	view = new ViewTemplate(ViewTemplate.InterfaceType.CLI);
-	control = new CLIController(model, view);
+	view = new CLIView();
     }
     
     @After
     public void cleanCLI() {
 	System.setOut(origOut);
 	System.setErr(origErr);
-	String[] commands = {"sudo", "clear"};
-	control.evaluateCommand(commands);
     }
     
     private void resetStreams() {
@@ -57,6 +40,34 @@ public class CLIViewTest {
         err.reset();
     }
 	
-   
+    @Test
+    public void printIntroTest() {
+	System.out.println("Hello, and welcome to Team mike's UML editor.");
+	System.out.println("To exit the program, type 'quit'.");
+	System.out.println("To see all the commands available, type 'help'.\n");
+	String expected = out.toString();
+	resetStreams();
+	view.printIntro();
+	assertEquals("printIntro text is wrong.", expected, out.toString());
+    }
+    
+    @Test
+    public void printInvalidCommandTest() {
+	System.out.println("\nInvalid command.\nType help to see a list of all commands.\n");
+	String expected = out.toString();
+	resetStreams();
+	view.printInvalidCommand();
+	assertEquals("printInvalidCommand text is wrong.", expected, out.toString());
+    }
+    
+    @Test
+    public void printErrorTest() {
+	String e = "This is a test!";
+	System.out.println("\nERROR: " + e);
+	String expected = out.toString();
+	resetStreams();
+	view.printError(e);
+	assertEquals("printInvalidCommand text is wrong.", expected, out.toString());
+    }
 
 }
