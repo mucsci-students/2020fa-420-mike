@@ -174,7 +174,7 @@ public class CreateCommandTest {
 	Entity c1 = model.getEntities().get(0);
 	
 	// Create one method
-	String[] methodCommands = {"create", "method", "c1", "public", "int", "m1"};
+	String[] methodCommands = {"create", "method", "c1", "private", "int", "m1"};
 	executeCommand(methodCommands);
 	assertTrue("CLI did not make a method; Should be one method called m1.", c1.containsMethod("m1"));
 	assertEquals("c1 made more or less than one method.", 1, c1.getMethods().size());
@@ -241,7 +241,7 @@ public class CreateCommandTest {
 	String[] classCommands = {"create", "class", "c1"};
 	executeCommand(classCommands);
 	Entity c1 = model.getEntities().get(0);
-	String[] methodCommands = {"create", "method", "c1", "public", "int", "m1"};
+	String[] methodCommands = {"create", "method", "c1", "protected", "int", "m1"};
 	executeCommand(methodCommands);
 	Method m1 = c1.getMethods().get(0);
 	
@@ -395,6 +395,60 @@ public class CreateCommandTest {
 
         relationships[2] = "composition";
         assertEquals("New c2 recursive relationship created, even though c2 already has a recursive relationship", 4, model.getRelationships().size());
+    }
+    
+    @Test
+    public void createErrorTest() {
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  create class <name>\n"
+		+ "  create field <class name> <field visibility> <field type> <field name>\n"
+		+ "  create method <class name> <method visibility> <method type> <method name>\n"
+		+ "  create relationship <type> <class name1> <class name2>\n"
+		+ "  create parameter <class name> <method> <parameter type> <parameter name>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] createError = {"create", "class"};
+	executeCommand(createError);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	resetStreams();
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  create class <name>\n"
+		+ "  create field <class name> <field visibility> <field type> <field name>\n"
+		+ "  create method <class name> <method visibility> <method type> <method name>\n"
+		+ "  create relationship <type> <class name1> <class name2>\n"
+		+ "  create parameter <class name> <method> <parameter type> <parameter name>\n");
+	expected = out.toString();
+	resetStreams();
+	String[] createObjError = {"create", "ERROR", "test"};
+	executeCommand(createObjError);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+    }
+    
+    @Test
+    public void createVisErrorTest() {
+	System.out.println("\n"
+		+ "ERROR: Invalid visibility type. Valid types are public, private, or protected.\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] createVisError = {"create", "field", "c1", "ERROR", "int", "f1"};
+	executeCommand(createVisError);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	resetStreams();
+	System.out.println("\n"
+		+ "ERROR: Invalid visibility type. Valid types are public, private, or protected.\n");
+	expected = out.toString();
+	resetStreams();
+	createVisError[1] = "method";
+	executeCommand(createVisError);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
     }
     
 }

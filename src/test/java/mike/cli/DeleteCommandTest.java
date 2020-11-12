@@ -50,7 +50,12 @@ public class DeleteCommandTest {
 	String[] commands = { "sudo", "clear" };
 	command = new CreateCommand(model, view, commands, prompt);
     }
-
+    
+    private void resetStreams() {
+        out.reset();
+        err.reset();
+    }
+    
     private void executeCreate(String[] commands) {
 	CreateCommand create = new CreateCommand(model, view, commands, prompt);
 	prompt = create.execute();
@@ -441,4 +446,91 @@ public class DeleteCommandTest {
 	assertFalse("Relationship c3--c3 failed to delete", model.containsRelationship(Type.INHERITANCE, "c3", "c3"));
 	assertEquals("Size of relationship list is wrong", 1, model.getRelationships().size());
     }
+    
+    @Test
+    public void deleteRelationshipTypesTest() {
+	// create classes to have relationships
+	String[] classes = { "create", "class", "c1" };
+	executeCreate(classes);
+	classes[2] = "c2";
+	executeCreate(classes);
+	classes[2] = "c3";
+	executeCreate(classes);
+
+	// create relationships (c1--c2, c2--c3, c3--c3)
+	String[] relationships = { "create", "relationship", "aggregation", "c1", "c2" };
+	executeCreate(relationships);
+	String[] relationships2 = { "create", "relationship", "inheritance", "c1", "c1" };
+	executeCreate(relationships2);
+	String[] relationships3 = { "create", "relationship", "composition", "c1", "c3" };
+	executeCreate(relationships3);
+	String[] relationships4 = { "create", "relationship", "realization", "c3", "c3" };
+	executeCreate(relationships4);
+	
+	relationships[0] = "delete";
+	executeDelete(relationships);
+	relationships2[0] = "delete";
+	executeDelete(relationships2);
+	relationships3[0] = "delete";
+	executeDelete(relationships3);
+	relationships4[0] = "delete";
+	executeDelete(relationships4);
+	assertFalse("Relationship c1--c2 failed to delete", model.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertFalse("Relationship c1--c1 failed to delete", model.containsRelationship(Type.INHERITANCE, "c1", "c1"));
+	assertFalse("Relationship c1--c3 failed to delete", model.containsRelationship(Type.COMPOSITION, "c1", "c3"));
+	assertFalse("Relationship c3--c3 failed to delete", model.containsRelationship(Type.REALIZATION, "c3", "c3"));
+	assertEquals("Size of relationship list is wrong", 0, model.getRelationships().size());
+    }
+    
+    @Test
+    public void deleteErrorTest() {
+	//create classes
+        String[] classes = {"create", "class", "c1"};
+        executeCreate(classes);
+        classes[2] = "c2";
+        executeCreate(classes);
+        classes[2] = "c3";
+        executeCreate(classes);
+	
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  delete class <name>\n"
+		+ "  delete field <class name> <field name>\n"
+		+ "  delete method <class name> <method name>\n"
+		+ "  delete relationship <type> <class name1> <class name2>\n"
+		+ "  delete parameter <class name> <method name>, <parameter name>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] deleteError = {"delete", "class"};
+	executeDelete(deleteError);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	resetStreams();
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  delete class <name>\n"
+		+ "  delete field <class name> <field name>\n"
+		+ "  delete method <class name> <method name>\n"
+		+ "  delete relationship <type> <class name1> <class name2>\n"
+		+ "  delete parameter <class name> <method name>, <parameter name>\n");
+	expected = out.toString();
+	resetStreams();
+	String[] deleteObjError = {"delete", "ERROR", "test"};
+	executeDelete(deleteObjError);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	
+	resetStreams();
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  delete relationship <type> <class name1> <class name2>\n");
+	expected = out.toString();
+	resetStreams();
+	String[] deleteRelationError = {"delete", "relationship", "test"};
+	executeDelete(deleteRelationError);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+    }
+    
 }

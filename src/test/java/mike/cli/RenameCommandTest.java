@@ -49,6 +49,11 @@ public class RenameCommandTest {
 	command = new CreateCommand(model, view, commands, prompt);
     }
     
+    private void resetStreams() {
+        out.reset();
+        err.reset();
+    }
+    
     private void executeCommand(String[] commands) {
 	RenameCommand create = new RenameCommand(model, view, commands, prompt);
 	prompt = create.execute();
@@ -450,6 +455,37 @@ public class RenameCommandTest {
 	assertTrue("CLI did not rename a parameter in m3; Should be a parameter called p5 in m3.", c2.getMethods().get(0).containsParameter("p5"));
 	assertEquals("m3 has more or less than two parameter.", 2, c2.getMethods().get(0).getParameters().size());
 	
+    }
+    
+    @Test
+    public void RenameErrorTest() {
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  rename class <name> <newname>\n"
+		+ "  rename field <class name> <field name> <newname>\n"
+		+ "  rename method <class name> <method name> <newname>\n"
+		+ "  rename parameter <class name> <method name> <parameter name> <parameter newname>\n");
+	String expected = out.toString();
+	resetStreams();
+	String[] renameError = { "rename", "class" };
+	executeCommand(renameError);
+	String actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+
+	resetStreams();
+	System.out.println("\n"
+		+ "ERROR: Error in parsing command. Proper command usage is: \n"
+		+ "  rename class <name> <newname>\n"
+		+ "  rename field <class name> <field name> <newname>\n"
+		+ "  rename method <class name> <method name> <newname>\n"
+		+ "  rename parameter <class name> <method name> <parameter name> <parameter newname>\n");
+	expected = out.toString();
+	resetStreams();
+	String[] renameObjError = { "rename", "ERROR", "test", "test" };
+	executeCommand(renameObjError);
+	actual = out.toString();
+	assertEquals("Initial print all does not equal printout", expected, actual);
+	  
     }
     
 }

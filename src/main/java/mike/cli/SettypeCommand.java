@@ -24,7 +24,7 @@ public class SettypeCommand extends CommandObj {
 		    view.printError("settype method failed. Make sure the class and method both exist.\n");
 		}
 	    } else {
-		System.out.println(errorMessage + commandUsage[16] + commandUsage[17] + "\n");
+		view.printError(errorMessage + commandUsage[16] + commandUsage[17] + "\n");
 	    }
 	} else if (commands.length == 6) {
 	    if (commands[1].equals("parameter")) {
