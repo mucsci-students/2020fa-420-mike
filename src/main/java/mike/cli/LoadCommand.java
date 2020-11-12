@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -9,13 +9,14 @@ import org.jline.reader.MaskingCallback;
 
 import mike.HelperMethods;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 
 public class LoadCommand extends CommandObj {
 
     private static LineReader savePromptReader;
     
-    public LoadCommand(Model m, String[] com, boolean p, LineReader reader) {
-	super(m, com, p);
+    public LoadCommand(Model m, CLIView v, String[] com, boolean p, LineReader reader) {
+	super(m, v, com, p);
 	savePromptReader = reader;
     }
 
@@ -39,11 +40,11 @@ public class LoadCommand extends CommandObj {
 		    return false;
 		}
 	    } catch (Exception e) {
-		System.out.println("Failed to parse directory. Exiting.");
+		view.printError("Failed to parse directory. Exiting.");
 		return prompt;
 	    }
 	} else {
-	    System.out.println(errorMessage + commandUsage[1] + "\n");
+	    view.printError(errorMessage + commandUsage[1] + "\n");
 	    return prompt;
 	}
 	return prompt;

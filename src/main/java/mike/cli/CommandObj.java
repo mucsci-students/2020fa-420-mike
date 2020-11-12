@@ -1,17 +1,20 @@
-package cli;
+package mike.cli;
 
 import mike.datastructures.Model;
+import mike.view.CLIView;
 
 public abstract class CommandObj {
     
     protected Model model;
+    protected CLIView view;
     protected String[] commands;
-    protected String errorMessage = "\nError in parsing command. Proper command usage is: ";
+    protected String errorMessage = "Error in parsing command. Proper command usage is: ";
     protected String[] commandUsage;
     protected static boolean prompt;
 
-    CommandObj(Model m, String[] com, boolean p) {
+    CommandObj(Model m, CLIView view, String[] com, boolean p) {
 	this.model = m;
+	this.view = view;
 	this.commands = com;
 	commandUsage = getCommandUsage();
 	prompt = p;

@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mike.datastructures.Model;
+import mike.controller.CLIController;
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
@@ -28,7 +29,8 @@ public class HelperMethodsTest {
     
     Path path;
     Model model;
-    CLIView cli;
+    ViewTemplate view;
+    CLIController control;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
@@ -40,7 +42,8 @@ public class HelperMethodsTest {
 	System.setOut(new PrintStream(out));
 	System.setErr(new PrintStream(err));
 	model = new Model();
-	cli = (CLIView) new ViewTemplate(ViewTemplate.InterfaceType.CLI, model).getViewinterface();
+	view = new ViewTemplate(ViewTemplate.InterfaceType.CLI);
+	control = new CLIController(model, view);
 	path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemo.json");
     }
     
@@ -49,7 +52,7 @@ public class HelperMethodsTest {
 	System.setOut(origOut);
 	System.setErr(origErr);
 	String[] commands = {"sudo", "clear"};
-	cli.evaluateCommand(commands);
+	control.evaluateCommand(commands);
     }
     
     private void resetStreams() {

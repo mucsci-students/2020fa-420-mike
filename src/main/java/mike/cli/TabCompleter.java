@@ -1,4 +1,4 @@
-package cli;
+package mike.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;

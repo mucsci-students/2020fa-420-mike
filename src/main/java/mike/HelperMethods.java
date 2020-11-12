@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 import mike.controller.Controller;
+import mike.controller.ControllerType;
+import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.datastructures.Relationship.Type;
 import mike.view.GUIView;
@@ -26,7 +28,7 @@ import javax.swing.JLabel;
 public class HelperMethods {
 
     // Main load function. Calls loadClasses and loadRelationships
-    public static void load(Path userPath, Model userClasses, Controller control, ViewTemplate view)
+    public static void load(Path userPath, Model userClasses, ControllerType control, ViewTemplate view)
 	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
 	userClasses.clear();
@@ -41,7 +43,7 @@ public class HelperMethods {
 	JSONArray list = (JSONArray) javaObj.get("Classes");
 	ArrayList<JSONObject> objList = new ArrayList<JSONObject>();
 
-	loadClasses(userClasses, javaObj, list, objList, control, view);
+	loadClasses(userClasses, javaObj, list, objList, (GUIController)control, view);
 
 	// Clear out variables for reuse
 	list = (JSONArray) javaObj.get("Relationships");
@@ -53,7 +55,7 @@ public class HelperMethods {
     // Takes all of the information from the classes in the JSON file,
     // and inserts them to the currently running program
     private static void loadClasses(Model userClasses, JSONObject javaObj, JSONArray list,
-	    ArrayList<JSONObject> objList, Controller control, ViewTemplate view) {
+	    ArrayList<JSONObject> objList, ControllerType control, ViewTemplate view) {
 	// Add class names and attributes from JSONArray list to loadFile
 	for (int x = 0; x < list.size(); ++x) {
 	    // Get class from JSONArray list, add to ArrayList objList (type conversions)
@@ -100,7 +102,7 @@ public class HelperMethods {
 	    location = (Long) objList.get(x).get("yPosition");
 	    e.setYLocation(Math.toIntExact(location));
 	    if (ViewTemplate.isGUI()) {
-		((GUIView) view).showClass(e, control);
+		((GUIView) view).showClass(e, (GUIController)control);
 	    }
 	}
 	if (ViewTemplate.isGUI()) {

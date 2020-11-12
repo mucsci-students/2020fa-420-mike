@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import mike.controller.Controller;
+import mike.controller.GUIController;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
 import mike.datastructures.Method;
@@ -39,7 +39,7 @@ public class editBox {
     private static Entity e;
     private Model backupMod;
 
-    public editBox(JLabel label, Controller control, Model model, GUIView view) {
+    public editBox(JLabel label, GUIController control, Model model, GUIView view) {
 	backupMod = new Model(model);
 	e = model.copyEntity(label.getName());
 
@@ -78,7 +78,7 @@ public class editBox {
 	newBox = b;
     }
 
-    private void createClassSection(String labelName, Controller control, GUIView view) {
+    private void createClassSection(String labelName, GUIController control, GUIView view) {
 	JFrame frame = view.getFrame();
 	JMenuBar menuBar = view.getMenuBar();
 	JButton addRelation = new JButton("Add Relationship");
@@ -107,7 +107,7 @@ public class editBox {
 	newBox.add(newEntity);
     }
 
-    private void createSection(String section, Controller control, Model model) {
+    private void createSection(String section, GUIController control, Model model) {
 	JLabel Label = new JLabel(section);
 	Label.setFont(new Font("", Font.BOLD, 18));
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
