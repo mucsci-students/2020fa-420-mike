@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.junit.After;
@@ -34,7 +33,7 @@ public class DeleteCommandTest {
     private final PrintStream origErr = System.err;
 
     @Before
-    public void createCLI() throws IOException {
+    public void createCLI() throws Exception {
 	System.setOut(new PrintStream(out));
 	System.setErr(new PrintStream(err));
 	model = new Model();

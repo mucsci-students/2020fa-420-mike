@@ -1,6 +1,7 @@
 package mike.controller;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -113,7 +114,10 @@ public class ClassController {
 		    }
 		    // Change button to signify we are out of edit mode
 		    editButton.setText("Enable Edit Mode");
-		    editButton.setBackground(null);
+		    editButton.setFont(editButton.getFont().deriveFont(Font.PLAIN));
+		    editButton.setBackground(new Color(240, 240, 240));
+		    editButton.setContentAreaFilled(true);
+		    editButton.setOpaque(false);
 		    if (control.getinClass() != null) {
 			view.exitEditingClass(control.getinClass(), control, control.getModel());
 			view.getMenuBar().remove(6);
@@ -132,7 +136,10 @@ public class ClassController {
 		    }
 		    // change button to signify we are in edit mode
 		    editButton.setText("Disable Edit Mode");
+		    editButton.setFont(editButton.getFont().deriveFont(Font.BOLD));
 		    editButton.setBackground(Color.RED);
+                    editButton.setContentAreaFilled(false);
+                    editButton.setOpaque(true);
 		}
 	    }
 	});

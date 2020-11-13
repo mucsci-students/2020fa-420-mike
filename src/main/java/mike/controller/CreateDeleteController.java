@@ -20,15 +20,15 @@ public class CreateDeleteController {
 
     @SuppressWarnings("unchecked")
     protected static void createFunction(JPanel panel, GUIController control, String attribute, String methodName) {
-	JButton creation = (JButton) panel.getComponent(3);
+	JButton creation = (JButton) panel.getComponent(6);
 	creation.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		String visType = null;
 		if (attribute != "parameter") {
 		    visType = ((JComboBox<String>) panel.getComponent(0)).getSelectedItem().toString();
 		}
-		String newType = ((JTextField) panel.getComponent(1)).getText();
-		String newName = ((JTextField) panel.getComponent(2)).getText();
+		String newType = ((JTextField) panel.getComponent(2)).getText();
+		String newName = ((JTextField) panel.getComponent(4)).getText();
 
 		if (newType.isEmpty() || newName.isEmpty()) {
 		    return;
@@ -58,8 +58,8 @@ public class CreateDeleteController {
 		    }
 		    control.deleteParam(editBox.editSection(newType, newName, true, spot), methodName);
 		}
-		((JTextField) panel.getComponent(1)).setText("");
 		((JTextField) panel.getComponent(2)).setText("");
+		((JTextField) panel.getComponent(4)).setText("");
 		ending(control, newview, entity);
 	    }
 	});
@@ -68,7 +68,7 @@ public class CreateDeleteController {
     protected static void deleteFunction(JPanel panel, GUIController control, String attribute, String methodName) {
 	JButton deletion;
 	if (attribute.equals("parameter")) {
-	    deletion = (JButton) panel.getComponent(1);
+	    deletion = (JButton) panel.getComponent(2);
 	} else {
 	    deletion = (JButton) panel.getComponent(0);
 	}
@@ -76,7 +76,7 @@ public class CreateDeleteController {
 	    public void actionPerformed(ActionEvent e) {
 		JLabel newview = editBox.getBox();
 		Entity entity = editBox.getEntity();
-		String deleteAtt = ((JTextField) panel.getComponent(3)).getText();
+		String deleteAtt = ((JTextField) panel.getComponent(6)).getText();
 		Model model = control.getModel();
 		
 		// Delete attribute from model 

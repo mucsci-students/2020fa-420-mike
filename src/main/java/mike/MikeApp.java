@@ -1,15 +1,11 @@
 package mike;
 
-import java.io.IOException;
-
 import mike.controller.Controller;
 import mike.datastructures.Model;
-import mike.view.CLIView;
-import mike.view.GUIView;
 import mike.view.ViewTemplate;
 
 public class MikeApp {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 	Model model = new Model();
 	ViewTemplate view;
 	Controller control;

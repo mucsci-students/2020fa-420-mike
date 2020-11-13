@@ -29,7 +29,7 @@ public class SaveCommandTest {
     private final PrintStream origErr = System.err;
 
     @Before
-    public void createCLI() throws IOException {
+    public void createCLI() throws Exception {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
         model = new Model();

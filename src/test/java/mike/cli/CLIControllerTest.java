@@ -3,22 +3,14 @@ package mike.cli;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import mike.datastructures.Entity.visibility;
 import mike.datastructures.Model;
-import mike.HelperMethods;
 import mike.controller.CLIController;
 
 import mike.view.ViewTemplate;
@@ -36,7 +28,7 @@ public class CLIControllerTest {
     private final PrintStream origErr = System.err;
 
     @Before
-    public void createCLI() throws IOException {
+    public void createCLI() throws Exception {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
         model = new Model();

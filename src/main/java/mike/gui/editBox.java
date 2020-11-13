@@ -4,11 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-//import java.awt.Image;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
-//import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,12 +29,6 @@ import mike.view.GUIView;
 public class editBox {
 
     private static JLabel newBox;
-    // private static ImageIcon xIcon = new ImageIcon(new
-    // ImageIcon(GUIView.class.getResource("..\\gui\\resources\\xmark.jpg")).getImage().getScaledInstance(16,
-    // 16, Image.SCALE_DEFAULT));
-    // private static ImageIcon addIcon = new ImageIcon(new
-    // ImageIcon(GUIView.class.getResource("..\\gui\\resources\\addSymbol.png")).getImage().getScaledInstance(16,
-    // 16, Image.SCALE_DEFAULT));
     private static Entity e;
     private Model backupMod;
 
@@ -100,8 +93,10 @@ public class editBox {
 
 	JPanel newEntity = setUpJPanel();
 	JButton xButton = new JButton("X");
+	xButton.setBackground(Color.RED);
 	JTextField className = new JTextField(labelName);
 	newEntity.add(xButton);
+	newEntity.add(Box.createHorizontalStrut(5));
 	newEntity.add(className);
 	control.saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation, backupMod);
 	newBox.add(newEntity);
@@ -147,18 +142,23 @@ public class editBox {
 	JButton xButton = new JButton("X");
 	JTextField Type = new JTextField(sectionType);
 	JTextField Name = new JTextField(sectionName);
+	xButton.setBackground(Color.RED);
 
 	if (parameter) {
 	    JLabel Tab = new JLabel("------");
 	    editSection.add(Tab);
+	    editSection.add(Box.createHorizontalStrut(5));
 	}
 	editSection.add(xButton);
+	editSection.add(Box.createHorizontalStrut(5));
 	if (!parameter) {
 	    editSection.add(visTypes);
+	    editSection.add(Box.createHorizontalStrut(5));
 	}
 	editSection.add(Type);
+	editSection.add(Box.createHorizontalStrut(5));
 	editSection.add(Name);
-
+	
 	newBox.add(editSection, spot);
 
 	return editSection;
@@ -171,18 +171,24 @@ public class editBox {
 	JTextField Name = new JTextField(7);
 
 	JButton plusButton = new JButton("+");
+	plusButton.setBackground(Color.green.darker());
 	if (parameter) {
 	    JLabel Tab = new JLabel("------");
 	    newSection.add(Tab);
+	    newSection.add(Box.createHorizontalStrut(5));
 	} else {
 	    String[] visTypesArray = { "public", "private", "protected" };
 	    JComboBox<String> visTypes = new JComboBox<>(visTypesArray);
 	    newSection.add(visTypes);
+	    newSection.add(Box.createHorizontalStrut(5));
 	}
 	newSection.add(Type);
+	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(Name);
+	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(plusButton);
-
+	newSection.add(Box.createHorizontalStrut(5));
+	
 	newBox.add(newSection, spot);
 
 	return newSection;

@@ -22,7 +22,6 @@ import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
 
-import mike.view.CLIView;
 import mike.view.ViewTemplate;
 
 public class HelperMethodsTest {
@@ -38,7 +37,7 @@ public class HelperMethodsTest {
     private final PrintStream origErr = System.err;
     
     @Before
-    public void createCLI() throws IOException {
+    public void createCLI() throws Exception {
 	System.setOut(new PrintStream(out));
 	System.setErr(new PrintStream(err));
 	model = new Model();
@@ -62,7 +61,7 @@ public class HelperMethodsTest {
     
     @Test
     public void HelperMethodConstructor() {
-	HelperMethods test = new HelperMethods();
+	new HelperMethods();
     }
     
     @Test

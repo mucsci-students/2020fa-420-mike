@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import mike.controller.Controller;
 import mike.controller.ControllerType;
 import mike.controller.GUIController;
 import mike.datastructures.*;
