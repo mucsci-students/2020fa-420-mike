@@ -71,7 +71,7 @@ public class FrameController {
 				
 				if (result == 0) {
 					if(control.getModel().createClass(name.getText())){
-					    ((GUIView) control.getView()).showClass(control.getModel().copyEntity(name.getText()), control);
+						((GUIView) control.getView()).showClass(control.getModel().copyEntity(name.getText()), control);
 					} else {
 						JOptionPane.showMessageDialog( ((GUIView) control.getView()).getFrame(), "An entity with that name already exists.");
 					}

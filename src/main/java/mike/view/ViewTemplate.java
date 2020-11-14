@@ -12,11 +12,15 @@ public class ViewTemplate {
     public ViewTemplate() {
     }
 
-    public ViewTemplate(InterfaceType newtype) throws Exception {
+    public ViewTemplate(InterfaceType newtype) {
 	viewtype = newtype;
 
 	if (viewtype.equals(InterfaceType.GUI)) {
-	    setViewinterface(new GUIView());
+	    try {
+		setViewinterface(new GUIView());
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
 	} else {
 	    setViewinterface(new CLIView());
 	}

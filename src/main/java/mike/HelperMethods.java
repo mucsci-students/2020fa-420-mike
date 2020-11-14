@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.ParseException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,7 +27,7 @@ public class HelperMethods {
 
     // Main load function. Calls loadClasses and loadRelationships
     public static void load(Path userPath, Model userClasses, ControllerType control, ViewTemplate view)
-	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
+	    throws FileNotFoundException, IOException, org.json.simple.parser.ParseException {
 
 	userClasses.clear();
 

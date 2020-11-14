@@ -120,6 +120,7 @@ public class ClassController {
 		    editButton.setOpaque(false);
 		    if (control.getinClass() != null) {
 			view.exitEditingClass(control.getinClass(), control, control.getModel());
+			
 			view.getMenuBar().remove(6);
 			view.getMenuBar().remove(5);
 			view.getFrame().validate();

@@ -21,7 +21,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private ArrayList<Line> relations;
     private JFrame frame;
     private JMenuBar menuBar;
-
+    
     public GUIView() throws Exception {
         super();
 
@@ -30,9 +30,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
         relations = new ArrayList<Line>();
         menuBar = new JMenuBar();
 
-        //set windows look and feel
+        //set windows look and feel       
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
 
         frame = new JFrame("Team mike UML Editor");
         //frame.setBackground(Color.CYAN);
