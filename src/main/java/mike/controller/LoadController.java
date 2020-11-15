@@ -36,16 +36,17 @@ public class LoadController {
 		    int returnVal = chooser.showOpenDialog(control.getView().getFrame().getParent());
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
 			control.setPath(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+			control.getView().getPane().removeAll();
 			HelperMethods.load(control.getPath(), control.getModel(), control, ((GUIView) control.getView()));
 			control.setChanged(false);
-			control.getView().getPane().validate();
+			control.getView().validateRepaint();
+			for (Entity curEntity : control.getModel().getEntities()) {
+			    JLabel curLabel = ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
+			    curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
+			}
 		    }
 		} catch (Exception e1) {
 		    e1.printStackTrace();
-		}
-		for (Entity curEntity : control.getModel().getEntities()) {
-		    JLabel curLabel = ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
-		    curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 		}
 	    }
 	});
