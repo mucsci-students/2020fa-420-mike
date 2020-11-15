@@ -1,9 +1,6 @@
 package mike.controller;
 
 import java.io.IOException;
-import java.nio.file.Path;
-
-import javax.swing.JLabel;
 
 import org.jline.reader.History;
 import org.jline.reader.LineReader;

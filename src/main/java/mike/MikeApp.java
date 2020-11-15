@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import mike.controller.Controller;
 import mike.datastructures.Model;
-import mike.view.CLIView;
-import mike.view.GUIView;
 import mike.view.ViewTemplate;
 
 public class MikeApp {

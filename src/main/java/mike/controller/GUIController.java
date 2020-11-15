@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Model;
-import mike.view.CLIView;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
 
@@ -87,7 +86,7 @@ public class GUIController extends ControllerType {
 	return model;
     }
 
-    protected ViewTemplate getView() {
+    protected GUIView getView() {
 	return view;
     }
 
