@@ -15,8 +15,8 @@ public class Method extends Formal{
     }
     
     public Method(Method copyMethod){
-        super(copyMethod.getName(), copyMethod.getType());
-        this.setVisibility(copyMethod.visType);
+        super(new String(copyMethod.getName()), new String(copyMethod.getType()));
+        this.setVisibility(copyMethod.getVisibility());
         parameters = new ArrayList<Parameter>();
         for (Parameter p : copyMethod.getParameters()) {
             this.parameters.add(p);

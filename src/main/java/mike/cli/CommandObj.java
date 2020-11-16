@@ -12,7 +12,7 @@ public abstract class CommandObj {
     protected String[] commandUsage;
     protected static boolean prompt;
 
-    CommandObj(Model m, CLIView view, String[] com, boolean p) {
+    public CommandObj(Model m, CLIView view, String[] com, boolean p) {
 	this.model = m;
 	this.view = view;
 	this.commands = com;
