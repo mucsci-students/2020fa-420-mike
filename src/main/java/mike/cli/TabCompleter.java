@@ -27,6 +27,14 @@ public class TabCompleter {
                         new NullCompleter()
                 ),
                 new ArgumentCompleter(
+                        new StringsCompleter("undo"),
+                        new NullCompleter()
+                ),
+                new ArgumentCompleter(
+                        new StringsCompleter("redo"),
+                        new NullCompleter()
+                ),
+                new ArgumentCompleter(
                         new StringsCompleter("quit"),
                         new NullCompleter()
                 ),
