@@ -37,10 +37,12 @@ public class Entity {
 		yLocation = copyEntity.yLocation;
 		
 		for(Field f : copyEntity.getFields()) {
-		    this.fields.add(f);
+		    Field newf = new Field(f);
+		    this.fields.add(newf);
 		}
 		for(Method m : copyEntity.getMethods()) {
-		    this.methods.add(m);
+		    Method newm = new Method(m);
+		    this.methods.add(newm);
 		}
 	}
 	

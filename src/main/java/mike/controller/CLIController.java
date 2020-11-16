@@ -162,15 +162,7 @@ public class CLIController extends ControllerType {
 	    break;
 	// Proper command not detected, print an error
 	case "undo":
-	    for (Memento m : mementos) {
-		HelperMethods.listClasses(m.getModel());
-	    }
-	    HelperMethods.listClasses(this.model);
 	    undo();
-	    for (Memento m : mementos) {
-		HelperMethods.listClasses(m.getModel());
-	    }
-	    HelperMethods.listClasses(this.model);
 	    break;
 	case "redo":
 	    redo();
@@ -211,15 +203,8 @@ public class CLIController extends ControllerType {
 
     private void newMeme(Memento meme) {
 	truncateMemes();
-	    for (Memento m : mementos) {
-		HelperMethods.listClasses(m.getModel());
-	    }
 	mementos.add(meme);
-	    System.out.println("memento added to the array list");
 	this.model = meme.getModel();
-	    for (Memento m : mementos) {
-		HelperMethods.listClasses(m.getModel());
-	    }
 	++currMeme;
     }
 

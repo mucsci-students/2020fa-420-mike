@@ -19,7 +19,8 @@ public class Method extends Formal{
         this.setVisibility(copyMethod.getVisibility());
         parameters = new ArrayList<Parameter>();
         for (Parameter p : copyMethod.getParameters()) {
-            this.parameters.add(p);
+            Parameter newp = new Parameter(p);
+            this.parameters.add(newp);
         }
     }
 
