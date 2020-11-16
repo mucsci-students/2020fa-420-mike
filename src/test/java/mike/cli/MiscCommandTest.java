@@ -31,7 +31,7 @@ public class MiscCommandTest {
     private Terminal terminal;
     private DefaultParser parser;
     private LineReader savePromptReader;
-    
+
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
@@ -46,7 +46,7 @@ public class MiscCommandTest {
 	viewTemp = new ViewTemplate(ViewTemplate.InterfaceType.CLI);
 	view = (CLIView) viewTemp.getViewinterface();
 	prompt = false;
-	
+
 	terminal = TerminalBuilder.builder().system(true).build();
 	StringsCompleter savePromptCompleter = new StringsCompleter("yes", "no");
 	parser = new DefaultParser();
@@ -67,12 +67,12 @@ public class MiscCommandTest {
 	MiscCommand create = new MiscCommand(model, view, commands, prompt, savePromptReader);
 	prompt = create.execute();
     }
-    
+
     private void executeCreateCommand(String[] commands) {
 	CreateCommand create = new CreateCommand(model, view, commands, prompt);
 	prompt = create.execute();
     }
-    
+
     @Test
     public void helpTest() {
 	String[] help = { "help" };
@@ -109,77 +109,90 @@ public class MiscCommandTest {
 		+ "\n" + "  list classes - List all existing classes\n"
 		+ "  list relationships - List all existing relationships\n"
 		+ "  list all - List all existing classes and relationships\n" + "\n"
-		+ "  clear - Clear all classes and relationships\n" + "  quit - exits the program" + "\n");
+		+ "  clear - Clear all classes and relationships\n"
+		+ "  undo - Reverts the most recent change to the UML Editor\n"
+		+ "  redo - Restores the most recently undone action.\n" + "  quit - exits the program" + "\n");
 	String expected = out.toString();
 	out.reset();
 	err.reset();
 	executeCommand(help);
 	assertEquals("Initial print all does not equal printout", expected, out.toString());
     }
-    
+
     @Test
     public void clearTest() {
-        // Make a whole bunch of stuff to be cleared.
-        String[] classes = {"create", "class", "c1"};
-        executeCreateCommand(classes);
-        classes[2] = "c2";
-        executeCreateCommand(classes);
+	// Make a whole bunch of stuff to be cleared.
+	String[] classes = { "create", "class", "c1" };
+	executeCreateCommand(classes);
+	classes[2] = "c2";
+	executeCreateCommand(classes);
 
-        assertEquals("CLI did not make the classes; Should be 2.", 2, model.getEntities().size());
+	assertEquals("CLI did not make the classes; Should be 2.", 2, model.getEntities().size());
 
-        String[] field = {"create", "field", "c1", "public", "int", "f1"};
-        executeCreateCommand(field);
-        field[5] = "f2";
-        executeCreateCommand(field);
-        field[2] = "c2";
-        field[5] = "f1";
-        executeCreateCommand(field);
+	String[] field = { "create", "field", "c1", "public", "int", "f1" };
+	executeCreateCommand(field);
+	field[5] = "f2";
+	executeCreateCommand(field);
+	field[2] = "c2";
+	field[5] = "f1";
+	executeCreateCommand(field);
 
-        assertTrue("CLI did not make 2 fields in c1; C1 should have f1 and f2.", model.getEntities().get(0).containsField("f1"));
-        assertTrue("CLI did not make 2 fields in c1; C1 should have f1 and f2.", model.getEntities().get(0).containsField("f2"));
-        assertTrue("CLI did not make 1 field in c2; C2 should have f1.", model.getEntities().get(1).containsField("f1"));
+	assertTrue("CLI did not make 2 fields in c1; C1 should have f1 and f2.",
+		model.getEntities().get(0).containsField("f1"));
+	assertTrue("CLI did not make 2 fields in c1; C1 should have f1 and f2.",
+		model.getEntities().get(0).containsField("f2"));
+	assertTrue("CLI did not make 1 field in c2; C2 should have f1.",
+		model.getEntities().get(1).containsField("f1"));
 
-        String[] method = {"create", "method", "c1", "public", "double", "m1"};
-        executeCreateCommand(method);
-        method[5] = "m2";
-        executeCreateCommand(method);
-        method[2] = "c2";
-        method[5] = "m1";
-        executeCreateCommand(method);
+	String[] method = { "create", "method", "c1", "public", "double", "m1" };
+	executeCreateCommand(method);
+	method[5] = "m2";
+	executeCreateCommand(method);
+	method[2] = "c2";
+	method[5] = "m1";
+	executeCreateCommand(method);
 
-        assertTrue("CLI did not make 2 methods in c1; C1 should have m1 and m2.", model.getEntities().get(0).containsMethod("m1"));
-        assertTrue("CLI did not make 2 methods in c1; C1 should have m1 and m2.", model.getEntities().get(0).containsMethod("m2"));
-        assertTrue("CLI did not make 1 method in c2; C2 should have m1.", model.getEntities().get(1).containsMethod("m1"));
+	assertTrue("CLI did not make 2 methods in c1; C1 should have m1 and m2.",
+		model.getEntities().get(0).containsMethod("m1"));
+	assertTrue("CLI did not make 2 methods in c1; C1 should have m1 and m2.",
+		model.getEntities().get(0).containsMethod("m2"));
+	assertTrue("CLI did not make 1 method in c2; C2 should have m1.",
+		model.getEntities().get(1).containsMethod("m1"));
 
-        String[] parameter = {"create", "parameter", "c1", "m1", "char", "p1"};
-        executeCreateCommand(parameter);
-        parameter[5] = "p2";
-        executeCreateCommand(parameter);
-        parameter[3] = "m2";
-        parameter[5] = "p1";
-        executeCreateCommand(parameter);
-        parameter[2] = "c2";
-        parameter[3] = "m1";
-        executeCreateCommand(parameter);
+	String[] parameter = { "create", "parameter", "c1", "m1", "char", "p1" };
+	executeCreateCommand(parameter);
+	parameter[5] = "p2";
+	executeCreateCommand(parameter);
+	parameter[3] = "m2";
+	parameter[5] = "p1";
+	executeCreateCommand(parameter);
+	parameter[2] = "c2";
+	parameter[3] = "m1";
+	executeCreateCommand(parameter);
 
-        assertTrue("CLI did not make 2 parameters in c1 > m1; M1 should have p1 and p2.", model.getEntities().get(0).getMethods().get(0).containsParameter("p1"));
-        assertTrue("CLI did not make 2 parameters in c1 > m1; M1 should have p1 and p2.", model.getEntities().get(0).getMethods().get(0).containsParameter("p2"));
-        assertTrue("CLI did not make 1 parameter in c1 > m2; M2 should have p1.", model.getEntities().get(0).getMethods().get(1).containsParameter("p1"));
-        assertTrue("CLI did not make 1 parameter in c2 > m1; M1 should have p1.", model.getEntities().get(1).getMethods().get(0).containsParameter("p1"));
+	assertTrue("CLI did not make 2 parameters in c1 > m1; M1 should have p1 and p2.",
+		model.getEntities().get(0).getMethods().get(0).containsParameter("p1"));
+	assertTrue("CLI did not make 2 parameters in c1 > m1; M1 should have p1 and p2.",
+		model.getEntities().get(0).getMethods().get(0).containsParameter("p2"));
+	assertTrue("CLI did not make 1 parameter in c1 > m2; M2 should have p1.",
+		model.getEntities().get(0).getMethods().get(1).containsParameter("p1"));
+	assertTrue("CLI did not make 1 parameter in c2 > m1; M1 should have p1.",
+		model.getEntities().get(1).getMethods().get(0).containsParameter("p1"));
 
-        String[] relationship = {"create", "relationship", "realization", "c1", "c1"};
-        executeCreateCommand(relationship);
-        relationship[2] = "aggregation";
-        relationship[4] = "c2";
-        executeCreateCommand(relationship);
+	String[] relationship = { "create", "relationship", "realization", "c1", "c1" };
+	executeCreateCommand(relationship);
+	relationship[2] = "aggregation";
+	relationship[4] = "c2";
+	executeCreateCommand(relationship);
 
-        assertTrue("CLI did not make a recursive relationship. There should be a realization from c1 to c1.", model.containsRelationship(Type.REALIZATION, "c1", "c1"));
-        assertTrue("CLI did not make a normal relationship. There should be an aggregation from c1 to c2.", model.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertTrue("CLI did not make a recursive relationship. There should be a realization from c1 to c1.",
+		model.containsRelationship(Type.REALIZATION, "c1", "c1"));
+	assertTrue("CLI did not make a normal relationship. There should be an aggregation from c1 to c2.",
+		model.containsRelationship(Type.AGGREGATION, "c1", "c2"));
 
+	String[] clear = { "sudo", "clear" };
+	executeCommand(clear);
 
-        String[] clear = {"sudo", "clear"};
-        executeCommand(clear);
-
-        assertTrue("CLI's model is not empty; CLI's model should be empty.", model.empty());
+	assertTrue("CLI's model is not empty; CLI's model should be empty.", model.empty());
     }
 }

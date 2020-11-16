@@ -113,7 +113,7 @@ public class CLIControllerTest {
 
     //**********************************************************************************************//
     //**                                MISC. TESTS                                               **//
-    //**                         	  (CLEAR)                                                 **//
+    //**                            (CLEAR, UNDO, REDO)                                           **//
     //**********************************************************************************************//
 
     @Test
@@ -151,5 +151,56 @@ public class CLIControllerTest {
         assertEquals("load error message did not appear correctly.", expected, out.toString());
         resetStreams();
     }
-
+    
+    @Test
+    public void undoTest() {
+	String[] commands = {"create", "class", "c1"};
+        control.evaluateCommand(commands);
+        commands[2] = "c2";
+        control.evaluateCommand(commands);
+        assertTrue("Model does not contain a class", control.getModel().containsEntity("c1"));
+        assertTrue("Model does not contain a second class", control.getModel().containsEntity("c2"));
+        
+        String[] undoCommand = {"undo"};
+        control.evaluateCommand(undoCommand);
+        
+        assertFalse("Model still has a second class after undo.", control.getModel().containsEntity("c2"));
+        
+        control.evaluateCommand(undoCommand);
+        
+        System.out.println("No actions to undo.");
+        String expected = out.toString();
+        resetStreams();
+        control.evaluateCommand(undoCommand);
+        assertEquals("Tried to undo with nothing to undo.", expected, out.toString());
+        
+        commands[2] = "c3";
+        control.evaluateCommand(commands);
+        
+        assertTrue("Model does not contain a class.", control.getModel().containsEntity("c3"));
+    }
+    
+    @Test
+    public void redoTest() {
+	String[] commands = {"create", "class", "c1"};
+        control.evaluateCommand(commands);
+        commands[2] = "c2";
+        control.evaluateCommand(commands);
+        assertTrue("Model does not contain a class", control.getModel().containsEntity("c1"));
+        assertTrue("Model does not contain a second class", control.getModel().containsEntity("c2"));
+        
+        String[] undoCommand = {"undo"};
+        control.evaluateCommand(undoCommand);
+        
+        String[] redoCommand = {"redo"};
+        control.evaluateCommand(redoCommand);;
+        
+        assertTrue("Model does not contain the second class after the redo.", control.getModel().containsEntity("c2"));
+        
+        System.out.println("No actions to redo.");
+        String expected = out.toString();
+        resetStreams();
+        control.evaluateCommand(redoCommand);
+        assertEquals("Tried to redo with nothing to redo.", expected, out.toString());
+    }
 }

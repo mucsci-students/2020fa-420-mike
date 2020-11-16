@@ -132,7 +132,9 @@ public class MiscCommand extends CommandObj {
 		+ commandUsage[21] + " - List all existing classes" + commandUsage[22]
 		+ " - List all existing relationships" + commandUsage[23]
 		+ " - List all existing classes and relationships\n" + commandUsage[24]
-		+ " - Clear all classes and relationships\n" + "  quit - exits the program\n");
+		+ " - Clear all classes and relationships\n"
+		+ "  undo - Reverts the most recent change to the UML Editor\n"
+		+ "  redo - Restores the most recently undone action.\n" + "  quit - exits the program\n");
     }
 
 }
