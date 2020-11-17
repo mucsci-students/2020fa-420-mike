@@ -33,15 +33,15 @@ public class SaveCancel {
 		String eName = entity.getName();
 		int fieldSize = entity.getFields().size(), methodNum = 0, paramSize;
 		JLabel newBox = editBox.getBox();
-		JTextField text = (JTextField) ((JPanel) newBox.getComponent(1)).getComponent(1);
+		JTextField text = (JTextField) ((JPanel) newBox.getComponent(1)).getComponent(2);
 		Model model = control.getModel();
 		model.renameClass(eName, text.getText());
 
 		for (int x = 0; x < fieldSize; ++x) {
 		    JPanel panelField = (JPanel) newBox.getComponent(x + 3);
-		    String textField = ((JTextField) panelField.getComponent(3)).getText();
-		    String typeField = ((JTextField) panelField.getComponent(2)).getText();
-		    String visType = ((JComboBox<String>) panelField.getComponent(1)).getSelectedItem().toString();
+		    String textField = ((JTextField) panelField.getComponent(6)).getText();
+		    String typeField = ((JTextField) panelField.getComponent(4)).getText();
+		    String visType = ((JComboBox<String>) panelField.getComponent(2)).getSelectedItem().toString();
 		    String fieldName = entity.getFields().get(x).getName();
 
 		    model.renameField(eName, fieldName, textField);
@@ -51,9 +51,9 @@ public class SaveCancel {
 
 		for (int x = fieldSize + 5; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
 		    JPanel panelMethod = (JPanel) newBox.getComponent(x);
-		    String textMethod = ((JTextField) panelMethod.getComponent(3)).getText();
-		    String typeMethod = ((JTextField) panelMethod.getComponent(2)).getText();
-		    String visType = ((JComboBox<String>) panelMethod.getComponent(1)).getSelectedItem().toString();
+		    String textMethod = ((JTextField) panelMethod.getComponent(6)).getText();
+		    String typeMethod = ((JTextField) panelMethod.getComponent(4)).getText();
+		    String visType = ((JComboBox<String>) panelMethod.getComponent(2)).getSelectedItem().toString();
 
 		    Method m = entity.getMethods().get(methodNum);
 		    paramSize = m.getParameters().size();
@@ -64,8 +64,8 @@ public class SaveCancel {
 
 		    for (int y = 0; y < paramSize; ++y) {
 			JPanel panelParam = (JPanel) newBox.getComponent(x + y + 1);
-			String typeParam = ((JTextField) panelParam.getComponent(2)).getText();
-			String textParam = ((JTextField) panelParam.getComponent(3)).getText();
+			String typeParam = ((JTextField) panelParam.getComponent(4)).getText();
+			String textParam = ((JTextField) panelParam.getComponent(6)).getText();
 
 			m.renameParameter(m.getParameters().get(y).getName(), textParam);
 			m.changeParameterType(textParam, typeParam);
@@ -74,6 +74,7 @@ public class SaveCancel {
 
 		control.getinClass().setName(text.getText());
 		view.exitEditingClass(control.getinClass(), control, model);
+		
 		exiting(view.getMenuBar(), control, view.getFrame());
 	    }
 	});
