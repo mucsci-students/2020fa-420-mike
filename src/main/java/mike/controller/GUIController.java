@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Model;
-import mike.view.CLIView;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
 

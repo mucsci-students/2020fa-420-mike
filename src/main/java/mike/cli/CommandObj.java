@@ -4,7 +4,7 @@ import mike.datastructures.Model;
 import mike.view.CLIView;
 
 public abstract class CommandObj {
-    
+
     protected Model model;
     protected CLIView view;
     protected String[] commands;
@@ -12,14 +12,14 @@ public abstract class CommandObj {
     protected String[] commandUsage;
     protected static boolean prompt;
 
-    CommandObj(Model m, CLIView view, String[] com, boolean p) {
+    public CommandObj(Model m, CLIView view, String[] com, boolean p) {
 	this.model = m;
 	this.view = view;
 	this.commands = com;
 	commandUsage = getCommandUsage();
 	prompt = p;
     }
-    
+
     private static String[] getCommandUsage() {
 	String[] commandUsage = { "\n  save <name>.json (optional <path>)", "\n  load <path>",
 		"\n  create class <name>", "\n  create field <class name> <field visibility> <field type> <field name>",
@@ -38,9 +38,9 @@ public abstract class CommandObj {
 		"\n  settype parameter <class name> <method name> <parameter name> <newtype>",
 		"\n  setvis field <class name> <field name> <visibility>",
 		"\n  setvis method <class name> <method name> <visibility>", "\n  list classes",
-		"\n  list relationships", "\n  list all", "\n  clear" };
+		"\n  list relationships", "\n  list all", "\n  clear", "\n undo", "\n redo" };
 	return commandUsage;
     }
-    
+
     protected abstract boolean execute();
 }

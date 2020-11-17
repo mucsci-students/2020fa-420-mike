@@ -11,7 +11,7 @@ public class Controller {
 
     public Controller(Model model, ViewTemplate view) throws IOException {
 
-	if (view.isGUI()) {
+	if (ViewTemplate.isGUI()) {
 	    control = new GUIController(model, view);
 	} else {
 	    control = new CLIController(model, view);

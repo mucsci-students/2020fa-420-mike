@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import mike.controller.Controller;
 import mike.controller.ControllerType;
 import mike.controller.GUIController;
 import mike.datastructures.*;
@@ -286,7 +285,7 @@ public class HelperMethods {
 	}
     }
 
-    private static Type checkEnum(String command) {
+    public static Type checkEnum(String command) {
 	switch (command) {
 	case "REALIZATION":
 	    return Type.REALIZATION;

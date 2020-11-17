@@ -9,6 +9,11 @@ public class Field extends Formal{
         super(name, type);
 	this.setVisibility(visType);
     }
+    
+    public Field(Field f) {
+	super(new String(f.getName()), new String(f.getType()));
+	this.setVisibility(f.getVisibility());
+    }
 
     public visibility getVisibility() {
 	return visType;

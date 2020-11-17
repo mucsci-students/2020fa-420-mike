@@ -22,7 +22,6 @@ import mike.datastructures.Entity;
 import mike.datastructures.Method;
 import mike.datastructures.Relationship.Type;
 
-import mike.view.CLIView;
 import mike.view.ViewTemplate;
 
 public class HelperMethodsTest {
@@ -62,7 +61,7 @@ public class HelperMethodsTest {
     
     @Test
     public void HelperMethodConstructor() {
-	HelperMethods test = new HelperMethods();
+	new HelperMethods();
     }
     
     @Test
