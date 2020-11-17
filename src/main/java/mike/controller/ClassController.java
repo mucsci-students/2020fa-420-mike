@@ -139,7 +139,7 @@ public class ClassController {
     }
 
     private static void createRelation(Model classes, String[] entityStrings, JFrame frame, GUIView view) {
-	if (classes.getEntities().size() < 2) {
+	if (classes.getEntities().size() < 1) {
 	    JOptionPane.showMessageDialog(frame, "There are not enough classes to create a relationship.");
 	    return;
 	}
