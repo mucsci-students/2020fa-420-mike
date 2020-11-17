@@ -97,12 +97,27 @@ public class CLIControllerTest {
         control.evaluateCommand(setvisCommands);
         assertEquals("Model does not contain a class", visibility.PRIVATE, control.getModel().copyEntity("c2").copyField("f1").getVisibility());
 
+        // Test list
+        // Print out classes
+        String[] clearCommand = {"sudo", "clear"};
+        control.evaluateCommand(clearCommand);
+        resetStreams();
+     	System.out.println();
+     	System.out.println("Classes:");
+        System.out.println();
+     	String expected = out.toString();
+     	resetStreams();
+     	String[] listCommand = {"list", "classes"};
+     	control.evaluateCommand(listCommand);
+     	String actual = out.toString();
+     	assertEquals("Initial print all does not equal printout", expected, actual);
+        
         // Test invalid command
         resetStreams();
         System.out.println("\n"
                 + "Invalid command.\n"
                 + "Type help to see a list of all commands.\n");
-        String expected = out.toString();
+        expected = out.toString();
         resetStreams();
         String[] errorCommand = {"error"};
         control.evaluateCommand(errorCommand);

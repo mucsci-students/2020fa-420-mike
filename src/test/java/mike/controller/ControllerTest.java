@@ -11,7 +11,7 @@ import mike.view.ViewTemplate;
 import mike.view.ViewTemplate.InterfaceType;
 
 public class ControllerTest {
-    
+
     @Test
     public void CLIControllerCreationTest() throws IOException {
 	Model m = new Model();
