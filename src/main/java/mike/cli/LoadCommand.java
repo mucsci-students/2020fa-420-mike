@@ -34,7 +34,7 @@ public class LoadCommand extends CommandObj {
 		    if (file.isAbsolute()) {
 			path = Paths.get(commands[1]);
 		    } else {
-			path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);
+			path = Paths.get(System.getProperty("user.dir") + File.separator + commands[1]);
 		    }
 		    HelperMethods.load(path, model, null, null);
 		    return false;

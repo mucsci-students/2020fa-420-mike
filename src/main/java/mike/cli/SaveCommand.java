@@ -23,7 +23,7 @@ public class SaveCommand extends CommandObj {
 		if (file.isAbsolute()) {
 		    path = Paths.get(commands[1]);
 		} else {
-		    path = Paths.get(System.getProperty("user.dir") + "\\" + commands[1]);
+		    path = Paths.get(System.getProperty("user.dir") + File.separator + commands[1]);
 		}
 		HelperMethods.save(path, model);
 		System.out.println("File saved at: " + path.toString());
@@ -33,12 +33,12 @@ public class SaveCommand extends CommandObj {
 	    }
 	} else if (commands.length == 3) {
 	    try {
-		File file = new File(commands[2] + "\\" + commands[1]);
+		File file = new File(commands[2] + File.separator + commands[1]);
 		Path path;
 		if (file.isAbsolute()) {
-		    path = Paths.get(commands[2] + "\\" + commands[1]);
+		    path = Paths.get(commands[2] + File.separator + commands[1]);
 		} else {
-		    path = Paths.get(System.getProperty("user.dir") + "\\" + commands[2] + "\\" + commands[1]);
+		    path = Paths.get(System.getProperty("user.dir") + File.separator + commands[2] + File.separator + commands[1]);
 		}
 		HelperMethods.save(path, model);
 		System.out.println("File saved at: " + path.toString());
