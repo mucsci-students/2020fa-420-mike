@@ -27,12 +27,11 @@ public class htmlBox {
     public htmlBox(Entity entity, GUIController control) {
 	try {
 	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    f = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("..\\..\\comic-neue-2.51\\comic-neue-2.51\\TTF\\ComicNeue\\ComicNeue-Regular.ttf"));
+	    f = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/comic-neue-2.51/comic-neue-2.51/TTF/ComicNeue/ComicNeue-Regular.ttf"));
 	    if (!ge.registerFont(f)) {
 	        System.out.println("Unable to register font");
 	    }
 	    f = f.deriveFont(Font.PLAIN, 12);
-	    
 	} catch (IOException e) {
 	    e.printStackTrace();
 	} catch (FontFormatException e) {
