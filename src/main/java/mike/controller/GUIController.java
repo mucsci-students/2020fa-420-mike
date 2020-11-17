@@ -86,7 +86,7 @@ public class GUIController extends ControllerType {
 	return model;
     }
 
-    protected ViewTemplate getView() {
+    protected GUIView getView() {
 	return view;
     }
 
