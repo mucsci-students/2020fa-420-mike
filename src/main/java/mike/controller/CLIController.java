@@ -14,7 +14,6 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import mike.HelperMethods;
 import mike.cli.CreateCommand;
 import mike.cli.DeleteCommand;
 import mike.cli.ListCommand;
