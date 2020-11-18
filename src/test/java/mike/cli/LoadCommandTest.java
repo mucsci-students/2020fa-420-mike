@@ -10,10 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,6 +25,8 @@ public class LoadCommandTest {
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
+    private final String sep = File.separator;
+    
     private final PrintStream origOut = System.out;
     private final PrintStream origErr = System.err;
 
@@ -68,27 +69,27 @@ public class LoadCommandTest {
         System.out.println("\nERROR: Failed to parse directory. Exiting.");
         expected = out.toString();
         resetStreams();
-        String[] loadErr3 = {"load", "\\src\\test\\java\\mike\\testDemo2.json"};
+        String[] loadErr3 = {"load", sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemo2.json"};
         control.evaluateCommand(loadErr3);
         assertEquals("load error message did not appear correctly.", expected, out.toString());
 
         // Test relative Path
-        String[] load = {"load", "\\src\\test\\java\\mike\\testDemoCLI.json"};
+        String[] load = {"load", sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json"};
         control.evaluateCommand(load);
-        Path path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
-        loadWorked(path);
+	File file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
+        loadWorked(file);
 
         // Test absolute Path
-        load[1] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+        load[1] = System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json";
         control.evaluateCommand(load);
-        path = Paths.get(load[1]);
-        loadWorked(path);
+        File file2 = new File(load[1]);
+        loadWorked(file2);
     }
 
-    private void loadWorked(Path path) throws IOException, ParseException, java.text.ParseException {
-        HelperMethods.save(path, model);
+    private void loadWorked(File file) throws IOException, ParseException, java.text.ParseException {
+        HelperMethods.save(file, model);
         Model loadModel = new Model();
-        HelperMethods.load(path, loadModel, null, null);
+        HelperMethods.load(file, loadModel, null, null);
 
         assertEquals("loadModel contains a class.", 0, loadModel.getEntities().size());
         assertEquals("loadModel contains a relationship.", 0, loadModel.getRelationships().size());
