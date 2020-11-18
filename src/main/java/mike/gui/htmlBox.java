@@ -31,7 +31,7 @@ public class htmlBox {
             if (!ge.registerFont(f)) {
                 System.out.println("Unable to register font");
             }
-            f = f.deriveFont(Font.PLAIN, 12);
+            f = f.deriveFont(Font.PLAIN, 14);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (FontFormatException e) {
@@ -43,6 +43,7 @@ public class htmlBox {
         newBox.setFont(f);
         newBox.setName(entity.getName());
         this.newBox.setBackground(Color.LIGHT_GRAY);
+        this.newBox.setForeground(Color.BLACK);
         this.newBox.setOpaque(true);
 
         // Create border and margin

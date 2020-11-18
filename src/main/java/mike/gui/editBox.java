@@ -106,6 +106,7 @@ public class editBox {
 	JLabel Label = new JLabel(section);
 	Label.setFont(new Font("", Font.BOLD, 18));
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
+	Label.setForeground(Color.BLACK);
 	newBox.add(Label);
 
 	// Add all existing fields/methods(and Paramters) to editBox
