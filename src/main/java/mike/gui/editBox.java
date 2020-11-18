@@ -106,6 +106,7 @@ public class editBox {
 	JLabel Label = new JLabel(section);
 	Label.setFont(new Font("", Font.BOLD, 18));
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
+	Label.setForeground(Color.BLACK);
 	newBox.add(Label);
 
 	// Add all existing fields/methods(and Paramters) to editBox
@@ -167,9 +168,6 @@ public class editBox {
     public static JPanel newSection(Boolean parameter, int spot) {
 	JPanel newSection = setUpJPanel();
 
-	JTextField Type = new JTextField(7);
-	JTextField Name = new JTextField(7);
-
 	JButton plusButton = new JButton("+");
 	plusButton.setBackground(Color.green.darker());
 	if (parameter) {
@@ -182,9 +180,10 @@ public class editBox {
 	    newSection.add(visTypes);
 	    newSection.add(Box.createHorizontalStrut(5));
 	}
-	newSection.add(Type);
+
+	newSection.add(new JTextField(7)); // Type
 	newSection.add(Box.createHorizontalStrut(5));
-	newSection.add(Name);
+	newSection.add(new JTextField(7)); // Name
 	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(plusButton);
 	newSection.add(Box.createHorizontalStrut(5));
