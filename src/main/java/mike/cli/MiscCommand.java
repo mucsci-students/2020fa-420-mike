@@ -1,8 +1,6 @@
 package mike.cli;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.MaskingCallback;
@@ -57,13 +55,7 @@ public class MiscCommand extends CommandObj {
 	    } else if (commands[1].equals("load") && commands.length == 3) {
 		try {
 		    File file = new File(commands[2]);
-		    Path path;
-		    if (file.isAbsolute()) {
-			path = Paths.get(commands[2]);
-		    } else {
-			path = Paths.get(System.getProperty("user.dir") + "\\" + commands[2]);
-		    }
-		    HelperMethods.load(path, model, null, null);
+		    HelperMethods.load(file, model, null, null);
 		    prompt = false;
 		} catch (Exception e) {
 		    System.out.println("Failed to parse directory. Exiting.");

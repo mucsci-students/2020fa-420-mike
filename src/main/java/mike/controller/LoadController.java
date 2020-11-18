@@ -2,7 +2,6 @@ package mike.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -35,9 +34,9 @@ public class LoadController {
 		    chooser.setFileFilter(filter);
 		    int returnVal = chooser.showOpenDialog(control.getView().getFrame().getParent());
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
-			control.setPath(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+			control.setFile(chooser.getSelectedFile());
 			control.getView().getPane().removeAll();
-			HelperMethods.load(control.getPath(), control.getModel(), control,
+			HelperMethods.load(control.getFile(), control.getModel(), control,
 				((GUIView) control.getView()));
 			control.setChanged(false);
 			control.getView().validateRepaint();

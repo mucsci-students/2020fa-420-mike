@@ -3,7 +3,6 @@ package mike.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,10 +16,10 @@ public class SaveController {
 	save.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		try {
-		    if (control.getPath() == null) {
+		    if (control.getFile() == null) {
 			saveWithInput(control);
 		    } else {
-			HelperMethods.save(control.getPath(), control.getModel());
+			HelperMethods.save(control.getFile(), control.getModel());
 			control.setChanged(false);
 		    }
 		} catch (IOException e1) {
@@ -44,9 +43,9 @@ public class SaveController {
 	chooser.setFileFilter(filter);
 	int returnVal = chooser.showOpenDialog(control.getView().getFrame().getParent());
 	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    control.setPath(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+	    control.setFile(chooser.getSelectedFile());
 	    try {
-		HelperMethods.save(control.getPath(), control.getModel());
+		HelperMethods.save(control.getFile(), control.getModel());
 		control.setChanged(false);
 	    } catch (IOException e) {
 		System.out.println("Something went wrong when calling save from saveWithInput.");

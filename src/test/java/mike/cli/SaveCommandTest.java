@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,6 +19,9 @@ public class SaveCommandTest {
     Model model;
     ViewTemplate view;
     CLIController control;
+    
+    private final String sep = File.separator;
+    private final String partialPath = sep + "src" + sep + "test" + sep + "java" + sep + "mike";
 
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -55,43 +56,39 @@ public class SaveCommandTest {
         // Test relative Path error length 4
         System.out.println("\nERROR: "
                 + "Error in parsing command. Proper command usage is: \n"
-                + "  save <name>.json (optional <path>)\n");
+                + "  save <name>.json\n");
         String expected = out.toString();
         resetStreams();
-        String[] saveErr2 = {"save", "testDemoCLI.json", "\\src\\test\\java\\mike", "WRONG"};
+        String[] saveErr2 = {"save", "testDemoCLI.json", partialPath, "WRONG"};
         control.evaluateCommand(saveErr2);
         assertEquals("save error message did not appear correctly.", expected, out.toString());
         resetStreams();
 
         // Test relative Path
-        String[] save = {"save", "\\src\\test\\java\\mike\\testDemoCLI.json"};
+        String[] save = {"save", partialPath + sep + "testDemoCLI.json"};
         control.evaluateCommand(save);
-        Path path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
-        saveWorked(path);
+	File file = new File(System.getProperty("user.dir") + partialPath + sep + "testDemoCLI.json");
+        saveWorked(file);
 
         // Test absolute Path
-        save[1] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+        save[1] = System.getProperty("user.dir") + partialPath + sep + "testDemoCLI.json";
         control.evaluateCommand(save);
-        path = Paths.get(save[1]);
-        saveWorked(path);
+        saveWorked(file);
 
         // Test giving relative directory
-        String[] saveDir = {"save", "testDemoCLI.json", "\\src\\test\\java\\mike" };
+        String[] saveDir = {"save", "testDemoCLI.json", partialPath};
         control.evaluateCommand(saveDir);
-        Path pathDir = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
-        saveWorked(pathDir);
+        saveWorked(file);
 
         // Test giving absolute directory
-        saveDir[2] = System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json";
+        saveDir[2] = System.getProperty("user.dir") + partialPath + sep + "testDemoCLI.json";
         control.evaluateCommand(saveDir);
-        pathDir = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemoCLI.json");
-        saveWorked(pathDir);
+        saveWorked(file);
     }
 
-    private void saveWorked(Path path) throws IOException, ParseException {
-        HelperMethods.save(path, model);
-        File directory = new File(path.toString());
-        Object obj = new JSONParser().parse(new FileReader(directory));
+    private void saveWorked(File file) throws IOException, ParseException {
+        HelperMethods.save(file, model);
+        Object obj = new JSONParser().parse(new FileReader(file));
 
         String emptyModelFile = "{\"Relationships\":[],\"Classes\":[]}";
         assertEquals("CLI is null; Should not be null.", emptyModelFile, obj.toString());
