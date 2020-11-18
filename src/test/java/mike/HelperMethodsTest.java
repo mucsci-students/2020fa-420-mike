@@ -333,6 +333,16 @@ public class HelperMethodsTest {
 	assertTrue("loadModel does not contain relationship c1--c1", loadModel.containsRelationship(Type.REALIZATION, "c1", "c1"));
     }
     
+    @Test
+    public void checkEnumTest() {
+	assertEquals("Type does not equal AGGREGATION", Type.AGGREGATION, HelperMethods.checkEnum("AGGREGATION"));
+	assertEquals("Type does not equal INHERITANCE", Type.INHERITANCE, HelperMethods.checkEnum("INHERITANCE"));
+	assertEquals("Type does not equal COMPOSITION", Type.COMPOSITION, HelperMethods.checkEnum("COMPOSITION"));
+	assertEquals("Type does not equal REALIZATION", Type.REALIZATION, HelperMethods.checkEnum("REALIZATION"));
+	assertEquals("Type does not equal null", null, HelperMethods.checkEnum("invalid"));
+    }
+    	
+    
     
     
 }

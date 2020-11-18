@@ -194,5 +194,15 @@ public class MiscCommandTest {
 	executeCommand(clear);
 
 	assertTrue("CLI's model is not empty; CLI's model should be empty.", model.empty());
+    
+	String[] invalidClear = {"clear", "WRONG"};
+	out.reset();
+	err.reset();
+	System.out.println("\nERROR: Error in parsing command. Proper command usage is: \n  clear\n");
+	String expected = out.toString();
+	out.reset();
+	err.reset();
+	executeCommand(invalidClear);
+	assertEquals("Initial print all does not equal printout", expected, out.toString());
     }
 }
