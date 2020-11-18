@@ -1,8 +1,6 @@
 package mike.cli;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.MaskingCallback;
@@ -30,13 +28,7 @@ public class LoadCommand extends CommandObj {
 		}
 		if (!prompt) {
 		    File file = new File(commands[1]);
-		    Path path;
-		    if (file.isAbsolute()) {
-			path = Paths.get(commands[1]);
-		    } else {
-			path = Paths.get(System.getProperty("user.dir") + File.separator + commands[1]);
-		    }
-		    HelperMethods.load(path, model, null, null);
+		    HelperMethods.load(file, model, null, null);
 		    return false;
 		}
 	    } catch (Exception e) {

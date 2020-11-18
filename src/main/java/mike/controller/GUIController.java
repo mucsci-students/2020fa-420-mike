@@ -1,6 +1,6 @@
 package mike.controller;
 
-import java.nio.file.Path;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,7 +16,7 @@ public class GUIController extends ControllerType {
     Model model;
     GUIView view;
     private boolean changed;
-    private Path path;
+    private File file;
     private JLabel inClass;
 
     public GUIController(Model model, ViewTemplate view) {
@@ -78,8 +78,8 @@ public class GUIController extends ControllerType {
 	return inClass;
     }
 
-    public Path getPath() {
-	return path;
+    public File getFile() {
+	return file;
     }
 
     protected Model getModel() {
@@ -106,7 +106,7 @@ public class GUIController extends ControllerType {
 	changed = yes;
     }
 
-    public void setPath(Path yes) {
-	path = yes;
+    public void setFile(File yes) {
+	file = yes;
     }
 }

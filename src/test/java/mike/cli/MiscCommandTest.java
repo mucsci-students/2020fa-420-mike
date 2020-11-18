@@ -83,7 +83,7 @@ public class MiscCommandTest {
 	System.setErr(new PrintStream(err));
 
 	System.out.println("\n" + "Here is a list of available commands:\n"
-		+ "  save <name>.json (optional <path>) - Save file to specific path\n"
+		+ "  save <name>.json - Save file to specific path\n"
 		+ "  load <path> - Loads a file at a specific path\n" + "\n"
 		+ "  create class <name> - create a class with title <name>\n"
 		+ "  create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <type visibility>, type <field type> titled <field name>\n"

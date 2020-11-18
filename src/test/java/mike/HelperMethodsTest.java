@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -26,12 +24,14 @@ import mike.view.ViewTemplate;
 
 public class HelperMethodsTest {
     
-    Path path;
+    File file;
     Model model;
     ViewTemplate view;
     CLIController control;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
+    
+    private final String sep = File.separator;
 
     private final PrintStream origOut = System.out;
     private final PrintStream origErr = System.err;
@@ -43,7 +43,7 @@ public class HelperMethodsTest {
 	model = new Model();
 	view = new ViewTemplate(ViewTemplate.InterfaceType.CLI);
 	control = new CLIController(model, view);
-	path = Paths.get(System.getProperty("user.dir") + "\\src\\test\\java\\mike\\testDemo.json");
+	file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemo.json");
     }
     
     @After
@@ -159,9 +159,8 @@ public class HelperMethodsTest {
     
     @Test
     public void intialSaveTest() throws IOException, ParseException {	
-	HelperMethods.save(path, model);
-	File directory = new File(path.toString());
-	Object obj = new JSONParser().parse(new FileReader(directory));
+	HelperMethods.save(file, model);
+	Object obj = new JSONParser().parse(new FileReader(file));
 	
 	String emptyModelFile = "{\"Relationships\":[],\"Classes\":[]}";
 	assertEquals("CLI is null; Should not be null.", emptyModelFile, obj.toString());
@@ -178,9 +177,8 @@ public class HelperMethodsTest {
 	model.createParameter("c1",  "m2",  "p1", "char");
 	model.createParameter("c1" , "m2",  "p2",  "boolean");
 	
-	HelperMethods.save(path, model);
-	File directory = new File(path.toString());
-	Object obj = new JSONParser().parse(new FileReader(directory));
+	HelperMethods.save(file, model);
+	Object obj = new JSONParser().parse(new FileReader(file));
 	
 	String emptyModelFile = 
 		  "{\"Relationships\":[],"
@@ -225,9 +223,8 @@ public class HelperMethodsTest {
 	model.createRelationship(Type.INHERITANCE, "c3", "c1");
 	model.createRelationship(Type.COMPOSITION, "c2", "c2");
 
-	HelperMethods.save(path, model);
-	File directory = new File(path.toString());
-	Object obj = new JSONParser().parse(new FileReader(directory));
+	HelperMethods.save(file, model);
+	Object obj = new JSONParser().parse(new FileReader(file));
 	
 	String emptyModelFile = 
 		 	"{\"Relationships\":["
@@ -261,9 +258,9 @@ public class HelperMethodsTest {
     
     @Test
     public void intialLoadTest() throws IOException, java.text.ParseException, ParseException {
-	HelperMethods.save(path, model);
+	HelperMethods.save(file, model);
 	Model loadModel = new Model();
-	HelperMethods.load(path, loadModel, null, null);
+	HelperMethods.load(file, loadModel, null, null);
 	
 	assertEquals("loadModel contains a class.", 0, loadModel.getEntities().size());
 	assertEquals("loadModel contains a relationship.", 0, loadModel.getRelationships().size());
@@ -280,9 +277,9 @@ public class HelperMethodsTest {
 	model.createParameter("c1",  "m2",  "p1", "char");
 	model.createParameter("c1" , "m2",  "p2",  "boolean");
 	
-	HelperMethods.save(path, model);
+	HelperMethods.save(file, model);
 	Model loadModel = new Model();
-	HelperMethods.load(path, loadModel, null, null);
+	HelperMethods.load(file, loadModel, null, null);
 	
 	// Classes (and relationships)
 	assertEquals("loadModel contains more or less than two classes.", 2, loadModel.getEntities().size());
@@ -318,9 +315,9 @@ public class HelperMethodsTest {
 	model.createRelationship(Type.COMPOSITION, "c2", "c2");
 	model.createRelationship(Type.REALIZATION, "c1", "c1");	
 	
-	HelperMethods.save(path, model);
+	HelperMethods.save(file, model);
 	Model loadModel = new Model();
-	HelperMethods.load(path, loadModel, null, null);
+	HelperMethods.load(file, loadModel, null, null);
 	
 	// Classes
 	assertEquals("loadModel contains more or less than three classes.", 3, loadModel.getEntities().size());
