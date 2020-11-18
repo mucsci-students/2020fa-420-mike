@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.ParseException;
 
 import org.json.simple.JSONArray;
@@ -27,15 +26,13 @@ import javax.swing.JLabel;
 public class HelperMethods {
 
     // Main load function. Calls loadClasses and loadRelationships
-    public static void load(Path userPath, Model userClasses, ControllerType control, ViewTemplate view)
+    public static void load(File file, Model userClasses, ControllerType control, ViewTemplate view)
 	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
 	userClasses.clear();
 
-	File directory = new File(userPath.toString());
-
 	// Parse the JSON file and get an array of the classes
-	Object obj = new JSONParser().parse(new FileReader(directory));
+	Object obj = new JSONParser().parse(new FileReader(file));
 
 	// Variable initialization. If the types look stupid that's because they are.
 	JSONObject javaObj = (JSONObject) obj;
@@ -139,13 +136,13 @@ public class HelperMethods {
     }
 
     // Main save function. Calls saveClasses and saveRelationships
-    public static void save(Path directory, Model userClasses) throws IOException {
+    public static void save(File file, Model userClasses) throws IOException {
 	JSONObject saveFile = new JSONObject();
 
 	saveFile = saveClasses(saveFile, userClasses);
 	saveFile = saveRelationships(saveFile, userClasses);
 
-	writeFile(saveFile, directory);
+	writeFile(saveFile, file);
     }
 
     // Creates a JSONObject for the classes and saves it to the saveFile
@@ -221,13 +218,12 @@ public class HelperMethods {
     }
 
     // Creates a file if it does not exist and writes saveFile to the file
-    private static void writeFile(JSONObject saveFile, Path directory) throws IOException {
-	File fileDirectory = new File(directory.toString());
-	fileDirectory.createNewFile();
+    private static void writeFile(JSONObject saveFile, File file) throws IOException {
+	file.createNewFile();
 
 	// Converts JSONObject and adds it to file
 	String fullJSONString = saveFile.toString();
-	FileWriter myWriter = new FileWriter(fileDirectory);
+	FileWriter myWriter = new FileWriter(file);
 	myWriter.write(fullJSONString);
 	myWriter.close();
     }
