@@ -41,7 +41,7 @@ public class SaveController {
 	JFileChooser chooser = new JFileChooser();
 	FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files", "json");
 	chooser.setFileFilter(filter);
-	int returnVal = chooser.showOpenDialog(control.getView().getFrame().getParent());
+	int returnVal = chooser.showSaveDialog(control.getView().getFrame().getParent());
 	if (returnVal == JFileChooser.APPROVE_OPTION) {
 	    control.setFile(chooser.getSelectedFile());
 	    try {
