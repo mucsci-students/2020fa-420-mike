@@ -14,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import mike.datastructures.Entity;
+import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Model;
+import mike.datastructures.Parameter;
 import mike.datastructures.Relationship;
 import mike.gui.Line;
 import mike.gui.editBox;
@@ -28,6 +30,8 @@ public class SaveCancel {
 	    @SuppressWarnings("unchecked")
 	    public void actionPerformed(ActionEvent e) {
 		GUIView view = entering(control);
+
+		boolean madeChange = false;
 		Entity entity = editBox.getEntity();
 		String eName = entity.getName();
 		int fieldSize = entity.getFields().size(), methodNum = 0, paramSize;
@@ -40,11 +44,21 @@ public class SaveCancel {
 		    String textField = ((JTextField) panelField.getComponent(6)).getText();
 		    String typeField = ((JTextField) panelField.getComponent(4)).getText();
 		    String visType = ((JComboBox<String>) panelField.getComponent(2)).getSelectedItem().toString();
-		    String fieldName = entity.getFields().get(x).getName();
+		    Field entityField = entity.getFields().get(x);
+		    String fieldName = entityField.getName();
 
-		    model.changeFieldType(eName, fieldName, typeField);
-		    model.changeFieldVis(eName, fieldName, visType);
-		    model.renameField(eName, fieldName, textField);
+		    if (!typeField.equals(entityField.getType())) {
+			model.changeFieldType(eName, fieldName, typeField);
+			madeChange = true;
+		    }
+		    if (!visType.equals(entityField.getVisibility().toString().toLowerCase())) {
+			model.changeFieldVis(eName, fieldName, visType);
+			madeChange = true;
+		    }
+		    if (!textField.equals(entityField.getName())) {
+			model.renameField(eName, fieldName, textField);
+			madeChange = true;
+		    }
 		}
 
 		for (int x = fieldSize + 5; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
@@ -56,27 +70,50 @@ public class SaveCancel {
 		    Method m = entity.getMethods().get(methodNum);
 		    paramSize = m.getParameters().size();
 
-		    model.changeMethodType(eName, m.getName(), typeMethod);
-		    model.changeMethodVis(eName, m.getName(), visType);
-		    model.renameMethod(eName, m.getName(), textMethod);
-
+		    if (!typeMethod.equals(m.getType())) {
+			model.changeMethodType(eName, m.getName(), typeMethod);
+			madeChange = true;
+		    }
+		    if (!visType.equals(m.getVisibility().toString().toLowerCase())) {
+			model.changeMethodVis(eName, m.getName(), visType);
+			madeChange = true;
+		    }
+		    if (!textMethod.equals(m.getName())) {
+			model.renameMethod(eName, m.getName(), textMethod);
+			madeChange = true;
+		    }
+		    
 		    for (int y = 0; y < paramSize; ++y) {
 			JPanel panelParam = (JPanel) newBox.getComponent(x + y + 1);
 			String typeParam = ((JTextField) panelParam.getComponent(4)).getText();
 			String textParam = ((JTextField) panelParam.getComponent(6)).getText();
-
-			m.changeParameterType(textParam, typeParam);
-			m.renameParameter(m.getParameters().get(y).getName(), textParam);
+			Parameter p = m.getParameters().get(y);
+			
+			if (!typeParam.equals(p.getType())) {
+			    m.changeParameterType(p.getName(), typeParam);
+			    madeChange = true;
+			}
+			if (!textParam.equals(p.getName())) {
+			    m.renameParameter(p.getName(), textParam);
+			    madeChange = true;
+			}
 		    }
+		    
 		}
-		model.renameClass(eName, text.getText());
+		if (!eName.equals(text.getText())) {
+		    model.renameClass(eName, text.getText());
+		    madeChange = true;
+		}
 
 		control.getinClass().setName(text.getText());
 		view.exitEditingClass(control.getinClass(), control, model);
+
+		if(madeChange) {
+		    editBox.newEditMeme();
+		}
 		control.setModel(editBox.getEditModel());
-		editBox.newEditMeme();
 		control.appendMementos(editBox.getEditMementos());
-		
+
 		exiting(view.getMenuBar(), control, view.getFrame());
 	    }
 	});
@@ -85,7 +122,7 @@ public class SaveCancel {
     protected static void cancelClass(JButton cancelButton, GUIController control) {
 	cancelButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		GUIView view = entering (control);
+		GUIView view = entering(control);
 		control.setModel(control.getModel());
 
 		for (Line relation : view.getRelations()) {
@@ -98,7 +135,7 @@ public class SaveCancel {
 		}
 
 		view.exitEditingClass(control.getinClass(), control, control.getModel());
-		exiting (view.getMenuBar(), control, view.getFrame());
+		exiting(view.getMenuBar(), control, view.getFrame());
 	    }
 	});
     }
@@ -109,11 +146,11 @@ public class SaveCancel {
 		int n = JOptionPane.showConfirmDialog(((GUIView) control.getView()).getFrame(),
 			"Are you sure you want to delete this class?", "Delete Class", JOptionPane.YES_NO_OPTION);
 		if (n == 0) {
-		    GUIView view = entering (control);
+		    GUIView view = entering(control);
 		    view.deleteLines(editBox.getEntity().getName());
 		    editBox.getEditModel().deleteClass(editBox.getEntity().getName());
 		    view.getPane().remove(control.getinClass());
-		    exiting (view.getMenuBar(), control, view.getFrame());
+		    exiting(view.getMenuBar(), control, view.getFrame());
 		    editBox.newEditMeme();
 		    control.appendMementos(editBox.getEditMementos());
 		}
@@ -129,7 +166,7 @@ public class SaveCancel {
 	menuBar.getComponent(5).setEnabled(true);
 	return view;
     }
-    
+
     private static void exiting(JMenuBar menuBar, GUIController control, JFrame frame) {
 	control.setinClass(null);
 	editBox.setBox(null);

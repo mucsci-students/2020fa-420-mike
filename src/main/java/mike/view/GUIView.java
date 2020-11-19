@@ -87,6 +87,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     public void repaintEverything(Model model, GUIController control) {
 	JLayeredPane pane = ((GUIView) control.getView()).getPane();
 	pane.removeAll();
+	relations.clear();
+	entitylabels.clear();
 	for (Entity e : model.getEntities()) {
 	    showClass(e, control);
 	    JLabel curLabel = this.getEntityLabels().get(e.getName());
