@@ -1,6 +1,7 @@
 package mike.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -8,6 +9,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import mike.datastructures.Entity;
+import mike.datastructures.Memento;
 import mike.datastructures.Model;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
@@ -18,11 +20,16 @@ public class GUIController extends ControllerType {
     private boolean changed;
     private File file;
     private JLabel inClass;
+    protected ArrayList<Memento> mementos;
+    private int currMeme;
 
     public GUIController(Model model, ViewTemplate view) {
 	super();
 	this.model = model;
 	this.view = (GUIView) view.getViewinterface();
+	currMeme = 0;
+	mementos = new ArrayList<Memento>();
+	mementos.add(new Memento(this.model));
     }
 
     public void classControls(JLabel box, Entity e) {
@@ -30,10 +37,9 @@ public class GUIController extends ControllerType {
 	ClassController.moveClass(box, e, view);
     }
 
-    public void saveCancel(JButton save, JButton cancel, JButton xButton, JButton addRelation, JButton deleteRelation,
-	    Model backup) {
+    public void saveCancel(JButton save, JButton cancel, JButton xButton, JButton addRelation, JButton deleteRelation) {
 	SaveCancel.saveClass(save, this);
-	SaveCancel.cancelClass(cancel, this, backup);
+	SaveCancel.cancelClass(cancel, this);
 	SaveCancel.deleteEntity(xButton, this);
 	ClassController.addRelationListener(addRelation, this);
 	ClassController.deleteRelationListener(deleteRelation, this);
@@ -44,10 +50,27 @@ public class GUIController extends ControllerType {
 	SaveController.saveListener((JButton) menubar.getComponent(0), this);
 	SaveController.saveAsListener((JButton) menubar.getComponent(1), this);
 	LoadController.loadListener((JButton) menubar.getComponent(2), this);
-	FrameController.addClassListener((JButton) menubar.getComponent(3), this);
-	ClassController.editModeListener((JButton) menubar.getComponent(4), this);
+	UndoRedoController.undoListener((JButton) menubar.getComponent(3), mementos, this);
+	UndoRedoController.redoListener((JButton) menubar.getComponent(4), mementos, this);
+	FrameController.addClassListener((JButton) menubar.getComponent(5), this);
+	ClassController.editModeListener((JButton) menubar.getComponent(6), this);
 	FrameController.exitListener(this.view, this);
 	FrameController.resizeListener(this.view);
+    }
+
+    protected void truncateMemes(int end) {
+	if (currMeme < mementos.size() - end) {
+	    for (int i = mementos.size() - end; i > currMeme; --i) {
+		mementos.remove(i);
+	    }
+	}
+    }
+
+    public void newMeme(Memento meme) {
+	truncateMemes(1);
+	mementos.add(meme);
+	this.model = meme.getModel();
+	++currMeme;
     }
 
     public void createField(JPanel panel) {
@@ -86,7 +109,7 @@ public class GUIController extends ControllerType {
 	return model;
     }
 
-    protected GUIView getView() {
+    public GUIView getView() {
 	return view;
     }
 
@@ -109,4 +132,23 @@ public class GUIController extends ControllerType {
     public void setFile(File yes) {
 	file = yes;
     }
+
+    public int getCurrMeme() {
+	return currMeme;
+    }
+
+    public void setCurrMeme(int newCurrMeme) {
+	currMeme = newCurrMeme;
+    }
+
+    public ArrayList<Memento> getMementos() {
+	return mementos;
+    }
+
+    public void appendMementos(ArrayList<Memento> editModeMementos) {
+	truncateMemes(1);
+	mementos.addAll(editModeMementos);
+	currMeme = mementos.size() - 1;
+    }
+
 }

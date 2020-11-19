@@ -28,7 +28,7 @@ public class SaveCancel {
 	    @SuppressWarnings("unchecked")
 	    public void actionPerformed(ActionEvent e) {
 		GUIView view = entering(control);
-
+		control.setModel(editBox.getEditModel());
 		Entity entity = editBox.getEntity();
 		String eName = entity.getName();
 		int fieldSize = entity.getFields().size(), methodNum = 0, paramSize;
@@ -75,22 +75,24 @@ public class SaveCancel {
 		control.getinClass().setName(text.getText());
 		view.exitEditingClass(control.getinClass(), control, model);
 		
+		control.appendMementos(editBox.getEditMementos());
+		
 		exiting(view.getMenuBar(), control, view.getFrame());
 	    }
 	});
     }
 
-    protected static void cancelClass(JButton cancelButton, GUIController control, Model backup) {
+    protected static void cancelClass(JButton cancelButton, GUIController control) {
 	cancelButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		GUIView view = entering (control);
-		control.setModel(backup);
+		control.setModel(control.getModel());
 
 		for (Line relation : view.getRelations()) {
 		    view.getPane().remove(relation);
 		}
 		view.getRelations().clear();
-		for (Relationship relation : backup.getRelationships()) {
+		for (Relationship relation : control.getModel().getRelationships()) {
 		    view.createRelationship(relation.getName(), relation.getFirstClass(), relation.getSecondClass(),
 			    control.getModel());
 		}
@@ -109,9 +111,11 @@ public class SaveCancel {
 		if (n == 0) {
 		    GUIView view = entering (control);
 		    view.deleteLines(editBox.getEntity().getName());
-		    control.getModel().deleteClass(editBox.getEntity().getName());
+		    editBox.getEditModel().deleteClass(editBox.getEntity().getName());
 		    view.getPane().remove(control.getinClass());
 		    exiting (view.getMenuBar(), control, view.getFrame());
+		    editBox.newEditMeme();
+		    control.appendMementos(editBox.getEditMementos());
 		}
 	    }
 	});
@@ -120,17 +124,17 @@ public class SaveCancel {
     private static GUIView entering(GUIController control) {
 	GUIView view = (GUIView) control.getView();
 	JMenuBar menuBar = view.getMenuBar();
-	menuBar.getComponent(4).setBackground(Color.RED);
-	menuBar.getComponent(4).setEnabled(true);
-	menuBar.getComponent(3).setEnabled(true);
+	menuBar.getComponent(6).setBackground(Color.RED);
+	menuBar.getComponent(6).setEnabled(true);
+	menuBar.getComponent(5).setEnabled(true);
 	return view;
     }
     
     private static void exiting(JMenuBar menuBar, GUIController control, JFrame frame) {
 	control.setinClass(null);
 	editBox.setBox(null);
-	menuBar.remove(6);
-	menuBar.remove(5);
+	menuBar.remove(8);
+	menuBar.remove(7);
 	frame.validate();
 	frame.repaint();
     }

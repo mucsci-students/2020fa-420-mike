@@ -24,7 +24,8 @@ public class Model {
 	    this.entities.add(thisE);
 	}
 	for(Relationship r : modelToCopy.relationships) {
-	    this.relationships.add(r);
+	    Relationship newR = new Relationship(r.getName(), r.getFirstClass(), r.getSecondClass());
+	    this.relationships.add(newR);
 	}
     }
 
