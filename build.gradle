@@ -36,6 +36,9 @@ dependencies {
     compile group: 'org.jline', name: 'jline', version: '3.16.0'
     compile group: 'org.jline', name: 'jline-terminal-jna', version: '3.16.0'
 
+    // Use mockito for mock objects
+    testCompile "org.mockito:mockito-core:2.+"
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 }

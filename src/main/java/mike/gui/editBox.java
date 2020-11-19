@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -21,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import mike.controller.GUIController;
 import mike.datastructures.Entity;
 import mike.datastructures.Field;
+import mike.datastructures.Memento;
 import mike.datastructures.Method;
 import mike.datastructures.Model;
 import mike.datastructures.Parameter;
@@ -30,11 +32,13 @@ public class editBox {
 
     private static JLabel newBox;
     private static Entity e;
-    private Model backupMod;
+    private static Model editModel;
+    private static ArrayList<Memento> editMementos;
 
     public editBox(JLabel label, GUIController control, Model model, GUIView view) {
-	backupMod = new Model(model);
-	e = model.copyEntity(label.getName());
+	editModel = new Model(model);
+	e = editModel.copyEntity(label.getName());
+	editMementos = new ArrayList<Memento>();
 
 	// Create entire editBox
 	newBox = new JLabel();
@@ -42,17 +46,19 @@ public class editBox {
 
 	// Add all model parts into newBox
 	createClassSection(label.getName(), control, view);
-	createSection("Fields:", control, model);
-	createSection("Methods:", control, model);
+	createSection("Fields:", control);
+	createSection("Methods:", control);
 
 	// Design entire label
 	newBox.setBackground(Color.LIGHT_GRAY);
 	newBox.setOpaque(true);
-	newBox.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 4), (new EmptyBorder(6, 6, 6, 6))));
+	newBox.setBorder(
+		new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 4), (new EmptyBorder(6, 6, 6, 6))));
 
 	// Position/show label
 	newBox.setName(e.getName());
-	newBox.setBounds(e.getXLocation(), e.getYLocation(), newBox.getLayout().preferredLayoutSize(newBox).width,newBox.getLayout().preferredLayoutSize(newBox).height);
+	newBox.setBounds(e.getXLocation(), e.getYLocation(), newBox.getLayout().preferredLayoutSize(newBox).width,
+		newBox.getLayout().preferredLayoutSize(newBox).height);
     }
 
     public static JLabel getBox() {
@@ -63,12 +69,24 @@ public class editBox {
 	return e;
     }
 
-    public Model getBackup() {
-	return backupMod;
+    public static Model getEditModel() {
+	return editModel;
+    }
+
+    public static void setEditModel(Model newModel) {
+	editModel = newModel;
+    }
+
+    public static ArrayList<Memento> getEditMementos() {
+	return editMementos;
     }
 
     public static void setBox(JLabel b) {
 	newBox = b;
+    }
+
+    public static void newEditMeme() {
+	editMementos.add(new Memento(new Model(editModel)));
     }
 
     private void createClassSection(String labelName, GUIController control, GUIView view) {
@@ -98,11 +116,11 @@ public class editBox {
 	newEntity.add(xButton);
 	newEntity.add(Box.createHorizontalStrut(5));
 	newEntity.add(className);
-	control.saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation, backupMod);
+	control.saveCancel(saveButton, cancelButton, xButton, addRelation, deleteRelation);
 	newBox.add(newEntity);
     }
 
-    private void createSection(String section, GUIController control, Model model) {
+    private void createSection(String section, GUIController control) {
 	JLabel Label = new JLabel(section);
 	Label.setFont(new Font("", Font.BOLD, 18));
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
@@ -159,7 +177,7 @@ public class editBox {
 	editSection.add(Type);
 	editSection.add(Box.createHorizontalStrut(5));
 	editSection.add(Name);
-	
+
 	newBox.add(editSection, spot);
 
 	return editSection;
@@ -177,6 +195,7 @@ public class editBox {
 	} else {
 	    String[] visTypesArray = { "public", "private", "protected" };
 	    JComboBox<String> visTypes = new JComboBox<>(visTypesArray);
+	    visTypes.setSelectedItem("public");
 	    newSection.add(visTypes);
 	    newSection.add(Box.createHorizontalStrut(5));
 	}
@@ -187,7 +206,7 @@ public class editBox {
 	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(plusButton);
 	newSection.add(Box.createHorizontalStrut(5));
-	
+
 	newBox.add(newSection, spot);
 
 	return newSection;
