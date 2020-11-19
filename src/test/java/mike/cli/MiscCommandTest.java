@@ -205,4 +205,17 @@ public class MiscCommandTest {
 	executeCommand(invalidClear);
 	assertEquals("Initial print all does not equal printout", expected, out.toString());
     }
+    
+    @Test
+    public void quitTest() {
+	String[] invalidQuit = {"quit", "WRONG"};
+	out.reset();
+	err.reset();
+	System.out.println("\nERROR: Error in parsing command. Proper command usage is: \n quit\n");
+	String expected = out.toString();
+	out.reset();
+	err.reset();
+	executeCommand(invalidQuit);
+	assertEquals("Initial print all does not equal printout", expected, out.toString());
+    }
 }

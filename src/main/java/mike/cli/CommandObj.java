@@ -38,7 +38,7 @@ public abstract class CommandObj {
 		"\n  settype parameter <class name> <method name> <parameter name> <newtype>",
 		"\n  setvis field <class name> <field name> <visibility>",
 		"\n  setvis method <class name> <method name> <visibility>", "\n  list classes",
-		"\n  list relationships", "\n  list all", "\n  clear", "\n undo", "\n redo" };
+		"\n  list relationships", "\n  list all", "\n  clear", "\n undo", "\n redo", "\n quit" };
 	return commandUsage;
     }
 

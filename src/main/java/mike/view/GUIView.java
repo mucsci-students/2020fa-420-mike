@@ -51,12 +51,11 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
-
+	
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);
 	pane.setOpaque(true);
 	validateRepaint();
-
     }
 
     public JMenuBar getMenuBar() {
