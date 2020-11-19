@@ -30,7 +30,7 @@ public class MockitoAttempt {
 
     @Before
     public void setUp() throws Exception {
-	MockitoAnnotations.initMocks(this);
+	//MockitoAnnotations.initMocks(this);
     }
     
     @Test
