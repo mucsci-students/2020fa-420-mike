@@ -3,7 +3,7 @@
 	1. Navigate to the directory with the files and have a command prompt ready
 	2. gradle build
 	3. gradle shadowJar
-	4. java -jar ./build/libs/mike-all.jar (for GUI) or java -jar ./build/libs/mike-all.jar (for CLI)
+	4. java -jar ./build/libs/mike-all.jar (for GUI) or java -jar ./build/libs/mike-all.jar cli (for CLI)
 	
 ## Switching between the CLI and GUI
 
@@ -13,8 +13,8 @@
 	4. Load the file that you saved earlier
 	
 # CLI commands
-	save <name> (optional <path>) - Save progress to a specific path or to the current directory if no path is specified. Adding .json to the end of the file will save it as a JSON file.
-  	load <filepath> - Loads saved progress from an absolute file path. If just the name of the file is given, then the program will try to find it in the current directory. Add .json to the end of the file name if it is a JSON file.
+	save <filepath> - Save progress to a file with a specific path or to the current directory if no path is specified. Adding .json to the end of the file will save it as a JSON file.
+  	load <filepath> - Loads saved progress from an absolute file path. If just the name of the file is given, then the program will try to find the file in the current directory. Add .json to the end of the file name if it is a JSON file.
 
   	create class <name> - create a class with title <name>
   	create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <field visibility> (public, private, protected), type <field type> titled <field name>
