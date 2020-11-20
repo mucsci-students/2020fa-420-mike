@@ -6,12 +6,12 @@
 	4. java -jar ./build/libs/mike-all.jar (for GUI) or java -jar ./build/libs/mike-all.jar (for CLI)
 	
 # CLI commands
-	save <name>.json (optional <path>) - Save file to specific path or to current directory if no path is specified
-  	load <path> - Loads a file from an absolute path
+	save <name>.json (optional <path>) - Save file to specific path or to current directory if no path is specified.
+  	load <path>.json - Loads a file from an absolute path. If just the name of the file is given, then it will try to find it in the current directory.
 
   	create class <name> - create a class with title <name>
-  	create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <type visibility>, type <field type> titled <field name>
-  	create method <class name> <method visibility> <method type> <method name> - create a method in <class name> with visibility <method visibility>, type <method type> titled <method name>
+  	create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <field visibility> (public, private, protected), type <field type> titled <field name>
+  	create method <class name> <method visibility> <method type> <method name> - create a method in <class name> with visibility <method visibility> (public, private, protected), type <method type> titled <method name>
   	create relationship <type> <class name1> <class name2> - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance). Recursive relationships can be created.
   	create parameter <class name> <method> <parameter type> <parameter name> - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>
 
@@ -29,6 +29,9 @@
   	settype field <class name> <field name> <newtype> - set type of field <field name> in <class name> to <type>
   	settype method <class name> <method name> <newtype> - set type of method <method name> in <class name> to <type>
   	settype parameter <class name> <method name> <parameter name> <newtype> - set type of parameter <class name> in <method name> titled <parameter name> to <type>
+
+	setvis field <class name> <field name> <visibility> - set visibility of field <field name> in <class name> to <visibility>
+	setvis method <class name> <method name> <visibility> - set visibility of method <method name> in <class name> to <visibility>
 
   	list classes - List all existing classes
   	list relationships - List all existing relationships
@@ -211,3 +214,10 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 	Undo: CTRL+Z
 
 	Redo: CTRL+Y
+	
+# Switching between the CLI and GUI
+
+	1. Save progress to a file on your computer
+	2. Quit the current program
+	3. Run the desired interface (GUI or CLI)
+	4. Load the file that you saved earlier
