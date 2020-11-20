@@ -11,32 +11,57 @@ import javax.swing.*;
 import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.gui.Line;
-import mike.gui.editBox;
-import mike.gui.htmlBox;
+import mike.gui.EditBox;
+import mike.gui.HtmlBox;
 
 public class GUIView extends ViewTemplate implements ViewInterface {
     // Global Variables
     private JLayeredPane pane;
-    private HashMap<String, JLabel> entitylabels;
+    private HashMap<String, JLabel> entityLabels;
     private ArrayList<Line> relations;
     private JFrame frame;
     private JMenuBar menuBar;
 
-    public GUIView() throws Exception {
+    public GUIView(JLayeredPane pane, HashMap<String, JLabel> entityLabels, ArrayList<Line> relations, JFrame frame,
+	    JMenuBar menuBar) {
 	super();
 
 	// initialize globals
-	entitylabels = new HashMap<String, JLabel>();
+	this.pane = pane;
+	this.entityLabels = entityLabels;
+	this.relations = relations;
+	this.frame = frame;
+	this.menuBar = menuBar;
+
+	//GUIInit();
+    }
+
+    public GUIView() {
+	super();
+
+	// initialize globals
+	entityLabels = new HashMap<String, JLabel>();
 	pane = new JLayeredPane();
 	relations = new ArrayList<Line>();
 	menuBar = new JMenuBar();
 
+	
+	GUIInit();
+    }
+    
+    public void GUIInit() {
 	// set look and feel to match user's OS
-	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+		| UnsupportedLookAndFeelException e) {
+	    System.out.println("UIManager had a big oopsy-woopsy");
+	    e.printStackTrace();
+	}
 
 	// create frame
 	frame = new JFrame("Team mike UML Editor");
-
+	
 	// Creating the menu bar and its options
 	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
 		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
@@ -64,7 +89,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public HashMap<String, JLabel> getEntityLabels() {
-	return entitylabels;
+	return entityLabels;
     }
 
     public JLayeredPane getPane() {
@@ -88,7 +113,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	JLayeredPane pane = ((GUIView) control.getView()).getPane();
 	pane.removeAll();
 	relations.clear();
-	entitylabels.clear();
+	entityLabels.clear();
 	for (Entity e : model.getEntities()) {
 	    showClass(e, control);
 	    JLabel curLabel = this.getEntityLabels().get(e.getName());
@@ -100,10 +125,10 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	validateRepaint();
     }
 
-    public htmlBox showClass(Entity entity, GUIController control) {
-	htmlBox newview = new htmlBox(entity, control);
+    public HtmlBox showClass(Entity entity, GUIController control) {
+	HtmlBox newview = new HtmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
-	entitylabels.put(entity.getName(), newview.getBox());
+	entityLabels.put(entity.getName(), newview.getBox());
 	validateRepaint();
 
 	return newview;
@@ -145,27 +170,27 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public void deleteClass(String name) {
-	pane.remove(entitylabels.get(name));
-	entitylabels.remove(name);
+	pane.remove(entityLabels.get(name));
+	entityLabels.remove(name);
 	validateRepaint();
     }
 
     public void createRelationship(Relationship.Type type, String name1, String name2, Model model) {
 	JLabel L1;
 	JLabel L2;
-	JLabel box = editBox.getBox();
+	JLabel box = EditBox.getBox();
 	Boolean notNull = (box != null);
 
 	if (notNull && name1.equals(box.getName())) {
 	    L1 = box;
 	} else {
-	    L1 = entitylabels.get(name1);
+	    L1 = entityLabels.get(name1);
 	}
 
 	if (notNull && name2.equals(box.getName())) {
 	    L2 = box;
 	} else {
-	    L2 = entitylabels.get(name2);
+	    L2 = entityLabels.get(name2);
 	}
 	Line line = new Line(L1, L2, type);
 
@@ -179,12 +204,12 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     public JLabel htmlBoxToEditBox(JLabel label, GUIController control, Model model) {
 	pane.remove(label);
 
-	new editBox(label, control, model, this);
-	pane.add(editBox.getBox(), JLayeredPane.MODAL_LAYER);
+	new EditBox(label, control, model, this);
+	pane.add(EditBox.getBox(), JLayeredPane.MODAL_LAYER);
 
-	resetLinesFromConversion(label, editBox.getBox());
+	resetLinesFromConversion(label, EditBox.getBox());
 
-	return editBox.getBox();
+	return EditBox.getBox();
     }
 
     public void exitEditingClass(JLabel inClass, GUIController control, Model model) {

@@ -19,12 +19,12 @@ import mike.datastructures.Field;
 import mike.datastructures.Method;
 import mike.datastructures.Parameter;
 
-public class htmlBox {
+public class HtmlBox {
 
     private JLabel newBox;
     private static Font f;
 
-    public htmlBox(Entity entity, GUIController control) {
+    public HtmlBox(Entity entity, GUIController control) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             f = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/comic-neue-2.51/comic-neue-2.51/TTF/ComicNeue/ComicNeue-Regular.ttf"));

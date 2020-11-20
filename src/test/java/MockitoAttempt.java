@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -17,25 +18,35 @@ import mike.view.GUIView;
 
 public class MockitoAttempt {
 
+    @Spy
+    private HashMap<String, JLabel> entityLabels =  new HashMap<String, JLabel>();
+    @Spy
+    private ArrayList<Line> relations = new ArrayList<Line>();
+    @Mock
+    private JLayeredPane pane = new JLayeredPane();
+    @Mock
+    private JFrame frame = new JFrame();
+    @Mock
+    private JMenuBar menuBar = new JMenuBar();
     
     @Mock
-    private JLayeredPane pane;
-    private HashMap<String, JLabel> entitylabels;
-    private ArrayList<Line> relations;
-    private JFrame frame;
-    private JMenuBar menuBar;
-    
-    @InjectMocks
     private GUIView guiViewMock;
 
-    @Before
-    public void setUp() throws Exception {
-	//MockitoAnnotations.initMocks(this);
+
+    @Test
+    public void initTest() throws Exception {    
+	guiViewMock = new GUIView(pane, entityLabels, relations, frame, menuBar);
     }
     
     @Test
-    public void testGetters() throws Exception {    
-	guiViewMock = new GUIView();
+    public void getterTest() throws Exception{
+	guiViewMock = new GUIView(pane, entityLabels, relations, frame, menuBar);
+	
+	assertFalse("entityLabels object is null.", guiViewMock.getEntityLabels().equals(null));
+	assertFalse("relations object is null.", guiViewMock.getRelations().equals(null));
+	assertFalse("pane object is null.", guiViewMock.getPane().equals(null));
+	assertFalse("frame object is null.", guiViewMock.getFrame().equals(null));
+	assertFalse("menuBar object is null.", guiViewMock.getMenuBar().equals(null));
     }
 
 }
