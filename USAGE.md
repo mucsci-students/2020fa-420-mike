@@ -35,8 +35,16 @@
   	quit - exits the program
 
 ### Tab Completion
-	The CLI comes with tab completion. Hitting tab before typing presents a list of valid commands. 
-	Hitting tab after typing in text will present a list of valid commands, or autocomplete if there is only one valid command left.
+	
+The CLI comes with tab completion. Hitting tab before typing presents a list of valid commands, as such:
+![Tab Options](/images/cli-tab-options.png)
+	
+Hitting tab after typing in text will present a list of valid commands, as such:
+![Text Tab Options](/images/c-tab-options.png)
+	
+If there is only one valid comment left, hitting tab will autocomplete the command, as such:
+![Text Tab Options](/images/pre-tab-create.png)
+![Text Tab Options](/images/post-tab-create.png)
 
 # Using the GUI
 
