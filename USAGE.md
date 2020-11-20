@@ -58,7 +58,7 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 
 # Using the GUI
 
-### Topbar buttons:
+## Topbar buttons:
 	
 	Save:
 		Saves progress made since last save to the file that was specified using Save As.
@@ -71,10 +71,10 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		Opens a file chooser and allows the user to select and load a saved version of a UML diagram.
 
 	Undo:
-		Undo cancels or reverses the most recent command performed on the UML diagram.
+		Reverses the most recent command performed on the UML diagram.
 
 	Redo:
-		Redo allows you to cancel or reverse your last UNDO command.
+		Reverses the last UNDO command.
 
 	Add Class:
 		Adds a class with the specified name to the GUI. If a class with the specified name already exists,
@@ -82,24 +82,26 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 
 	Enable/Disable Edit Mode:
 		When Enable Edit Mode is clicked, it gives the user the ability to edit a class by clicking on it. More
-		on the buttons and options available with edit mode is listed later in this document. In edit mode,
+		on the buttons and options available within edit mode are listed later in this document. In edit mode,
 		the ability to Save/Save As/Load are disabled to prevent saving changes that are still being made.
 		When in edit mode, the "Enable Edit Mode" button turns to a "Disable Edit Mode" button, 
 		which exits edit mode when pressed.
 
-### GUI Edit Mode
+## GUI Edit Mode
+
+### Adding items:
 
 	Adding fields:
-		Under the area of a class labeled "Fields" are two text boxes. The left one is for the field type
-		and the right one is for the field name. Enter the desired information into these text boxes and hit
-		the blue '+' located to the right of the text boxes to add the field. Each time a field is added,
-		new boxes will appear with the ability to add more fields.
+		Under the area of a class labeled "Fields" are two text boxes and a drop down menu. The drop down menu is for
+		selecting the visibility type. The left text box is for the field type and the right one is for the field name. 
+		Enter the desired information into these text boxes and hit the blue '+' located to the right of the text boxes 
+		to add the field. Each time a field is added, new boxes will appear with the ability to add more fields.
 
 	Adding methods:
-		Under the area of a class labeled "Methods" are two text boxes. The left one is for the method type
-		and the right one is for the method name. Enter the desired information into these text boxes and hit
-		the blue '+' located to the right of the text boxes to add the method. Each time a method is added,
-		new boxes will appear with the ability to add more methods.
+		Under the area of a class labeled "Methods" are two text boxes and a drop down menu. The drop down menu is for
+		selecting the visibility type. The left one is for the method type and the right one is for the method name. 
+		Enter the desired information into these text boxes and hit the blue '+' located to the right of the text boxes 
+		to add the method. Each time a method is added, new boxes will appear with the ability to add more methods.
 
 	Adding parameters:
 		After creating a method, two text boxes will be located under the method preceded with "----". These lines 
@@ -115,6 +117,8 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		When these both selections are made, hit OK and a line will be drawn between the classes
 		representing the relationship. If it is a recursive relationship, a circular line will be drawn from the
 		class to itself.
+		
+### Renaming items:
 
 	Renaming a class:
 		Enter the new name of the class into the text field where the previous class name is located.
@@ -137,15 +141,50 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		Under each method, there will be two text boxes for each parameter. The left one
 		is for the type and the right one is for the name. Enter the new type and name into these
 		text boxes then hit the "Save" button at the top of the class.
+		
+### Editing items:
+		
+	Editing field types:
+		When in edit mode, click on the class containing the fields you wish to edit the type of.
+		Under the section labeled "Fields", there will be two text boxes for each field. The left text box contains 
+		the field's type. Type in the desired type, then click the "Save" button at the top of the class.
+	
+	Editing method types:
+		When in edit mode, click on the class containing the methods you wish to edit the type of.
+		Under the section labeled "Methods", there will be two text boxes for each method. The left text box contains 
+		the method's type. Type in the desired type, then click the "Save" button at the top of the class.
+	
+	Editing parameter types:
+		When in edit mode, click on the class containing the parameters you wish to edit the type of.
+		Under each method, there will be two text boxes for each parameter. The left text box contains 
+		the parameter's type. Type in the desired type, then click the "Save" button at the top of the class.
+		
+	Editing field visibility:
+		When in edit mode, click on the class containing the fields you wish to edit the visibility of.
+		Under the section labeled "Fields", on the left side of each field will be a drop down menu containing
+		each of the visibility types. Select the desired visibility type, then click the "Save" button at the top of the class.
+		
+	Editing method visibility:
+		When in edit mode, click on the class containing the methods you wish to edit the visibility of.
+		Under the section labeled "Methods", on the left side of each method will be a drop down menu containing
+		each of the visibility types. Select the desired visibility type, then click the "Save" button at the top of the class.
+		
+	Saving changes made to a class:
+		When clicking on a class in edit mode, a button will appear on the top of the class that says 
+		"Save". When you are done editing the class, hit the save button to save changes made to that
+		class.
 
-	Editing Visibility of :
-		When in edit mode, click on the class cont
+	Canceling changes made to a class:
+		When clicking on a class in edit mode, a button will appear on the top of the class that says 
+		"Cancel". If you do not want to keep the changes you made, hit the cancel button to cancel 
+		changes made to that class.
+
+### Deleting items:
 
 	Deleting classes:
 		When in edit mode, click on the class you wish to delete. There will be a button marked 
 		with an 'X' to the left of the class name. Click on this button, and a pop up will appear asking
-		if you are sure that you want to delete the class (it is not reversable). Click OK and the class will
-		disappear.
+		if you are sure that you want to delete the class. Click OK and the class will disappear.
 
 	Deleting fields:
 		When in edit mode, click on the class containing the fields that you wish to delete.
@@ -165,17 +204,7 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		associated with that class. Select which relationship you desire to delete, then hit OK.
 		The line that was previously drawn to the represent the relationship will now disappear.
 
-	Saving changes made to a class:
-		When clicking on a class in edit mode, a button will appear on the top of the class that says 
-		"Save". When you are done editing the class, hit the save button to save changes made to that
-		class.
-
-	Canceling changes made to a class:
-		When clicking on a class in edit mode, a button will appear on the top of the class that says 
-		"Cancel". If you do not want to keep the changes you made, hit the cancel button to cancel 
-		changes made to that class.
-
-### GUI Keybindings
+## GUI Keybindings
 	
 	Save: CTRL+S
 
