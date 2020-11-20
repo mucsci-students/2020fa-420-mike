@@ -10,9 +10,9 @@
   	load <path> - Loads a file from an absolute path
 
   	create class <name> - create a class with title <name>
-  	create field <class name> <field type> <field name> - create a field in <class name> with type <field type> titled <field name>
-  	create method <class name> <method type> <method name> - create a method in <class name> with type <method type> titled <method name>
-  	create relationship <type> <class name1> <class name2> - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance)
+  	create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <type visibility>, type <field type> titled <field name>
+  	create method <class name> <method visibility> <method type> <method name> - create a method in <class name> with visibility <method visibility>, type <method type> titled <method name>
+  	create relationship <type> <class name1> <class name2> - create a relationship between <class name1> and <class name2> with type <type> (Aggregation, Realization, Composition, Inheritance). Recursive relationships can be created.
   	create parameter <class name> <method> <parameter type> <parameter name> - create a parameter in <class name> for <method> with type <parameter type> titled <parameter name>
 
   	delete class <name> - delete a class with title <name>
@@ -26,11 +26,17 @@
   	rename method <class name> <method name> <newname> - rename method <method name> to <newname> in class titled <class name>
   	rename parameter <class name> <method name> <parameter name> <parameter newname> - rename parameter in <class name> for <method> titled <parameter name> to <parameter newname>
 
+  	settype field <class name> <field name> <newtype> - set type of field <field name> in <class name> to <type>
+  	settype method <class name> <method name> <newtype> - set type of method <method name> in <class name> to <type>
+  	settype parameter <class name> <method name> <parameter name> <newtype> - set type of parameter <class name> in <method name> titled <parameter name> to <type>
+
   	list classes - List all existing classes
   	list relationships - List all existing relationships
   	list all - List all existing classes and relationships
 
   	clear - clear all classes and relationships
+  	undo - Reverts the most recent change to the UML Editor
+  	redo - Restores the most recently undone action.
   	help - prints list of commands and their usage
   	quit - exits the program
 
@@ -59,12 +65,16 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		If Save As was not called beforehand, Save will have the same functionality as Save As.
 
 	Save As:
-		Saves progress to a file name in a specified directory. If no directory is specified, the file is saved
-		in the current working directory. Files can be saved as json with the .json extension.
+		Opens a file chooser and allows the user to save to a selected directory. Optionally, files can be saved in JSON format by adding .json to the end of the file name.
 
 	Load:
-		Loads the saved state of a UML diagram from within a specified filepath. If only the file name is given,
-		the file will try to be found in the current working directory.
+		Opens a file chooser and allows the user to select and load a saved version of a UML diagram.
+
+	Undo:
+		Undo cancels or reverses the most recent command performed on the UML diagram.
+
+	Redo:
+		Redo allows you to cancel or reverse your last UNDO command.
 
 	Add Class:
 		Adds a class with the specified name to the GUI. If a class with the specified name already exists,
@@ -128,6 +138,9 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		is for the type and the right one is for the name. Enter the new type and name into these
 		text boxes then hit the "Save" button at the top of the class.
 
+	Editing Visibility of :
+		When in edit mode, click on the class cont
+
 	Deleting classes:
 		When in edit mode, click on the class you wish to delete. There will be a button marked 
 		with an 'X' to the left of the class name. Click on this button, and a pop up will appear asking
@@ -161,3 +174,11 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 		When clicking on a class in edit mode, a button will appear on the top of the class that says 
 		"Cancel". If you do not want to keep the changes you made, hit the cancel button to cancel 
 		changes made to that class.
+
+### GUI Keybindings
+	
+	Save: CTRL+S
+
+	Undo: CTRL+Z
+
+	Redo: CTRL+Y
