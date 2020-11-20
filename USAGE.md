@@ -5,9 +5,16 @@
 	3. gradle shadowJar
 	4. java -jar ./build/libs/mike-all.jar (for GUI) or java -jar ./build/libs/mike-all.jar (for CLI)
 	
+## Switching between the CLI and GUI
+
+	1. Save progress to a file on your computer
+	2. Quit the current program
+	3. Run the desired interface (GUI or CLI)
+	4. Load the file that you saved earlier
+	
 # CLI commands
-	save <name>.json (optional <path>) - Save file to specific path or to current directory if no path is specified.
-  	load <path>.json - Loads a file from an absolute path. If just the name of the file is given, then it will try to find it in the current directory.
+	save <name> (optional <path>) - Save progress to a specific path or to the current directory if no path is specified. Adding .json to the end of the file will save it as a JSON file.
+  	load <filepath> - Loads saved progress from an absolute file path. If just the name of the file is given, then the program will try to find it in the current directory. Add .json to the end of the file name if it is a JSON file.
 
   	create class <name> - create a class with title <name>
   	create field <class name> <field visibility> <field type> <field name> - create a field in <class name> with visibility <field visibility> (public, private, protected), type <field type> titled <field name>
@@ -30,8 +37,8 @@
   	settype method <class name> <method name> <newtype> - set type of method <method name> in <class name> to <type>
   	settype parameter <class name> <method name> <parameter name> <newtype> - set type of parameter <class name> in <method name> titled <parameter name> to <type>
 
-	setvis field <class name> <field name> <visibility> - set visibility of field <field name> in <class name> to <visibility>
-	setvis method <class name> <method name> <visibility> - set visibility of method <method name> in <class name> to <visibility>
+	setvis field <class name> <field name> <visibility> - set visibility of field <field name> in <class name> to <visibility> (public, private, protected)
+	setvis method <class name> <method name> <visibility> - set visibility of method <method name> in <class name> to <visibility> (public, private, protected)
 
   	list classes - List all existing classes
   	list relationships - List all existing relationships
@@ -215,9 +222,3 @@ If there is only one valid comment left, hitting tab will autocomplete the comma
 
 	Redo: CTRL+Y
 	
-# Switching between the CLI and GUI
-
-	1. Save progress to a file on your computer
-	2. Quit the current program
-	3. Run the desired interface (GUI or CLI)
-	4. Load the file that you saved earlier
