@@ -23,13 +23,13 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private JFrame frame;
     private JMenuBar menuBar;
 
-    public GUIView(String cut) {
+    public GUIView(HashMap<String, JLabel> entityLabels, ArrayList<Line> relations) {
 	super();
 
 	// initialize globals
-	entityLabels = new HashMap<String, JLabel>();
+	this.entityLabels = entityLabels;
 	pane = new JLayeredPane();
-	relations = new ArrayList<Line>();
+	this.relations = relations;
 	menuBar = new JMenuBar();
 
 	GUIInit();
