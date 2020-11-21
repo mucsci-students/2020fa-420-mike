@@ -73,9 +73,6 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	    e.printStackTrace();
 	}
 
-	// create frame
-	frame = new JFrame("Team mike UML Editor");
-
 	
 
 	// Creating the middle panel
