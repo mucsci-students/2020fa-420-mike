@@ -54,17 +54,17 @@
 	
 The CLI comes with tab completion. Hitting tab before typing presents a list of valid commands, as such:
 
-![Tab Options](https://github.com/mucsci-students/2020fa-420-mike/blob/update/USAGE/images/cli-tab-options.PNG)
+![Tab Options](https://github.com/mucsci-students/2020fa-420-mike/blob/develop/images/cli-tab-options.PNG)
 	
 Hitting tab after typing in text will present a list of valid commands, as such:
 
-![c Tab Options](https://github.com/mucsci-students/2020fa-420-mike/blob/update/USAGE/images/c-tab-options.PNG)
+![c Tab Options](https://github.com/mucsci-students/2020fa-420-mike/blob/develop/images/c-tab-options.PNG)
 	
 If there is only one valid comment left, hitting tab will autocomplete the command, as such:
 
-![Pre Tab Create](https://github.com/mucsci-students/2020fa-420-mike/blob/update/USAGE/images/pre-tab-create.PNG)
+![Pre Tab Create](https://github.com/mucsci-students/2020fa-420-mike/blob/develop/images/pre-tab-create.PNG)
 
-![Post Tab Create](https://github.com/mucsci-students/2020fa-420-mike/blob/update/USAGE/images/post-tab-create.PNG)
+![Post Tab Create](https://github.com/mucsci-students/2020fa-420-mike/blob/develop/images/post-tab-create.PNG)
 
 # Using the GUI
 
