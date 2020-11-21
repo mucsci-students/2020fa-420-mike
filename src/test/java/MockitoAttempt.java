@@ -14,8 +14,8 @@ import mike.view.GUIView;
 public class MockitoAttempt {
 
     @Spy
-    ArrayList<Line> relations;
-    @Mock
+    ArrayList<Line> relations = new ArrayList<Line>();
+    @InjectMocks
     private GUIView guiViewMock;
 
     @Before
@@ -25,7 +25,6 @@ public class MockitoAttempt {
     
     @Test
     public void test() throws Exception { 
-	guiViewMock = new GUIView(relations);
 	assertTrue("", guiViewMock.getRelations().isEmpty());
     }
 
