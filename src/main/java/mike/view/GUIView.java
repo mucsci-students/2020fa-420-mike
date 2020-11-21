@@ -22,18 +22,16 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private JFrame frame;
     private JMenuBar menuBar;
 
-    public GUIView(JLayeredPane pane, HashMap<String, JLabel> entityLabels, ArrayList<Line> relations, JFrame frame,
-	    JMenuBar menuBar) {
+    public GUIView(ArrayList<Line> relations) {
 	super();
 
 	// initialize globals
-	this.pane = pane;
-	this.entityLabels = entityLabels;
+	entityLabels = new HashMap<String, JLabel>();
+	pane = new JLayeredPane();
 	this.relations = relations;
-	this.frame = frame;
-	this.menuBar = menuBar;
+	menuBar = new JMenuBar();
 
-	//GUIInit();
+	GUIViewInit();
     }
 
     public GUIView() {
@@ -46,10 +44,10 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	menuBar = new JMenuBar();
 
 	
-	GUIInit();
+	GUIViewInit();
     }
     
-    public void GUIInit() {
+    public void GUIViewInit() {
 	// set look and feel to match user's OS
 	try {
 	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
