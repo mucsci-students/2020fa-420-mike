@@ -23,14 +23,15 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private JFrame frame;
     private JMenuBar menuBar;
 
-    public GUIView(HashMap<String, JLabel> entityLabels, ArrayList<Line> relations) {
+    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, ArrayList<Line> relations,
+	    JMenuBar menuBar) {
 	super();
 
 	// initialize globals
 	this.entityLabels = entityLabels;
-	pane = new JLayeredPane();
+	this.pane = pane;
 	this.relations = relations;
-	menuBar = new JMenuBar();
+	this.menuBar = menuBar;
 
 	GUIInit();
     }
@@ -54,6 +55,12 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
+	// Creating the menu bar and its options
+	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
+		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
+	for (int x = 0; x < 7; ++x) {
+	    menuBar.add(buttons[x]);
+	}
     }
 
     public void GUIInit() {
@@ -69,12 +76,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	// create frame
 	frame = new JFrame("Team mike UML Editor");
 
-	// Creating the menu bar and its options
-	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
-		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
-	for (int x = 0; x < 7; ++x) {
-	    menuBar.add(buttons[x]);
-	}
+	
 
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);

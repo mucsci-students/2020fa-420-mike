@@ -5,7 +5,10 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +23,10 @@ import mike.datastructures.Relationship.Type;
 import mike.gui.Line;
 
 public class GUIViewTest {
-    
+    @Mock
+    private JLayeredPane pane;
+    @Mock
+    private JMenuBar menuBar;
     @Spy
     private HashMap<String, JLabel> entityLabels;
     @Spy
@@ -35,12 +41,12 @@ public class GUIViewTest {
 
     @Test
     public void initTest() throws Exception {
-	guiViewMock = new GUIView(entityLabels, relations);
+	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
     }
 
     @Test
     public void getterTest() throws Exception {
-	guiViewMock = new GUIView(entityLabels, relations);
+	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
 
 	assertFalse("entityLabels object is null.", guiViewMock.getEntityLabels().equals(null));
 	assertFalse("relations object is null.", guiViewMock.getRelations().equals(null));
