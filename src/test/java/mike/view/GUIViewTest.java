@@ -33,7 +33,9 @@ public class GUIViewTest {
     private ArrayList<Line> relations;
     @Mock
     GUIView guiViewMock;
-
+    @Mock
+    GUIController control;
+    
     @Before
     public void setup() {
 	MockitoAnnotations.openMocks(this);
@@ -50,46 +52,44 @@ public class GUIViewTest {
 
 	assertFalse("entityLabels object is null.", guiViewMock.getEntityLabels().equals(null));
 	assertFalse("relations object is null.", guiViewMock.getRelations().equals(null));
-	//assertFalse("pane object is null.", guiViewMock.getPane().equals(null));
-	//assertFalse("menuBar object is null.", guiViewMock.getMenuBar().equals(null));
+	assertFalse("pane object is null.", guiViewMock.getPane().equals(null));
+	assertFalse("menuBar object is null.", guiViewMock.getMenuBar().equals(null));
     }
-    /*
+    
     @Test
     public void createClassTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	ViewTemplate view = new ViewTemplate();
-	GUIController control = new GUIController(model, view);
-	guiViewMock = new GUIView(entityLabels, relations);
+	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
 	model.createClass("c2");
 	guiViewMock.showClass(model.copyEntity("c1"), control);
 	guiViewMock.showClass(model.copyEntity("c2"), control);
-	//assertEquals("", 2, guiViewMock.getEntityLabels().size());
+	assertEquals("", 2, guiViewMock.getEntityLabels().size());
     }
-
+    /*
     @Test
     public void createRelationshipsTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
 	ViewTemplate view = new ViewTemplate();
 	GUIController control = new GUIController(model, view);
-	guiViewMock = new GUIView(entityLabels, relations);
+	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
 	model.createClass("c2");
 	guiViewMock.showClass(model.copyEntity("c1"), control);
 	guiViewMock.showClass(model.copyEntity("c2"), control);
-	//assertEquals("", 2, guiViewMock.getEntityLabels().size());
+	assertEquals("", 2, guiViewMock.getEntityLabels().size());
 
 	// Make a relationship
 	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
-	//assertEquals("", 1, guiViewMock.getRelations().size());
+	assertEquals("", 1, guiViewMock.getRelations().size());
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
-	//assertEquals("", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
     */
 }
