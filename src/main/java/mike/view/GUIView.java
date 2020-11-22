@@ -74,10 +74,6 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	    System.out.println("UIManager had a big oopsy-woopsy");
 	    e.printStackTrace();
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> 268645be03df6008482593e108935c694d995bb7
 	
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);
