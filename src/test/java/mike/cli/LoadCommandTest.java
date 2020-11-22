@@ -66,7 +66,7 @@ public class LoadCommandTest {
         resetStreams();
 
         // Test relative Path error length 2
-        System.out.println("\nERROR: Failed to parse directory. Exiting.");
+        System.out.println("\nERROR: Failed to parse directory. Exiting.\n");
         expected = out.toString();
         resetStreams();
         String[] loadErr3 = {"load", sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemo2.json"};
