@@ -47,7 +47,14 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	frame = new JFrame("Team mike UML Editor");
 
 	GUIInit();
-
+	
+	// Creating the menu bar and its options
+	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
+		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
+	for (int x = 0; x < 7; ++x) {
+	    menuBar.add(buttons[x]);
+	}
+	
 	// Adding all panels onto frame
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(1000, 800);
@@ -55,12 +62,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
-	// Creating the menu bar and its options
-	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
-		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
-	for (int x = 0; x < 7; ++x) {
-	    menuBar.add(buttons[x]);
-	}
+	
     }
 
     public void GUIInit() {
@@ -72,12 +74,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	    System.out.println("UIManager had a big oopsy-woopsy");
 	    e.printStackTrace();
 	}
-
-	// create frame
-	frame = new JFrame("Team mike UML Editor");
-
 	
-
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);
 	pane.setOpaque(true);
