@@ -1,9 +1,11 @@
 # Team mike's UML Editor
 
+![CI testing with Gradle](https://github.com/mucsci-students/2020fa-420-mike/workflows/CI%20testing%20with%20Gradle/badge.svg?branch=develop)
+
 [![codecov](https://codecov.io/gh/mucsci-students/2020fa-420-mike/branch/develop/graph/badge.svg)](https://codecov.io/gh/mucsci-students/2020fa-420-mike)
 
 Team mike's UML Editor is an application that allows the user to add, delete, and edit UML
-classes. Each UML class can hold different fields and methods, which can be added, deleted,
+classes. Each UML class can hold different fields, methods, and parameters, which can be added, deleted,
 and renamed. Relationships between classes may be created and deleted. The user can also 
 save files and load other ones to easily save progress and continue to work at a 
 later time. The application runs using a Command Line Interface or a Graphical User Interface.
@@ -34,4 +36,4 @@ later time. The application runs using a Command Line Interface or a Graphical U
 
 ### Version:
 
-3.0.0
+4.0.0

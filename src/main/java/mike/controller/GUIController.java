@@ -96,6 +96,21 @@ public class GUIController extends ControllerType {
 	++currMeme;
     }
 
+    protected void truncateMemes(int end) {
+	if (currMeme < mementos.size() - end) {
+	    for (int i = mementos.size() - end; i > currMeme; --i) {
+		mementos.remove(i);
+	    }
+	}
+    }
+
+    public void newMeme(Memento meme) {
+	truncateMemes(1);
+	mementos.add(meme);
+	this.model = meme.getModel();
+	++currMeme;
+    }
+
     public void createField(JPanel panel) {
 	CreateDeleteController.createFunction(panel, this, "field", null);
     }

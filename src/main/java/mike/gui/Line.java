@@ -33,7 +33,13 @@ public class Line extends JComponent {
 		update();
 
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension(L1.getParent().getWidth(), L2.getParent().getHeight()));
+		
+		if(L1.getParent() == null || L2.getParent() == null) {
+		    this.setPreferredSize(new Dimension(0, 0));
+		} else {
+		    this.setPreferredSize(new Dimension(L1.getParent().getWidth(), L2.getParent().getHeight()));
+		}
+		
 	}
 
 	public JLabel getClassOne() {

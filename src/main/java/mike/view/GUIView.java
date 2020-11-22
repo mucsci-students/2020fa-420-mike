@@ -17,10 +17,67 @@ import mike.gui.htmlBox;
 public class GUIView extends ViewTemplate implements ViewInterface {
     // Global Variables
     private JLayeredPane pane;
-    private HashMap<String, JLabel> entitylabels;
+    private HashMap<String, JLabel> entityLabels;
     private ArrayList<Line> relations;
     private JFrame frame;
     private JMenuBar menuBar;
+
+    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, ArrayList<Line> relations,
+	    JMenuBar menuBar) {
+	super();
+
+	// initialize globals
+	this.entityLabels = entityLabels;
+	this.pane = pane;
+	this.relations = relations;
+	this.menuBar = menuBar;
+
+	GUIInit();
+    }
+
+    public GUIView() {
+	super();
+
+	// initialize globals
+	entityLabels = new HashMap<String, JLabel>();
+	pane = new JLayeredPane();
+	relations = new ArrayList<Line>();
+	menuBar = new JMenuBar();
+	frame = new JFrame("Team mike UML Editor");
+
+	GUIInit();
+	
+	// Creating the menu bar and its options
+	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
+		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
+	for (int x = 0; x < 7; ++x) {
+	    menuBar.add(buttons[x]);
+	}
+	
+	// Adding all panels onto frame
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.setSize(1000, 800);
+	frame.getContentPane().add(BorderLayout.CENTER, pane);
+	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
+	frame.setLocationRelativeTo(null);
+	frame.setVisible(true);
+	
+    }
+
+    public void GUIInit() {
+	// set look and feel to match user's OS
+	try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+		| UnsupportedLookAndFeelException e) {
+	    System.out.println("UIManager had a big oopsy-woopsy");
+	    e.printStackTrace();
+	}
+	
+	// Creating the middle panel
+	pane.setBackground(Color.WHITE);
+	pane.setOpaque(true);
+	validateRepaint();
 
     public GUIView() throws Exception {
 	super();
@@ -63,7 +120,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public HashMap<String, JLabel> getEntityLabels() {
-	return entitylabels;
+	return entityLabels;
     }
 
     public JLayeredPane getPane() {
@@ -87,7 +144,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	JLayeredPane pane = ((GUIView) control.getView()).getPane();
 	pane.removeAll();
 	relations.clear();
-	entitylabels.clear();
+	entityLabels.clear();
 	for (Entity e : model.getEntities()) {
 	    showClass(e, control);
 	    JLabel curLabel = this.getEntityLabels().get(e.getName());
@@ -98,11 +155,11 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 	validateRepaint();
     }
-
+    
     public htmlBox showClass(Entity entity, GUIController control) {
 	htmlBox newview = new htmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
-	entitylabels.put(entity.getName(), newview.getBox());
+	entityLabels.put(entity.getName(), newview.getBox());
 	validateRepaint();
 
 	return newview;
@@ -144,8 +201,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public void deleteClass(String name) {
-	pane.remove(entitylabels.get(name));
-	entitylabels.remove(name);
+	pane.remove(entityLabels.get(name));
+	entityLabels.remove(name);
 	validateRepaint();
     }
 
@@ -158,16 +215,15 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	if (notNull && name1.equals(box.getName())) {
 	    L1 = box;
 	} else {
-	    L1 = entitylabels.get(name1);
+	    L1 = entityLabels.get(name1);
 	}
 
 	if (notNull && name2.equals(box.getName())) {
 	    L2 = box;
 	} else {
-	    L2 = entitylabels.get(name2);
+	    L2 = entityLabels.get(name2);
 	}
 	Line line = new Line(L1, L2, type);
-
 	line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
 	model.createRelationship(type, name1, name2);
 	relations.add(line);
