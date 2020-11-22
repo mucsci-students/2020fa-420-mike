@@ -14,6 +14,9 @@ plugins {
     id 'application'
 
     id 'com.github.johnrengelman.shadow' version '6.0.0'
+
+    //add jacoco for code coverage checks
+    id 'jacoco'
 }
 
 repositories {
@@ -33,6 +36,9 @@ dependencies {
     compile group: 'org.jline', name: 'jline', version: '3.16.0'
     compile group: 'org.jline', name: 'jline-terminal-jna', version: '3.16.0'
 
+	// Use mockito for mock objects
+    testCompile "org.mockito:mockito-core:3.+"
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 }
@@ -45,5 +51,14 @@ application {
 test {
     testLogging{
         events "passed", "skipped", "failed"
+    }
+    // generate report after running tests
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
     }
 }

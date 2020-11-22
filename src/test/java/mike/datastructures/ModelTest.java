@@ -26,6 +26,43 @@ public class ModelTest {
         assertTrue("Relationships list is empty", initClass.getRelationships().isEmpty());
         assertTrue("Entities list is empty", initClass.getEntities().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+        Model initClass = new Model();
+        Model copyClassOne = new Model(initClass);
+        assertTrue("Relationships list is empty", copyClassOne.getRelationships().isEmpty());
+        assertTrue("Entities list is empty", copyClassOne.getEntities().isEmpty());
+        
+        copyClassOne.createClass("c1");
+        Entity c1 = copyClassOne.copyEntity("c1");
+        copyClassOne.createClass("c2");
+        copyClassOne.createRelationship(Type.AGGREGATION, "c1", "c2");
+        Model copyClassTwo = new Model(copyClassOne);
+        assertFalse("c1 list is empty", initClass.containsEntity("c1"));
+        assertFalse("c1 list is empty", initClass.containsEntity("c2"));
+        assertFalse("c1 has more or less than one field", initClass.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+        assertEquals("Model has more or less than one relationship", 1, copyClassTwo.getRelationships().size());
+        assertTrue("Model does not contain relationship c1-c2", copyClassTwo.containsRelationship(Type.AGGREGATION, "c1", "c2"));
+        assertEquals("Model has more or less than two entities", 2, copyClassTwo.getEntities().size());
+        assertTrue("Entities list is empty", copyClassTwo.containsEntity("c1"));
+        assertTrue("Entities list is empty", copyClassTwo.containsEntity("c2"));
+        
+        copyClassTwo.createField("c1", "f1", "String", "public");
+        copyClassTwo.createMethod("c1", "m1", "boolean", "private");
+        copyClassTwo.createParameter("c1", "m1", "p1", "int");
+        Model copyClassThree = new Model(copyClassTwo);
+        Entity c1Copy = copyClassThree.copyEntity("c1");
+        assertFalse("c1 list is empty", c1.containsField("f1"));
+        assertFalse("c1 list is empty", c1.containsMethod("m1"));
+        assertEquals("c1 has more or less than one field", 1, c1Copy.getFields().size());
+        assertTrue("c1 list is empty", c1Copy.containsField("f1"));
+        assertEquals("c1 has more or less than one method", 1, c1Copy.getMethods().size());
+        assertTrue("c1 list is empty", c1Copy.containsMethod("m1"));
+        assertEquals("m1 has more or less than one field", 1, c1Copy.copyMethod("m1").getParameters().size());
+        assertTrue("Method list is empty", c1Copy.copyMethod("m1").containsParameter("p1"));
+    }
 
     /* ------------------------------------------------------------------------------ */
     /*                          TEST HELPER/MEMBER FUNCTIONS                          */
@@ -82,7 +119,11 @@ public class ModelTest {
         assertTrue("New model instance is empty", model.empty());
 
         model.createClass("E1");
-        assertFalse("Model instance is not empty", model.empty());
+        assertFalse("Model instance with class is not empty", model.empty());
+        
+        model.createClass("E2");
+        model.createRelationship(Type.REALIZATION, "E1", "E2");
+        assertFalse("Model instance with classes and relationship is not empty.", model.empty());
 
         model.clear();
         assertTrue("empty() returns true after clear() is called", model.empty());
@@ -101,15 +142,17 @@ public class ModelTest {
         assertTrue("Two entities with no fields/methods are equal after copyEntity call", model.getEntities().get(0).equals(e1copy));
 
         //add attributes to entity
-        model.createField("E1", "att1", "int");
-        model.createField("E1", "att2", "int");
-        model.createMethod("E1", "m1", "int");
-        model.createMethod("E1", "m2", "int");
+        model.createField("E1", "att1", "int", "PUBLIC");
+        model.createField("E1", "att2", "int", "PROTECTED");
+        model.createMethod("E1", "m1", "int", "PRIVATE");
+        model.createMethod("E1", "m2", "int", "PUBLIC");
 
         Entity new_e1copy = model.copyEntity("E1");
         assertTrue("Entity with fields and Methods was copied correctly", model.getEntities().get(0).equals(new_e1copy));
         assertTrue("Fields are the same", model.getEntities().get(0).getFields().equals(new_e1copy.getFields()));
         assertTrue("Methods are the same", model.getEntities().get(0).getMethods().equals(new_e1copy.getMethods()));
+        
+        assertEquals("Returns null if non-existant entity given.", null, model.copyEntity("E2"));
     }
 
     /** test containsEntity
@@ -137,7 +180,7 @@ public class ModelTest {
         model.createRelationship(Type.INHERITANCE, "e", "e2");
 
         assertTrue("Found relationship 'r, e, e2'", model.containsRelationship(Type.INHERITANCE, "e", "e2"));
-        assertFalse("False when given non-existent relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
+        assertFalse("False when given incorrect relationship type", model.containsRelationship(Type.AGGREGATION, "e", "e2"));
         assertFalse("False for non-existent class1 name", model.containsRelationship(Type.INHERITANCE, "fake", "e2"));
         assertFalse("False for non-existent class2 name", model.containsRelationship(Type.INHERITANCE, "e", "fake"));
         assertFalse("False when pairs are in wrong order", model.containsRelationship(Type.INHERITANCE, "e2", "e"));
@@ -166,7 +209,12 @@ public class ModelTest {
         assertEquals("Relationship types are equal", Type.COMPOSITION, r.getName());
         assertEquals("Class1 names are equal", "e", r.getFirstClass());
         assertEquals("Class2 names are equal", "e2", r.getSecondClass());
-
+        
+        assertEquals("Null when given incorrect relationship type", null, model.getRelationship(Type.AGGREGATION, "e", "e2"));
+        assertEquals("Null for non-existent class1 name", null, model.getRelationship(Type.COMPOSITION, "fake", "e2"));
+        assertEquals("Null for non-existent class2 name", null, model.getRelationship(Type.COMPOSITION, "e", "fake"));
+        assertEquals("Null when pairs are in wrong order", null, model.getRelationship(Type.COMPOSITION, "e2", "e"));
+        
         assertEquals("Null when relationship is not found", null, model.getRelationship(Type.AGGREGATION, "fake", "stillFake"));
     }
 
@@ -194,6 +242,8 @@ public class ModelTest {
         assertEquals("Entities list size is 3", 3, model.getEntities().size());
         assertTrue("Entities list contains E2", model.containsEntity("E2"));
         assertTrue("Entities list contains E3", model.containsEntity("E3"));
+        
+        assertFalse("Entity list created class with null name", model.createClass(null));
     }
 
     /** test the renameClass method
@@ -217,8 +267,8 @@ public class ModelTest {
 
         assertFalse("renameClass returned false after renaming to already existing class", model.renameClass("E1", "E2"));
 
-        model.createField("E1", "f", "int");
-        model.createMethod("E1", "m", "int");
+        model.createField("E1", "f", "int", "PUBLIC");
+        model.createMethod("E1", "m", "int", "PUBLIC");
 
         Entity e1_copy = model.copyEntity("E1");
         model.renameClass("E1", "e");
@@ -262,8 +312,8 @@ public class ModelTest {
 
         /*Deleting model that contain fields and methods*/
         model.createClass("cla");
-        model.createField("cla", "f", "int");
-        model.createMethod("cla", "m", "int");
+        model.createField("cla", "f", "int", "PUBLIC");
+        model.createMethod("cla", "m", "int", "PUBLIC");
 
         assertTrue("Class 'cla' has been deleted", model.deleteClass("cla"));
         assertFalse("Class 'cla' no longer exists", model.containsEntity("cla"));
@@ -283,7 +333,7 @@ public class ModelTest {
         assertFalse("Class e no longer exists", model.containsEntity("e"));
         assertEquals("Entities list size is 2", 2, model.getEntities().size());
 
-        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2") && model.containsRelationship(Type.COMPOSITION, "e3", "e");
+        boolean deletedRels = model.containsRelationship(Type.COMPOSITION, "e", "e2");
         assertFalse("Relationships associated with class e were deleted", deletedRels);
         assertTrue("Relationships not associated with class e still exist", model.containsRelationship(Type.COMPOSITION, "e2", "e3"));
 
@@ -304,13 +354,13 @@ public class ModelTest {
         Model model = new Model();
         model.createClass("e");
 
-        assertFalse("False when creating field for non-existent class", model.createField("fake", "a", "int"));
+        assertFalse("False when creating field for non-existent class", model.createField("fake", "a", "int", "PUBLIC"));
 
-        assertTrue("Added field 'a' for class 'e'", model.createField("e", "a", "int"));
+        assertTrue("Added field 'a' for class 'e'", model.createField("e", "a", "int", "PUBLIC"));
         assertTrue("e's field list contains 'a'", model.getEntities().get(0).containsField("a"));
         assertEquals("e's field list size is 1", 1, model.getEntities().get(0).getFields().size());
 
-        assertFalse("False when creating field that already exists", model.createField("e", "a", "int"));
+        assertFalse("False when creating field that already exists", model.createField("e", "a", "int", "PUBLIC"));
         assertEquals("e's field list size is still 1", 1, model.getEntities().get(0).getFields().size());
     }
 
@@ -322,8 +372,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createField("e", "a", "int");
-        model.createField("e", "a2", "int");
+        model.createField("e", "a", "int", "PUBLIC");
+        model.createField("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when renaming Field from non-existent class", model.renameField("fake", "a", "aa"));
         assertFalse("False when renaming non-existent Field", model.renameField("e", "fake", "aa"));
@@ -334,6 +384,38 @@ public class ModelTest {
         assertFalse("Field list no longer contains 'a'", model.getEntities().get(0).containsField("a"));
         assertEquals("Field list size is still 2", 2, model.getEntities().get(0).getFields().size());
     }
+    
+    /** test changeFieldType
+     * 
+     */
+    @Test
+    public void testChangeFieldType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createField("c", "f1", "int", "PUBLIC");
+	model.changeFieldType("c", "f1", "String");
+	
+	assertEquals("Field f1 should have type of String", "String", model.copyEntity("c").copyField("f1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeFieldType("c2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid field", model.changeFieldType("c", "f2", "int"));
+    }
+    
+    /** test changeFieldVis
+     * 
+     */
+    @Test
+    public void testChangeFieldVis()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createField("c", "f1", "int", "PUBLIC");
+	model.changeFieldVis("c", "f1", "PROTECTED");
+	
+	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyField("f1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid class", model.changeFieldVis("c2", "f1", "PRIVATE"));
+
+    }
 
     /** test deleteField
      *
@@ -343,8 +425,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createField("e", "a", "int");
-        model.createField("e", "a2", "int");
+        model.createField("e", "a", "int", "PUBLIC");
+        model.createField("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when deleting Field from non-existent class", model.deleteField("fake", "a"));
         assertFalse("False when deleting non-existent Field", model.deleteField("e", "fake"));
@@ -363,13 +445,13 @@ public class ModelTest {
         Model model = new Model();
         model.createClass("e");
 
-        assertFalse("False when creating method for non-existent class", model.createMethod("fake", "a", "int"));
+        assertFalse("False when creating method for non-existent class", model.createMethod("fake", "a", "int", "PUBLIC"));
 
-        assertTrue("Added method 'a' for class 'e'", model.createMethod("e", "a", "int"));
+        assertTrue("Added method 'a' for class 'e'", model.createMethod("e", "a", "int", "PUBLIC"));
         assertTrue("e's methods list contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("e's method list size is 1", 1, model.getEntities().get(0).getMethods().size());
 
-        assertFalse("False when creating method that already exists", model.createMethod("e", "a", "int"));
+        assertFalse("False when creating method that already exists", model.createMethod("e", "a", "int", "PUBLIC"));
         assertEquals("e's method list size is still 1", 1, model.getEntities().get(0).getMethods().size());
     }
 
@@ -381,8 +463,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createMethod("e", "a", "int");
-        model.createMethod("e", "a2", "int");
+        model.createMethod("e", "a", "int", "PUBLIC");
+        model.createMethod("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when renaming method from non-existent class", model.renameMethod("fake", "a", "aa"));
         assertFalse("False when renaming non-existent method", model.renameMethod("e", "fake", "aa"));
@@ -393,6 +475,37 @@ public class ModelTest {
         assertFalse("Methods list no longer contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("Methods list size is still 2", 2, model.getEntities().get(0).getMethods().size());
     }
+    
+    /** test changeMethodType
+     * 
+     */
+    @Test
+    public void testChangeMethodType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c", "m1", "int", "PUBLIC");
+	model.changeMethodType("c", "m1", "String");
+	
+	assertEquals("Method m1 should have type of String", "String", model.copyEntity("c").copyMethod("m1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeMethodType("c2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid method", model.changeMethodType("c", "m2", "int"));
+    }
+    
+    /** test changeMethodVis
+     * 
+     */
+    @Test
+    public void testChangeMethodVis()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c", "m1", "int", "PUBLIC");
+	model.changeMethodVis("c", "m1", "PROTECTED");
+	
+	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", model.copyEntity("c").copyMethod("m1").getVisibility().toString());
+	assertFalse("False when changing visibility on non-existent class", model.changeMethodVis("c2", "m1", "PRIVATE"));
+    }
 
     /** test deleteMethod
      *
@@ -402,8 +515,8 @@ public class ModelTest {
     {
         Model model = new Model();
         model.createClass("e");
-        model.createMethod("e", "a", "int");
-        model.createMethod("e", "a2", "int");
+        model.createMethod("e", "a", "int", "PUBLIC");
+        model.createMethod("e", "a2", "int", "PRIVATE");
 
         assertFalse("False when deleting Method from non-existent method", model.deleteMethod("fake", "a"));
         assertFalse("False when deleting non-existent method", model.deleteMethod("e", "fake"));
@@ -411,6 +524,25 @@ public class ModelTest {
         assertTrue("Deleted method 'a'", model.deleteMethod("e", "a"));
         assertFalse("Methods list no longer contains 'a'", model.getEntities().get(0).containsMethod("a"));
         assertEquals("Methods list size is 1", 1, model.getEntities().get(0).getMethods().size());
+    }
+    
+    
+    /** test changeParameterType
+     * 
+     */
+    @Test
+    public void testChangeParameterType()
+    {
+	Model model = new Model();
+	model.createClass("c");
+	model.createMethod("c",  "m1", "int", "PRIVATE");
+	model.createParameter("c", "m1", "p1", "int");
+	model.changeParameterType("c", "m1", "p1", "String");
+	
+	assertEquals("Parameter p1 should have type of String", "String", model.copyEntity("c").copyMethod("m1").copyParameter("p1").getType());
+	assertFalse("False when changing type with a non-valid class", model.changeParameterType("c2", "m1", "f1", "int"));
+	assertFalse("False when changing type with a non-valid method", model.changeParameterType("c", "m2", "f1", "int"));
+	assertFalse("False when changing type with a non-valid parameter", model.changeParameterType("c", "m1", "f2", "int"));
     }
 
     /* ------------------------------------------------------------------------------ */

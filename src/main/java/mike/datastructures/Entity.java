@@ -1,6 +1,7 @@
 package mike.datastructures;
 
 import java.util.Objects;
+
 import java.util.ArrayList;
 
 public class Entity {
@@ -9,6 +10,12 @@ public class Entity {
 	private ArrayList<Method> methods;
 	private int xLocation;
 	private int yLocation;
+	
+	public enum visibility {
+	    PUBLIC,
+	    PRIVATE,
+	    PROTECTED
+	}
 
 	//*********************************************************//
 	// Constructor //
@@ -20,6 +27,23 @@ public class Entity {
 		methods = new ArrayList<Method>();
 		xLocation = 0;
 		yLocation = 0;
+	}
+	
+	public Entity(Entity copyEntity) {
+		name = copyEntity.name;
+		fields = new ArrayList<Field>();
+		methods = new ArrayList<Method>();
+		xLocation = copyEntity.xLocation;
+		yLocation = copyEntity.yLocation;
+		
+		for(Field f : copyEntity.getFields()) {
+		    Field newf = new Field(f);
+		    this.fields.add(newf);
+		}
+		for(Method m : copyEntity.getMethods()) {
+		    Method newm = new Method(m);
+		    this.methods.add(newm);
+		}
 	}
 	
 	//*********************************************************//
@@ -86,11 +110,11 @@ public class Entity {
 	// Field Functions //
 	//*********************************************************//
 	
-	public boolean createField(String name, String type) {
+	public boolean createField(String name, String type, String visType) {
 		if(containsField(name)){
 			return false; //already contains field
 		}
-		return fields.add(new Field(name, type));
+		return fields.add(new Field(name, type, checkVis(visType)));
 	}
 	
 	public boolean renameField(String target, String newfield) {
@@ -111,19 +135,48 @@ public class Entity {
 		return false;
 	}
 	
+	public boolean changeFieldType(String target, String newType) {
+	    for (Field f : fields) {
+		// If target found
+		if (f.getName().equals(target)) {
+		    f.setType(newType);
+		    return true;
+		}
+	    }
+	    // Target not found
+	    return false;
+	}
+	
+	public boolean changeFieldVis(String target, String newVis) {
+	    for (Field f : fields) {
+		// If target found
+		if (f.getName().equals(target)) {
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			f.setVisibility(vis);
+			return true;
+		    }
+		}
+	    }
+	    // Target not found
+	    return false;
+	}
+	
 	public boolean deleteField(String target) {
-		return fields.remove(new Field(target, "int"));
+		return fields.remove(copyField(target));
 	}
 	
 	//*********************************************************//
 	// Method Functions //
 	//*********************************************************//
 	
-	public boolean createMethod(String method, String type) {
+	public boolean createMethod(String method, String type, String visType) {
 		if(containsMethod(method)){
 			return false; //already contains method
 		}
-		return methods.add(new Method(method, type));
+		return methods.add(new Method(method, type, checkVis(visType)));
 	}	
 
 	public boolean renameMethod(String target, String newmethod) {
@@ -144,8 +197,37 @@ public class Entity {
 		return false;
 	}
 	
+	public boolean changeMethodType(String target, String newType) {
+	    for (Method m : methods) {
+		// If target found
+		if (m.getName().equals(target)) {
+		    m.setType(newType);
+		    return true;
+		}
+	    }
+	    // Target not found
+	    return false;
+	}
+	
+	public boolean changeMethodVis(String target, String newVis) {
+	    for (Method m : methods) {
+		// If target found
+		if (m.getName().equals(target)) {
+		    visibility vis = checkVis(newVis);
+		    if (vis == null) {
+			return false;
+		    } else {
+			m.setVisibility(vis);
+			return true;
+		    }
+		}
+	    }
+	    // Target not found
+	    return false;
+	}
+	
 	public boolean deleteMethod(String target) {
-		return methods.remove(new Method(target, "int"));
+		return methods.remove(copyMethod(target));
 	}
 
 	//*********************************************************//
@@ -174,6 +256,17 @@ public class Entity {
 		}
 		// Target not found.
 		return false;
+	}
+	
+	public boolean changeParameterType(String method, String target, String newType) {
+	    for (Method m : methods) {
+		// If target found
+		if (m.getName().equals(method)) {
+		    return  m.changeParameterType(target, newType);
+		}
+	    }
+	    // Target not found
+	    return false;
 	}
 
 	public boolean deleteParameter(String method, String name){
@@ -228,6 +321,20 @@ public class Entity {
 			}
 		}
 		return null;
+	}
+	
+	private visibility checkVis(String visType) {
+	    visType = visType.toUpperCase();
+	    switch (visType) {
+	    case "PUBLIC":
+		return visibility.PUBLIC;
+	    case "PRIVATE":
+		return visibility.PRIVATE;
+	    case "PROTECTED":
+		return visibility.PROTECTED;
+	    default:
+		return null;
+	    }
 	}
 }
 

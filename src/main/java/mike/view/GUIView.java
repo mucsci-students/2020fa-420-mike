@@ -6,13 +6,9 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JMenuBar;
+import javax.swing.*;
 
-import mike.controller.Controller;
+import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.gui.Line;
 import mike.gui.editBox;
@@ -20,34 +16,68 @@ import mike.gui.htmlBox;
 
 public class GUIView extends ViewTemplate implements ViewInterface {
     // Global Variables
-    private JLayeredPane pane = new JLayeredPane();
-    private HashMap<String, JLabel> entitylabels = new HashMap<String, JLabel>();
-    private ArrayList<Line> relations = new ArrayList<Line>();
-    private JFrame frame = new JFrame("Team mike UML Editor");
-    private JMenuBar menuBar = new JMenuBar();
+    private JLayeredPane pane;
+    private HashMap<String, JLabel> entityLabels;
+    private ArrayList<Line> relations;
+    private JFrame frame;
+    private JMenuBar menuBar;
 
-    public GUIView(Model model) {
+    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, ArrayList<Line> relations,
+	    JMenuBar menuBar) {
 	super();
 
+	// initialize globals
+	this.entityLabels = entityLabels;
+	this.pane = pane;
+	this.relations = relations;
+	this.menuBar = menuBar;
+
+	GUIInit();
+    }
+
+    public GUIView() {
+	super();
+
+	// initialize globals
+	entityLabels = new HashMap<String, JLabel>();
+	pane = new JLayeredPane();
+	relations = new ArrayList<Line>();
+	menuBar = new JMenuBar();
+	frame = new JFrame("Team mike UML Editor");
+
+	GUIInit();
+	
 	// Creating the menu bar and its options
-	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"),
-		new JButton("Add Class"), new JButton("Enable Edit Mode") };
-	for (int x = 0; x < 5; ++x) {
+	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
+		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
+	for (int x = 0; x < 7; ++x) {
 	    menuBar.add(buttons[x]);
 	}
-
-	// Creating the frame and adding all panels onto frame
+	
+	// Adding all panels onto frame
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(1000, 800);
 	frame.getContentPane().add(BorderLayout.CENTER, pane);
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
+	
+    }
 
+    public void GUIInit() {
+	// set look and feel to match user's OS
+	try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+		| UnsupportedLookAndFeelException e) {
+	    System.out.println("UIManager had a big oopsy-woopsy");
+	    e.printStackTrace();
+	}
+	
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);
+	pane.setOpaque(true);
 	validateRepaint();
-
     }
 
     public JMenuBar getMenuBar() {
@@ -55,7 +85,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public HashMap<String, JLabel> getEntityLabels() {
-	return entitylabels;
+	return entityLabels;
     }
 
     public JLayeredPane getPane() {
@@ -74,11 +104,27 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.validate();
 	pane.repaint();
     }
+
+    public void repaintEverything(Model model, GUIController control) {
+	JLayeredPane pane = ((GUIView) control.getView()).getPane();
+	pane.removeAll();
+	relations.clear();
+	entityLabels.clear();
+	for (Entity e : model.getEntities()) {
+	    showClass(e, control);
+	    JLabel curLabel = this.getEntityLabels().get(e.getName());
+	    curLabel.setLocation(e.getXLocation(), e.getYLocation());
+	}
+	for (Relationship r : model.getRelationships()) {
+	    createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass(), model);
+	}
+	validateRepaint();
+    }
     
-    public htmlBox showClass(Entity entity, Controller control) {
+    public htmlBox showClass(Entity entity, GUIController control) {
 	htmlBox newview = new htmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
-	entitylabels.put(entity.getName(), newview.getBox());
+	entityLabels.put(entity.getName(), newview.getBox());
 	validateRepaint();
 
 	return newview;
@@ -120,8 +166,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public void deleteClass(String name) {
-	pane.remove(entitylabels.get(name));
-	entitylabels.remove(name);
+	pane.remove(entityLabels.get(name));
+	entityLabels.remove(name);
 	validateRepaint();
     }
 
@@ -134,16 +180,15 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	if (notNull && name1.equals(box.getName())) {
 	    L1 = box;
 	} else {
-	    L1 = entitylabels.get(name1);
+	    L1 = entityLabels.get(name1);
 	}
 
 	if (notNull && name2.equals(box.getName())) {
 	    L2 = box;
 	} else {
-	    L2 = entitylabels.get(name2);
+	    L2 = entityLabels.get(name2);
 	}
 	Line line = new Line(L1, L2, type);
-
 	line.setBounds(0, 0, pane.getWidth(), pane.getHeight());
 	model.createRelationship(type, name1, name2);
 	relations.add(line);
@@ -151,7 +196,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.validate();
     }
 
-    public JLabel htmlBoxToEditBox(JLabel label, Controller control, Model model) {
+    public JLabel htmlBoxToEditBox(JLabel label, GUIController control, Model model) {
 	pane.remove(label);
 
 	new editBox(label, control, model, this);
@@ -162,7 +207,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	return editBox.getBox();
     }
 
-    public void exitEditingClass(JLabel inClass, Controller control, Model model) {
+    public void exitEditingClass(JLabel inClass, GUIController control, Model model) {
 	pane.remove(inClass);
 	Entity e = model.copyEntity(inClass.getName());
 
@@ -193,4 +238,5 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 	validateRepaint();
     }
+
 }
