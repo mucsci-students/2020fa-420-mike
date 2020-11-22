@@ -78,41 +78,6 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.setBackground(Color.WHITE);
 	pane.setOpaque(true);
 	validateRepaint();
-
-    public GUIView() throws Exception {
-	super();
-
-	// initialize globals
-	entitylabels = new HashMap<String, JLabel>();
-	pane = new JLayeredPane();
-	relations = new ArrayList<Line>();
-	menuBar = new JMenuBar();
-
-	// set look and feel to match user's OS
-	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-	// create frame
-	frame = new JFrame("Team mike UML Editor");
-
-	// Creating the menu bar and its options
-	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
-		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
-	for (int x = 0; x < 7; ++x) {
-	    menuBar.add(buttons[x]);
-	}
-
-	// Adding all panels onto frame
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setSize(1000, 800);
-	frame.getContentPane().add(BorderLayout.CENTER, pane);
-	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
-	frame.setLocationRelativeTo(null);
-	frame.setVisible(true);
-	
-	// Creating the middle panel
-	pane.setBackground(Color.WHITE);
-	pane.setOpaque(true);
-	validateRepaint();
     }
 
     public JMenuBar getMenuBar() {
