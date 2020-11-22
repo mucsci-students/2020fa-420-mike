@@ -97,8 +97,6 @@ public class GUIViewTest {
     public void createRelationshipsTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	ViewTemplate view = new ViewTemplate();
-	GUIController control = new GUIController(model, view);
 	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
 
 	// Make two classes
