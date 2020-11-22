@@ -88,7 +88,7 @@ public class GUIViewTest {
 	
 	// Delete two classes
 	guiViewMock.deleteClass("c1");
-	assertEquals("There are more or less than 1 entityLabels", 1, guiViewMock.getEntityLabels().size());
+	assertEquals("There is more or less than 1 entityLabel", 1, guiViewMock.getEntityLabels().size());
 	guiViewMock.deleteClass("c2");
 	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
     }
@@ -105,13 +105,13 @@ public class GUIViewTest {
 	model.createClass("c2");
 	guiViewMock.showClass(model.copyEntity("c1"), control);
 	guiViewMock.showClass(model.copyEntity("c2"), control);
-	assertEquals("", 2, guiViewMock.getEntityLabels().size());
+	assertEquals("There are more or less than 2 entityLabels", 2, guiViewMock.getEntityLabels().size());
 
 	// Make a relationship
 	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
-	assertEquals("", 1, guiViewMock.getRelations().size());
+	assertEquals("There is more or less than 1 relationship", 1, guiViewMock.getRelations().size());
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
-	assertEquals("", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("There are more or less than 2 relationships", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
     
 }
