@@ -217,4 +217,30 @@ public class CLIControllerTest {
         control.evaluateCommand(redoCommand);
         assertEquals("Tried to redo with nothing to redo.", expected, out.toString());
     }
+    
+    @Test
+    public void clearTest() {
+	String[] invalidClear = {"clear", "WRONG"};
+	out.reset();
+	err.reset();
+	System.out.println("\nERROR: Error in parsing command. Proper command usage is: \n  clear\n");
+	String expected = out.toString();
+	out.reset();
+	err.reset();
+	control.evaluateCommand(invalidClear);
+	assertEquals("Initial print all does not equal printout", expected, out.toString());
+    }
+    
+    @Test
+    public void quitTest() {
+	String[] invalidQuit = {"quit", "WRONG"};
+	out.reset();
+	err.reset();
+	System.out.println("\nERROR: Error in parsing command. Proper command usage is: \n quit\n");
+	String expected = out.toString();
+	out.reset();
+	err.reset();
+	control.evaluateCommand(invalidQuit);
+	assertEquals("Initial print all does not equal printout", expected, out.toString());
+    }
 }

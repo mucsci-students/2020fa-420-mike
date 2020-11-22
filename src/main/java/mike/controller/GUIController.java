@@ -1,22 +1,30 @@
 package mike.controller;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Memento;
 import mike.datastructures.Model;
+import mike.gui.RedoAction;
+import mike.gui.SaveAction;
+import mike.gui.UndoAction;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
 
 public class GUIController extends ControllerType {
-    Model model;
-    GUIView view;
+    private Model model;
+    private GUIView view;
     private boolean changed;
     private File file;
     private JLabel inClass;
@@ -46,7 +54,7 @@ public class GUIController extends ControllerType {
     }
 
     public void init() {
-	JMenuBar menubar = ((GUIView) view).getMenuBar();
+	JMenuBar menubar = view.getMenuBar();
 	SaveController.saveListener((JButton) menubar.getComponent(0), this);
 	SaveController.saveAsListener((JButton) menubar.getComponent(1), this);
 	LoadController.loadListener((JButton) menubar.getComponent(2), this);
@@ -56,6 +64,21 @@ public class GUIController extends ControllerType {
 	ClassController.editModeListener((JButton) menubar.getComponent(6), this);
 	FrameController.exitListener(this.view, this);
 	FrameController.resizeListener(this.view);
+	
+	Action save = new SaveAction(this);
+	Action undo = new UndoAction(this);
+	Action redo = new RedoAction(this);
+	
+	JComponent contentPane = ((JComponent) view.getFrame().getContentPane());
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "save");
+	contentPane.getActionMap().put("save", save);
+
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "undo");
+	contentPane.getActionMap().put("undo", undo);
+	
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "redo");
+	contentPane.getActionMap().put("redo", redo);
+	
     }
 
     protected void truncateMemes(int end) {
@@ -105,7 +128,7 @@ public class GUIController extends ControllerType {
 	return file;
     }
 
-    protected Model getModel() {
+    public Model getModel() {
 	return model;
     }
 

@@ -22,7 +22,10 @@ public class MiscCommand extends CommandObj {
     public boolean execute() {
 	switch (commands[0]) {
 	case "quit":
-	    if (prompt) {
+	    if (commands.length != 1) {
+		view.printError(errorMessage + commandUsage[27] + "\n");
+		return prompt;
+	    } else if (prompt) {
 		System.out.println("\nYou have unsaved changes, are you sure you want to continue?");
 		System.out.println("Type 'yes' to quit, or 'no' to go back.");
 		prompt = savePrompt(prompt);
@@ -31,6 +34,7 @@ public class MiscCommand extends CommandObj {
 		System.exit(0);
 	    }
 	    return true;
+
 	case "help":
 	    help(commandUsage);
 	    return prompt;

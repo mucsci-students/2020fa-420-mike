@@ -78,7 +78,6 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane.setBackground(Color.WHITE);
 	pane.setOpaque(true);
 	validateRepaint();
-
     }
 
     public JMenuBar getMenuBar() {
@@ -239,4 +238,5 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 	validateRepaint();
     }
+
 }
