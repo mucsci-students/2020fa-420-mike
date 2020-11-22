@@ -11,6 +11,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import mike.HelperMethods;
 import mike.datastructures.Entity;
+import mike.datastructures.Memento;
+import mike.datastructures.Model;
 import mike.view.GUIView;
 
 public class LoadController {
@@ -44,6 +46,11 @@ public class LoadController {
 			    JLabel curLabel = ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
 			    curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 			}
+			
+			control.getMementos().clear();
+			control.newMeme(new Memento(new Model(control.getModel())));
+			control.setCurrMeme(0);
+			
 		    }
 		} catch (Exception e1) {
 		    e1.printStackTrace();

@@ -44,7 +44,8 @@ public class ClassController {
 		for (int x = 0; x < entities.size(); ++x) {
 		    entityStrings[x] = entities.get(x).getName();
 		}
-		createRelation(control.getModel(), entityStrings, view.getFrame(), view);
+		createRelation(editBox.getEditModel(), entityStrings, view.getFrame(), view);
+		editBox.newEditMeme();
 	    }
 	});
     }
@@ -54,7 +55,8 @@ public class ClassController {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
 		GUIView view = (GUIView) control.getView();
-		deleteRelation(control.getModel(), view.getFrame(), view);
+		deleteRelation(editBox.getEditModel(), view.getFrame(), view);
+		editBox.newEditMeme();
 	    }
 	});
     }
@@ -66,8 +68,8 @@ public class ClassController {
 		if (editMode) {
 		    if (control.getinClass() == null) {
 			GUIView view = (GUIView) control.getView();
-			JButton addClassButton = (JButton) view.getMenuBar().getComponent(3);
-			JButton editModeButton = (JButton) view.getMenuBar().getComponent(4);
+			JButton addClassButton = (JButton) view.getMenuBar().getComponent(5);
+			JButton editModeButton = (JButton) view.getMenuBar().getComponent(6);
 			editModeButton.setBackground(Color.LIGHT_GRAY);
 			editModeButton.setEnabled(false);
 			addClassButton.setEnabled(false);
@@ -108,7 +110,7 @@ public class ClassController {
 		// If leaving edit mode
 		if (editMode) {
 		    editMode = false;
-		    for (int x = 0; x < 4; ++x) {
+		    for (int x = 0; x < 5; ++x) {
 			JButton button = (JButton) view.getMenuBar().getComponent(x);
 			button.setEnabled(true);
 		    }
@@ -131,7 +133,7 @@ public class ClassController {
 		// If entering edit mode
 		else {
 		    editMode = true;
-		    for (int x = 0; x < 3; ++x) {
+		    for (int x = 0; x < 5; ++x) {
 			JButton button = (JButton) view.getMenuBar().getComponent(x);
 			button.setEnabled(false);
 		    }
