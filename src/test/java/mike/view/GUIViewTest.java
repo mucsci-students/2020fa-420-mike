@@ -63,18 +63,13 @@ public class GUIViewTest {
 	// Pre make things
 	Model model = new Model();
 	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
-<<<<<<< HEAD
 	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
 	
-=======
-
->>>>>>> 268645be03df6008482593e108935c694d995bb7
 	// Make two classes
 	model.createClass("c1");
 	model.createClass("c2");
 	guiViewMock.showClass(model.copyEntity("c1"), control);
 	guiViewMock.showClass(model.copyEntity("c2"), control);
-<<<<<<< HEAD
 	assertEquals("There are more or less than 2 entityLabels", 2, guiViewMock.getEntityLabels().size());
     }
     
@@ -97,13 +92,7 @@ public class GUIViewTest {
 	guiViewMock.deleteClass("c2");
 	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
     }
-    
-    
-=======
-	assertEquals("", 2, guiViewMock.getEntityLabels().size());
-    }
-    /*
->>>>>>> 268645be03df6008482593e108935c694d995bb7
+	
     @Test
     public void createRelationshipsTest() throws Exception {
 	// Pre make things
@@ -125,10 +114,6 @@ public class GUIViewTest {
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
 	assertEquals("", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
-<<<<<<< HEAD
     
 }
-=======
-    */
-}
->>>>>>> 268645be03df6008482593e108935c694d995bb7
+
