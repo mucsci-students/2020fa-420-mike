@@ -15,6 +15,29 @@ public class EntityTest {
         assertTrue("Fields list was initialized", e.getFields().isEmpty());
         assertTrue("Methods list was initialized", e.getMethods().isEmpty());
     }
+    
+    @Test
+    public void initCopyClass()
+    {
+	Entity initEntity = new Entity("c1");
+	Entity copyEntityOne = new Entity(initEntity);
+        assertTrue("Fields list is empty", copyEntityOne.getFields().isEmpty());
+        assertTrue("Methods list is empty", copyEntityOne.getMethods().isEmpty());
+        assertEquals("copyEntityOne has same name as initEntity", initEntity.getName(), copyEntityOne.getName());
+        
+        copyEntityOne.createField("f1", "String", "public");
+        copyEntityOne.createMethod("m1", "boolean", "private");
+        copyEntityOne.createParameter("m1", "p1", "int");
+        Entity copyEntityTwo = new Entity(copyEntityOne);
+        assertFalse("initEntity list is empty", initEntity.containsField("f1"));
+        assertFalse("initEntity list is empty", initEntity.containsMethod("m1"));
+        assertEquals("initEntity has more or less than zero field", 0, initEntity.getFields().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsField("f1"));
+        assertEquals("c1 has more or less than one method", 1, copyEntityTwo.getMethods().size());
+        assertTrue("c1 list is empty", copyEntityTwo.containsMethod("m1"));
+        assertEquals("m1 has more or less than one field", 1, copyEntityTwo.copyMethod("m1").getParameters().size());
+        assertTrue("Method list is empty", copyEntityTwo.copyMethod("m1").containsParameter("p1"));
+    }
 
     /* test equals */
     @Test
@@ -43,18 +66,18 @@ public class EntityTest {
     public void testCreateField() {
         Entity e = new Entity("e");
 
-        e.createField("a1", "int");
+        e.createField("a1", "int", "PUBLIC");
         assertTrue("Field a1 was created", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
-        assertFalse("False when duplicating field", e.createField("a1", "int"));
+        assertFalse("False when duplicating field", e.createField("a1", "int", "PUBLIC"));
     }
 
     /* test renameField */
     @Test
     public void testRenameField() {
         Entity e = new Entity("e");
-        e.createField("a1", "int");
-        e.createField("a2", "boolean");
+        e.createField("a1", "int", "PUBLIC");
+        e.createField("a2", "boolean", "PROTECTED");
 
         assertFalse("False when renaming to already existing field", e.renameField("a1", "a2"));
         assertFalse("False when renaming non-existent field", e.renameField("fake", "a3"));
@@ -65,13 +88,26 @@ public class EntityTest {
         assertFalse("a1 field no longer exists", e.containsField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
     }
+    
+    /* test changeFieldVis */
+    @Test
+    public void testChangeFieldVis()
+    {
+	Entity e = new Entity("e");
+	e.createField("f1", "int", "PUBLIC");
+	e.changeFieldVis("f1", "PROTECTED");
+	
+	assertEquals("Field f1 should have visibility of PROTECTED", "PROTECTED", e.copyField("f1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid field", e.changeFieldVis("f2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeFieldVis("f1", "WRONG"));
+    }
 
     /* test deleteField */
     @Test
     public void testDeleteField() {
         Entity e = new Entity("e");
-        e.createField("a1", "int");
-        e.createField("a2", "double");
+        e.createField("a1", "int", "PUBLIC");
+        e.createField("a2", "double", "PROTECTED");
 
         assertFalse("False when deleting non-existent field", e.deleteField("fake"));
 
@@ -86,18 +122,18 @@ public class EntityTest {
     public void testCreateMethod() {
         Entity e = new Entity("e");
 
-        e.createMethod("a1", "int");
+        e.createMethod("a1", "int", "PUBLIC");
         assertTrue("Method a1 was created", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
-        assertFalse("False when duplicating method", e.createMethod("a1", "int"));
+        assertFalse("False when duplicating method", e.createMethod("a1", "int", "PUBLIC"));
     }
 
     /* test renameMethod */
     @Test
     public void testRenameMethod() {
         Entity e = new Entity("e");
-        e.createMethod("a1", "int");
-        e.createMethod("a2", "String");
+        e.createMethod("a1", "int", "PUBLIC");
+        e.createMethod("a2", "String", "PROTECTED");
 
         assertFalse("False when renaming to already existing method", e.renameMethod("a1", "a2"));
         assertFalse("False when renaming non-existent method", e.renameMethod("fake", "a3"));
@@ -108,13 +144,26 @@ public class EntityTest {
         assertFalse("a1 method no longer exists", e.containsMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
     }
+    
+    /* test changeMethodVis */
+    @Test
+    public void testChangeMethodVis()
+    {
+	Entity e = new Entity("e");
+	e.createMethod("m1", "int", "PUBLIC");
+	e.changeMethodVis("m1", "PROTECTED");
+	
+	assertEquals("Method m1 should have visibility of PROTECTED", "PROTECTED", e.copyMethod("m1").getVisibility().toString());
+	assertFalse("False when changing visibility with a non-valid method", e.changeMethodVis("m2", "PRIVATE"));
+	assertFalse("False when changing visibility with a non-valid visibility", e.changeMethodVis("m1", "WRONG"));
+    }
 
     /* test deleteMethod */
     @Test
     public void testDeleteMethod() {
         Entity e = new Entity("e");
-        e.createMethod("a1", "int");
-        e.createMethod("a2", "String");
+        e.createMethod("a1", "int", "PUBLIC");
+        e.createMethod("a2", "String", "PROTECTED");
 
         assertFalse("False when deleting non-existent method", e.deleteMethod("fake"));
 
@@ -131,7 +180,7 @@ public class EntityTest {
     public void testContainsField()
     {
         Entity e = new Entity("e");
-        e.createField("a1", "int");
+        e.createField("a1", "int", "PUBLIC");
 
         assertFalse("False when searching non-existent field", e.containsField("fake"));
         assertTrue("a1 field found", e.containsField("a1"));
@@ -142,7 +191,7 @@ public class EntityTest {
     public void testContainsMethod()
     {
         Entity e = new Entity("e");
-        e.createMethod("a1", "int");
+        e.createMethod("a1", "int", "PUBLIC");
 
         assertFalse("False when searching non-existent method", e.containsMethod("fake"));
         assertTrue("a1 method found", e.containsMethod("a1"));
@@ -153,7 +202,7 @@ public class EntityTest {
     public void testCopyField()
     {
         Entity e = new Entity("e");
-        e.createField("a1", "int");
+        e.createField("a1", "int", "PUBLIC");
 
         assertEquals("Null when copying non-existent field", null, e.copyField("fake"));
 
@@ -167,7 +216,7 @@ public class EntityTest {
     public void testCopyMethod()
     {
         Entity e = new Entity("e");
-        e.createMethod("a1", "int");
+        e.createMethod("a1", "int", "PUBLIC");
 
         assertEquals("Null when copying non-existent method", null, e.copyMethod("fake"));
 

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import mike.datastructures.Relationship.Type;
 
 public class Model {
-    private static ArrayList<Entity> entities;
-    private static ArrayList<Relationship> relationships;
-
+    private ArrayList<Entity> entities;
+    private ArrayList<Relationship> relationships;
+    
     // *********************************************************//
     // Constructor //
     // *********************************************************//
@@ -14,6 +14,19 @@ public class Model {
     public Model() {
         entities = new ArrayList<Entity>();
         relationships = new ArrayList<Relationship>();
+    }
+    
+    public Model(Model modelToCopy) {
+	entities = new ArrayList<Entity>();
+        relationships = new ArrayList<Relationship>();
+	for(Entity e : modelToCopy.entities) {
+	    Entity thisE = new Entity(e);
+	    this.entities.add(thisE);
+	}
+	for(Relationship r : modelToCopy.relationships) {
+	    Relationship newR = new Relationship(r.getName(), r.getFirstClass(), r.getSecondClass());
+	    this.relationships.add(newR);
+	}
     }
 
     // *********************************************************//
@@ -98,12 +111,12 @@ public class Model {
     // Field Functions //
     // *********************************************************//
 
-    public boolean createField(String targetclass, String field, String type) {
+    public boolean createField(String targetclass, String field, String type, String visType) {
         for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createField(field, type);
+                return e.createField(field, type, visType);
             }
         }
         // Target not found.
@@ -120,6 +133,30 @@ public class Model {
         }
         // Target not found.
         return false;
+    }
+    
+    public boolean changeFieldType(String targetclass, String targetfield, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeFieldType(targetfield, newType);
+	    }
+	}
+	// Target not found
+	return false;
+    }
+    
+    public boolean changeFieldVis(String targetclass, String targetfield, String newVis) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the visibility.
+		return e.changeFieldVis(targetfield, newVis);
+	    }
+	}
+	// Target not found
+	return false;
     }
 
     public boolean deleteField(String targetclass, String targetfield) {
@@ -138,12 +175,12 @@ public class Model {
     // Method Functions //
     // *********************************************************//
 
-    public boolean createMethod(String targetclass, String method, String type) {
+    public boolean createMethod(String targetclass, String method, String type, String visType) {
         for (Entity e : entities) {
             // If target found.
             if (e.getName().equals(targetclass)) {
                 // Create the attribute.
-                return e.createMethod(method, type);
+                return e.createMethod(method, type, visType);
             }
         }
         // Target not found.
@@ -160,6 +197,30 @@ public class Model {
         }
         // Target not found.
         return false;
+    }
+    
+    public boolean changeMethodType(String targetclass, String targetmethod, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeMethodType(targetmethod, newType);
+	    }
+	}
+	// Target not found
+	return false;
+    }
+    
+    public boolean changeMethodVis(String targetclass, String targetmethod, String newVis) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the visibility.
+		return e.changeMethodVis(targetmethod, newVis);
+	    }
+	}
+	// Target not found
+	return false;
     }
 
     public boolean deleteMethod(String targetclass, String targetmethod) {
@@ -229,6 +290,18 @@ public class Model {
         // Target not found.
         return false;
     }
+    
+    public boolean changeParameterType(String targetclass, String method, String targetparameter, String newType) {
+	for (Entity e: entities) {
+	    // If target found.
+	    if (e.getName().equals(targetclass)) {
+		// Try to change the type.
+		return e.changeParameterType(method, targetparameter, newType);
+	    }
+	}
+	// Target not found
+	return false;
+    }
 
     public boolean deleteParameter(String className, String method, String name){
         for (Entity e : entities) {
@@ -252,7 +325,7 @@ public class Model {
     }
 
     public boolean empty(){
-        return entities.isEmpty() && relationships.isEmpty();
+        return entities.isEmpty();
     }
 
     // *********************************************************//

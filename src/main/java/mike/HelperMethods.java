@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.ParseException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
-import mike.controller.Controller;
+import mike.controller.ControllerType;
+import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.datastructures.Relationship.Type;
 import mike.view.GUIView;
@@ -26,22 +26,20 @@ import javax.swing.JLabel;
 public class HelperMethods {
 
     // Main load function. Calls loadClasses and loadRelationships
-    public static void load(Path userPath, Model userClasses, Controller control, ViewTemplate view)
+    public static void load(File file, Model userClasses, ControllerType control, ViewTemplate view)
 	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
-	userClasses.clear();
-
-	File directory = new File(userPath.toString());
-
 	// Parse the JSON file and get an array of the classes
-	Object obj = new JSONParser().parse(new FileReader(directory));
+	Object obj = new JSONParser().parse(new FileReader(file));
 
+	userClasses.clear();
+	
 	// Variable initialization. If the types look stupid that's because they are.
 	JSONObject javaObj = (JSONObject) obj;
 	JSONArray list = (JSONArray) javaObj.get("Classes");
 	ArrayList<JSONObject> objList = new ArrayList<JSONObject>();
 
-	loadClasses(userClasses, javaObj, list, objList, control, view);
+	loadClasses(userClasses, javaObj, list, objList, (GUIController)control, view);
 
 	// Clear out variables for reuse
 	list = (JSONArray) javaObj.get("Relationships");
@@ -53,7 +51,7 @@ public class HelperMethods {
     // Takes all of the information from the classes in the JSON file,
     // and inserts them to the currently running program
     private static void loadClasses(Model userClasses, JSONObject javaObj, JSONArray list,
-	    ArrayList<JSONObject> objList, Controller control, ViewTemplate view) {
+	    ArrayList<JSONObject> objList, ControllerType control, ViewTemplate view) {
 	// Add class names and attributes from JSONArray list to loadFile
 	for (int x = 0; x < list.size(); ++x) {
 	    // Get class from JSONArray list, add to ArrayList objList (type conversions)
@@ -70,8 +68,9 @@ public class HelperMethods {
 		JSONObject field = (JSONObject) classFields.get(y);
 		String fieldName = field.get("fieldName").toString();
 		String fieldType = field.get("fieldType").toString();
+		String fieldVis = field.get("fieldVis").toString();
 
-		userClasses.createField(className, fieldName, fieldType);
+		userClasses.createField(className, fieldName, fieldType, fieldVis);
 	    }
 
 	    // Extract all methods of associated class, add to loadFile
@@ -80,8 +79,9 @@ public class HelperMethods {
 		JSONObject method = (JSONObject) classMethods.get(y);
 		String methodName = method.get("methodName").toString();
 		String methodType = method.get("methodType").toString();
+		String methodVis = method.get("methodVis").toString();
 
-		userClasses.createMethod(className, methodName, methodType);
+		userClasses.createMethod(className, methodName, methodType, methodVis);
 		JSONArray methodParam = (JSONArray) method.get("Parameters");
 		for (int z = 0; z < methodParam.size(); ++z) {
 		    JSONObject param = (JSONObject) methodParam.get(z);
@@ -98,7 +98,7 @@ public class HelperMethods {
 	    location = (Long) objList.get(x).get("yPosition");
 	    e.setYLocation(Math.toIntExact(location));
 	    if (ViewTemplate.isGUI()) {
-		((GUIView) view).showClass(e, control);
+		((GUIView) view).showClass(e, (GUIController)control);
 	    }
 	}
 	if (ViewTemplate.isGUI()) {
@@ -136,13 +136,13 @@ public class HelperMethods {
     }
 
     // Main save function. Calls saveClasses and saveRelationships
-    public static void save(Path directory, Model userClasses) throws IOException {
+    public static void save(File file, Model userClasses) throws IOException {
 	JSONObject saveFile = new JSONObject();
 
 	saveFile = saveClasses(saveFile, userClasses);
 	saveFile = saveRelationships(saveFile, userClasses);
 
-	writeFile(saveFile, directory);
+	writeFile(saveFile, file);
     }
 
     // Creates a JSONObject for the classes and saves it to the saveFile
@@ -158,6 +158,7 @@ public class HelperMethods {
 	    JSONArray fields = new JSONArray();
 	    for (Field field : entity.getFields()) {
 		JSONObject oneField = new JSONObject();
+		oneField.put("fieldVis", field.getVisibility().toString());
 		oneField.put("fieldType", field.getType());
 		oneField.put("fieldName", field.getName());
 		fields.add(oneField);
@@ -168,6 +169,7 @@ public class HelperMethods {
 	    JSONArray methods = new JSONArray();
 	    for (Method method : entity.getMethods()) {
 		JSONObject oneMethod = new JSONObject();
+		oneMethod.put("methodVis", method.getVisibility().toString());
 		oneMethod.put("methodType", method.getType());
 		oneMethod.put("methodName", method.getName());
 
@@ -216,13 +218,12 @@ public class HelperMethods {
     }
 
     // Creates a file if it does not exist and writes saveFile to the file
-    private static void writeFile(JSONObject saveFile, Path directory) throws IOException {
-	File fileDirectory = new File(directory.toString());
-	fileDirectory.createNewFile();
+    private static void writeFile(JSONObject saveFile, File file) throws IOException {
+	file.createNewFile();
 
 	// Converts JSONObject and adds it to file
 	String fullJSONString = saveFile.toString();
-	FileWriter myWriter = new FileWriter(fileDirectory);
+	FileWriter myWriter = new FileWriter(file);
 	myWriter.write(fullJSONString);
 	myWriter.close();
     }
@@ -238,7 +239,7 @@ public class HelperMethods {
 	    ArrayList<Field> fields = curEntity.getFields();
 	    for (int x = 0; x < fields.size(); x++) {
 
-		System.out.print("(" + fields.get(x).getType() + ") " + fields.get(x).getName());
+		System.out.print("(" + fields.get(x).getVisibility().toString().toLowerCase() + ") " + fields.get(x).getType() + " " + fields.get(x).getName());
 		if (x != fields.size() - 1) {
 		    System.out.print(", ");
 		}
@@ -249,7 +250,7 @@ public class HelperMethods {
 	    System.out.print("		methods: [ ");
 	    for (int x = 0; x < curEntity.getMethods().size(); x++) {
 		Method curMethod = curEntity.getMethods().get(x);
-		System.out.print("(" + curMethod.getType() + ") " + curMethod.getName() + " -- {");
+		System.out.print("(" + curMethod.getVisibility().toString().toLowerCase() + ") " + curMethod.getType() + " " + curMethod.getName() + " -- {");
 
 		// Loop through parameters of method
 		ArrayList<Parameter> parameters = curMethod.getParameters();
@@ -280,7 +281,7 @@ public class HelperMethods {
 	}
     }
 
-    private static Type checkEnum(String command) {
+    public static Type checkEnum(String command) {
 	switch (command) {
 	case "REALIZATION":
 	    return Type.REALIZATION;

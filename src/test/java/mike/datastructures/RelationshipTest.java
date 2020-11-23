@@ -17,6 +17,19 @@ public class RelationshipTest {
 		assertEquals("First class name should be set properly.", "B", r.getFirstClass());
 		assertEquals("Second class name should be set properly.", "C", r.getSecondClass());
 	}
+	
+	@Test
+	public void testGettersAndSetters() {
+	    	Relationship r = new Relationship(Type.REALIZATION, "B", "C");
+	    	
+	    	r.setName(Type.INHERITANCE);
+	    	r.setFirstClass("D");
+	    	r.setSecondClass("E");
+		
+		assertEquals("Relationship name should be reset properly.", Type.INHERITANCE, r.getName());
+		assertEquals("First class should be changed properly.", "D", r.getFirstClass());
+		assertEquals("Second class should be changed properly.", "E", r.getSecondClass());
+	}
 
 
 	@Test
