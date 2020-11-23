@@ -238,5 +238,4 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 	validateRepaint();
     }
-
 }
