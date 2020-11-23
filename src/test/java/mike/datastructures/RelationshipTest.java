@@ -31,6 +31,7 @@ public class RelationshipTest {
 		assertEquals("Second class should be changed properly.", "E", r.getSecondClass());
 	}
 
+
 	@Test
 	public void testEquals() {
 		Relationship r1 = new Relationship(Type.REALIZATION, "B", "C");
