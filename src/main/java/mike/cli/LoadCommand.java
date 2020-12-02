@@ -32,7 +32,7 @@ public class LoadCommand extends CommandObj {
 		    return false;
 		}
 	    } catch (Exception e) {
-		view.printError("Failed to parse directory. Exiting.\n");
+		view.printError("Failed to parse directory. Exiting.");
 		return prompt;
 	    }
 	} else {

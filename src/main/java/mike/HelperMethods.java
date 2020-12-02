@@ -29,11 +29,11 @@ public class HelperMethods {
     public static void load(File file, Model userClasses, ControllerType control, ViewTemplate view)
 	    throws FileNotFoundException, IOException, ParseException, org.json.simple.parser.ParseException {
 
+	userClasses.clear();
+
 	// Parse the JSON file and get an array of the classes
 	Object obj = new JSONParser().parse(new FileReader(file));
 
-	userClasses.clear();
-	
 	// Variable initialization. If the types look stupid that's because they are.
 	JSONObject javaObj = (JSONObject) obj;
 	JSONArray list = (JSONArray) javaObj.get("Classes");

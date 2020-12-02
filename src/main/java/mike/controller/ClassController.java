@@ -24,7 +24,7 @@ import mike.datastructures.Entity;
 import mike.datastructures.Model;
 import mike.datastructures.Relationship;
 import mike.datastructures.Relationship.Type;
-import mike.gui.editBox;
+import mike.gui.EditBox;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
 
@@ -44,8 +44,8 @@ public class ClassController {
 		for (int x = 0; x < entities.size(); ++x) {
 		    entityStrings[x] = entities.get(x).getName();
 		}
-		createRelation(editBox.getEditModel(), entityStrings, view.getFrame(), view);
-		editBox.newEditMeme();
+		createRelation(EditBox.getEditModel(), entityStrings, view.getFrame(), view);
+		EditBox.newEditMeme();
 	    }
 	});
     }
@@ -55,8 +55,8 @@ public class ClassController {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
 		GUIView view = (GUIView) control.getView();
-		deleteRelation(editBox.getEditModel(), view.getFrame(), view);
-		editBox.newEditMeme();
+		deleteRelation(EditBox.getEditModel(), view.getFrame(), view);
+		EditBox.newEditMeme();
 	    }
 	});
     }
@@ -180,7 +180,7 @@ public class ClassController {
 
 	JComboBox<String> listTwo = new JComboBox<>(entityStrings);
 	ArrayList<Relationship> allRelationships = classes.getRelationships();
-	String selectedClass = editBox.getBox().getName();
+	String selectedClass = EditBox.getBox().getName();
 
 	// Remove classes from listTwo based on existing relationships
 	// Find all relationships that have use the selected class as class 1...
@@ -224,7 +224,7 @@ public class ClassController {
 	}
 
 	if (result == 0) {
-	    String name1 = editBox.getBox().getName();
+	    String name1 = EditBox.getBox().getName();
 	    String name2 = listTwo.getSelectedItem().toString();
 	    classes.createRelationship(type, name1, name2);
 	    view.createRelationship(type, name1, name2, classes);
@@ -246,7 +246,7 @@ public class ClassController {
 
 	// Create String array holding all existing relationships
 	// Use a common string between class one and class two for easier parsing
-	String editName = editBox.getBox().getName();
+	String editName = EditBox.getBox().getName();
 	int y = 0;
 	for (int x = 0; x < allRelationships.size(); ++x) {
 	    if (editName.equals(allRelationships.get(x).getFirstClass())) {
