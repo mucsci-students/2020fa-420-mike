@@ -8,6 +8,7 @@ import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,8 @@ public class GUIViewTest {
 
     @Mock
     private JLayeredPane pane;
+    @Mock
+    private JScrollPane scrollPane;
     @Mock
     private JMenuBar menuBar;
     @Spy
@@ -44,12 +47,12 @@ public class GUIViewTest {
 
     @Test
     public void initTest() throws Exception {
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
     }
 
     @Test
     public void getterTest() throws Exception {
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 
 	assertFalse("entityLabels object is null.", guiViewMock.getEntityLabels().equals(null));
 	assertFalse("relations object is null.", guiViewMock.getRelations().equals(null));
@@ -61,7 +64,7 @@ public class GUIViewTest {
     public void createClassTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
 
 	// Make two classes
@@ -76,7 +79,7 @@ public class GUIViewTest {
     public void deleteClassTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
@@ -97,7 +100,7 @@ public class GUIViewTest {
     public void createRelationshipsTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
@@ -117,7 +120,7 @@ public class GUIViewTest {
     public void deleteLineTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
@@ -173,7 +176,7 @@ public class GUIViewTest {
     public void deleteLinesTest() throws Exception {
 	// Pre make things
 	Model model = new Model();
-	guiViewMock = new GUIView(entityLabels, pane, relations, menuBar);
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
 
 	// Make two classes
 	model.createClass("c1");
@@ -211,4 +214,26 @@ public class GUIViewTest {
 
     }
 
+    @Test
+    public void editmodeTest() throws Exception {
+	// Pre make things
+	Model model = new Model();
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
+	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
+
+	// Make two classes
+	model.createClass("c1");
+	model.createClass("c2");
+	guiViewMock.showClass(model.copyEntity("c1"), control);
+	guiViewMock.showClass(model.copyEntity("c2"), control);
+	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
+	
+	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
+	System.out.println(entityLabels.get("c1"));
+	guiViewMock.repaintEverything(model, control);
+	assertEquals("There are more or less than 1 relationships in model", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("There is more or less than 1 relationship in gui", 1, guiViewMock.getRelations().size());
+	assertEquals("There are more or less than 2 entityLabels in gui", 2, guiViewMock.getEntityLabels().size());
+    }
+    
 }

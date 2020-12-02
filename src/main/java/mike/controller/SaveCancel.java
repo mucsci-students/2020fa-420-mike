@@ -20,7 +20,7 @@ import mike.datastructures.Model;
 import mike.datastructures.Parameter;
 import mike.datastructures.Relationship;
 import mike.gui.Line;
-import mike.gui.editBox;
+import mike.gui.EditBox;
 import mike.view.GUIView;
 
 public class SaveCancel {
@@ -32,12 +32,12 @@ public class SaveCancel {
 		GUIView view = entering(control);
 
 		boolean madeChange = false;
-		Entity entity = editBox.getEntity();
+		Entity entity = EditBox.getEntity();
 		String eName = entity.getName();
 		int fieldSize = entity.getFields().size(), methodNum = 0, paramSize;
-		JLabel newBox = editBox.getBox();
+		JLabel newBox = EditBox.getBox();
 		JTextField text = (JTextField) ((JPanel) newBox.getComponent(1)).getComponent(2);
-		Model model = editBox.getEditModel();
+		Model model = EditBox.getEditModel();
 
 		for (int x = 0; x < fieldSize; ++x) {
 		    JPanel panelField = (JPanel) newBox.getComponent(x + 3);
@@ -109,10 +109,10 @@ public class SaveCancel {
 		view.exitEditingClass(control.getinClass(), control, model);
 
 		if(madeChange) {
-		    editBox.newEditMeme();
+		    EditBox.newEditMeme();
 		}
-		control.setModel(editBox.getEditModel());
-		control.appendMementos(editBox.getEditMementos());
+		control.setModel(EditBox.getEditModel());
+		control.appendMementos(EditBox.getEditMementos());
 
 		exiting(view.getMenuBar(), control, view.getFrame());
 	    }
@@ -147,12 +147,12 @@ public class SaveCancel {
 			"Are you sure you want to delete this class?", "Delete Class", JOptionPane.YES_NO_OPTION);
 		if (n == 0) {
 		    GUIView view = entering(control);
-		    view.deleteLines(editBox.getEntity().getName());
-		    editBox.getEditModel().deleteClass(editBox.getEntity().getName());
+		    view.deleteLines(EditBox.getEntity().getName());
+		    EditBox.getEditModel().deleteClass(EditBox.getEntity().getName());
 		    view.getPane().remove(control.getinClass());
 		    exiting(view.getMenuBar(), control, view.getFrame());
-		    editBox.newEditMeme();
-		    control.appendMementos(editBox.getEditMementos());
+		    EditBox.newEditMeme();
+		    control.appendMementos(EditBox.getEditMementos());
 		}
 	    }
 	});
@@ -169,7 +169,7 @@ public class SaveCancel {
 
     private static void exiting(JMenuBar menuBar, GUIController control, JFrame frame) {
 	control.setinClass(null);
-	editBox.setBox(null);
+	EditBox.setBox(null);
 	menuBar.remove(8);
 	menuBar.remove(7);
 	frame.validate();

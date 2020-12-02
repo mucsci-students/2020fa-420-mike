@@ -28,14 +28,14 @@ import mike.datastructures.Model;
 import mike.datastructures.Parameter;
 import mike.view.GUIView;
 
-public class editBox {
+public class EditBox {
 
     private static JLabel newBox;
     private static Entity e;
     private static Model editModel;
     private static ArrayList<Memento> editMementos;
 
-    public editBox(JLabel label, GUIController control, Model model, GUIView view) {
+    public EditBox(JLabel label, GUIController control, Model model, GUIView view) {
 	editModel = new Model(model);
 	e = editModel.copyEntity(label.getName());
 	editMementos = new ArrayList<Memento>();

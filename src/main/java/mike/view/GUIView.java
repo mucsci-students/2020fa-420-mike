@@ -7,27 +7,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import mike.controller.GUIController;
 import mike.datastructures.*;
 import mike.gui.Line;
-import mike.gui.editBox;
-import mike.gui.htmlBox;
+import mike.gui.EditBox;
+import mike.gui.HtmlBox;
 
 public class GUIView extends ViewTemplate implements ViewInterface {
     // Global Variables
     private JLayeredPane pane;
+    private JScrollPane scrollPane;
     private HashMap<String, JLabel> entityLabels;
     private ArrayList<Line> relations;
     private JFrame frame;
     private JMenuBar menuBar;
-
-    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, ArrayList<Line> relations,
+    
+    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, JScrollPane scrollPane, ArrayList<Line> relations,
 	    JMenuBar menuBar) {
 	super();
 
 	// initialize globals
 	this.entityLabels = entityLabels;
+	this.scrollPane = scrollPane;
 	this.pane = pane;
 	this.relations = relations;
 	this.menuBar = menuBar;
@@ -41,10 +46,14 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	// initialize globals
 	entityLabels = new HashMap<String, JLabel>();
 	pane = new JLayeredPane();
+	pane.setPreferredSize(new Dimension(5000, 5000));
+	scrollPane = new JScrollPane(pane);
+	scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+	scrollPane.getHorizontalScrollBar().setUnitIncrement(15);
 	relations = new ArrayList<Line>();
 	menuBar = new JMenuBar();
 	frame = new JFrame("Team mike UML Editor");
-
+	
 	GUIInit();
 	
 	// Creating the menu bar and its options
@@ -57,7 +66,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	// Adding all panels onto frame
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(1000, 800);
-	frame.getContentPane().add(BorderLayout.CENTER, pane);
+	frame.getContentPane().add(BorderLayout.CENTER, scrollPane);
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
@@ -101,12 +110,11 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     }
 
     public void validateRepaint() {
-	pane.validate();
-	pane.repaint();
+	scrollPane.validate();
+	scrollPane.repaint();
     }
 
     public void repaintEverything(Model model, GUIController control) {
-	JLayeredPane pane = ((GUIView) control.getView()).getPane();
 	pane.removeAll();
 	relations.clear();
 	entityLabels.clear();
@@ -121,8 +129,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	validateRepaint();
     }
     
-    public htmlBox showClass(Entity entity, GUIController control) {
-	htmlBox newview = new htmlBox(entity, control);
+    public HtmlBox showClass(Entity entity, GUIController control) {
+	HtmlBox newview = new HtmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
 	entityLabels.put(entity.getName(), newview.getBox());
 	validateRepaint();
@@ -174,7 +182,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     public void createRelationship(Relationship.Type type, String name1, String name2, Model model) {
 	JLabel L1;
 	JLabel L2;
-	JLabel box = editBox.getBox();
+	JLabel box = EditBox.getBox();
 	Boolean notNull = (box != null);
 
 	if (notNull && name1.equals(box.getName())) {
@@ -199,19 +207,29 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     public JLabel htmlBoxToEditBox(JLabel label, GUIController control, Model model) {
 	pane.remove(label);
 
-	new editBox(label, control, model, this);
-	pane.add(editBox.getBox(), JLayeredPane.MODAL_LAYER);
+	new EditBox(label, control, model, this);
+	pane.add(EditBox.getBox(), JLayeredPane.MODAL_LAYER);
 
-	resetLinesFromConversion(label, editBox.getBox());
+	resetLinesFromConversion(label, EditBox.getBox());
 
-	return editBox.getBox();
+	return EditBox.getBox();
     }
 
     public void exitEditingClass(JLabel inClass, GUIController control, Model model) {
 	pane.remove(inClass);
 	Entity e = model.copyEntity(inClass.getName());
+	HtmlBox box = showClass(e, control);
+	JLabel label = box.getBox();
+	// Create border and margin
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+        Border margin = new EmptyBorder(6, 6, 6, 6);
+        label.setBorder(new CompoundBorder(border, margin));
 
-	resetLinesFromConversion(inClass, showClass(e, control).getBox());
+        // Create settings so the box can appear at right spot
+        label.setBounds(0, 0, label.getPreferredSize().width, label.getPreferredSize().height);
+        label.setLocation(e.getXLocation(), e.getYLocation());
+	
+	resetLinesFromConversion(inClass, label);
     }
 
     private void resetLinesFromConversion(JLabel label, JLabel box) {
