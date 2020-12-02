@@ -48,6 +48,8 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	pane = new JLayeredPane();
 	pane.setPreferredSize(new Dimension(5000, 5000));
 	scrollPane = new JScrollPane(pane);
+	scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+	scrollPane.getHorizontalScrollBar().setUnitIncrement(15);
 	relations = new ArrayList<Line>();
 	menuBar = new JMenuBar();
 	frame = new JFrame("Team mike UML Editor");
