@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import mike.datastructures.Entity;
 import mike.datastructures.Method;
-import mike.gui.editBox;
+import mike.gui.EditBox;
 import mike.view.GUIView;
 
 public class CreateDeleteController {
@@ -32,23 +32,23 @@ public class CreateDeleteController {
 		if (newType.isEmpty() || newName.isEmpty()) {
 		    return;
 		}
-		Entity entity = editBox.getEntity();
-		JLabel newview = editBox.getBox();
+		Entity entity = EditBox.getEntity();
+		JLabel newview = EditBox.getBox();
 
 		// Create attribute in model and view (makes controllers at the same time)
 		if (attribute == "field") {
-		    editBox.getEditModel().createField(entity.getName(), newName, newType, visType);
-		    int spot = editBox.getEntity().getFields().size() + 2;
-		    control.deleteField(editBox.editSection(newType, newName, false, spot));
+		    EditBox.getEditModel().createField(entity.getName(), newName, newType, visType);
+		    int spot = EditBox.getEntity().getFields().size() + 2;
+		    control.deleteField(EditBox.editSection(newType, newName, false, spot));
 		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
 		} else if (attribute == "method") {
-		    editBox.getEditModel().createMethod(entity.getName(), newName, newType, visType);
+		    EditBox.getEditModel().createMethod(entity.getName(), newName, newType, visType);
 		    int spot = newview.getComponentCount() - 1;
-		    control.deleteMethod(editBox.editSection(newType, newName, false, spot));
-		    control.createParam(editBox.newSection(true, spot + 1), newName);
+		    control.deleteMethod(EditBox.editSection(newType, newName, false, spot));
+		    control.createParam(EditBox.newSection(true, spot + 1), newName);
 		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
 		} else if (attribute == "parameter") {
-		    editBox.getEditModel().createParameter(entity.getName(), methodName, newName, newType);
+		    EditBox.getEditModel().createParameter(entity.getName(), methodName, newName, newType);
 		    int spot = entity.getFields().size() + 4;
 		    for (Method m : entity.getMethods()) {
 			spot += m.getParameters().size() + 2;
@@ -57,13 +57,13 @@ public class CreateDeleteController {
 			    break;
 			}
 		    }
-		    control.deleteParam(editBox.editSection(newType, newName, true, spot), methodName);
+		    control.deleteParam(EditBox.editSection(newType, newName, true, spot), methodName);
 		}
 		((JTextField) panel.getComponent(2)).setText("");
 		((JTextField) panel.getComponent(4)).setText("");
 		ending(control, newview, entity);
 
-		editBox.newEditMeme();
+		EditBox.newEditMeme();
 	    }
 	});
     }
@@ -77,13 +77,13 @@ public class CreateDeleteController {
 	}
 	deletion.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		JLabel newview = editBox.getBox();
-		Entity entity = editBox.getEntity();
+		JLabel newview = EditBox.getBox();
+		Entity entity = EditBox.getEntity();
 		String deleteAtt = ((JTextField) panel.getComponent(6)).getText();
 
 		// Delete attribute from model
 		if (attribute.equals("field")) {
-		    editBox.getEditModel().deleteField(entity.getName(), deleteAtt);
+		    EditBox.getEditModel().deleteField(entity.getName(), deleteAtt);
 		} else if (attribute.equals("method")) {
 		    // Delete parameters in view as well
 		    int methodSpot = newview.getComponentZOrder(panel);
@@ -92,16 +92,16 @@ public class CreateDeleteController {
 			newview.remove(methodSpot + 1);
 		    }
 
-		    editBox.getEditModel().deleteMethod(entity.getName(), deleteAtt);
+		    EditBox.getEditModel().deleteMethod(entity.getName(), deleteAtt);
 		} else if (attribute.equals("parameter")) {
-		    editBox.getEditModel().deleteParameter(entity.getName(), methodName, deleteAtt);
+		    EditBox.getEditModel().deleteParameter(entity.getName(), methodName, deleteAtt);
 		}
 
 		// Delete attribute from view
 		newview.remove(deletion.getParent());
 		ending(control, newview, entity);
 
-		editBox.newEditMeme();
+		EditBox.newEditMeme();
 	    }
 	});
     }
