@@ -68,6 +68,9 @@ public class MethodTest {
         assertTrue("Parameters list contains p", m.containsParameter("p"));
 
         assertFalse("False when creating duplicate", m.createParameter("p", "String"));
+        
+        assertFalse("False when creating parameter with space in the name", m.createParameter("p 1", "String"));
+        assertFalse("False when creating parameter with space in the type", m.createParameter("p", "Str ing"));
     }
 
     /* test renameParameter */
@@ -84,6 +87,8 @@ public class MethodTest {
         assertTrue("p renamed to p1", m.renameParameter("p", "p1"));
         assertTrue("Parameters list contains p1", m.containsParameter("p1"));
         assertFalse("Parameters list no longer contains p", m.containsParameter("p"));
+        
+        assertFalse("False when renaming parameter to a name with a space", m.renameParameter("p", "p 1"));
     }
 
     /* test deleteParameter */

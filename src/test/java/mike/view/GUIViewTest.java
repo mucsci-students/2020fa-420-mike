@@ -258,4 +258,28 @@ public class GUIViewTest {
 	assertEquals("There are more or less than 2 relationships", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
     
+    @Test
+    public void exitEditingClassTest() {
+	// Pre make things
+	Model model = new Model();
+	guiViewMock = new GUIView(entityLabels, pane, scrollPane, relations, menuBar);
+
+	// Make one class
+	model.createClass("c1");
+	model.createClass("c2");
+	guiViewMock.showClass(model.copyEntity("c1"), control);
+	guiViewMock.showClass(model.copyEntity("c2"), control);
+	assertEquals("There are more or less than 2 entityLabels", 2, guiViewMock.getEntityLabels().size());
+
+	// Make a relationship
+	guiViewMock.createRelationship(Type.INHERITANCE, "c1", "c1", model);
+	assertEquals("There is more or less than 1 relationships", 1, guiViewMock.getRelations().size());
+
+	JLabel c1 = new JLabel();
+	c1.setName("c1");
+	guiViewMock.exitEditingClass(c1, control, model);
+	assertEquals("There is more or less than 1 relationships", 1, guiViewMock.getRelations().size());
+	assertEquals("There are more or less than 2 entityLabels", 2, guiViewMock.getEntityLabels().size());
+    }
+
 }

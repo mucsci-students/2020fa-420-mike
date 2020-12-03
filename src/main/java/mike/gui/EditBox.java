@@ -50,10 +50,10 @@ public class EditBox {
 	createSection("Methods:", control);
 
 	// Design entire label
-	newBox.setBackground(Color.LIGHT_GRAY);
+	newBox.setBackground(new Color(30, 30, 30));
 	newBox.setOpaque(true);
 	newBox.setBorder(
-		new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 4), (new EmptyBorder(6, 6, 6, 6))));
+		new CompoundBorder(BorderFactory.createLineBorder(Color.CYAN.darker(), 4), (new EmptyBorder(6, 6, 6, 6))));
 
 	// Position/show label
 	newBox.setName(e.getName());
@@ -98,6 +98,8 @@ public class EditBox {
 	JButton deleteRelation = new JButton("Delete Relationship");
 	menuBar.add(addRelation);
 	menuBar.add(deleteRelation);
+	addRelation.setBackground(new Color(30, 30, 30));
+	deleteRelation.setBackground(new Color(30, 30, 30));
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
@@ -107,6 +109,8 @@ public class EditBox {
 	JPanel saveCancel = setUpJPanel();
 	JButton saveButton = new JButton("Save");
 	JButton cancelButton = new JButton("Cancel");
+	saveButton.setBackground(new Color(30, 30, 30));
+	cancelButton.setBackground(new Color(30, 30, 30));
 	saveCancel.add(saveButton);
 	saveCancel.add(cancelButton);
 	newBox.add(saveCancel);
@@ -126,8 +130,27 @@ public class EditBox {
 	JLabel Label = new JLabel(section);
 	Label.setFont(new Font("", Font.BOLD, 18));
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
-	Label.setForeground(Color.BLACK);
+	Label.setForeground(Color.WHITE);
 	newBox.add(Label);
+	
+	JLabel start;
+	if(section == "Fields:") {
+	    if (control.getModel().copyEntity(e.getName()).getFields().size() == 0) {
+		start = new JLabel(" Visibility        Type              Name");
+	    } else {
+		start = new JLabel("            Visibility        Type              Name");
+	    }
+	} else {
+	    if (control.getModel().copyEntity(e.getName()).getMethods().size() == 0) {
+		start = new JLabel(" Visibility        Type              Name");
+	    } else {
+		start = new JLabel("            Visibility        Type              Name");
+	    }
+	}
+	start.setFont(new Font("", Font.BOLD, 14));
+	start.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0));
+	start.setForeground(Color.WHITE);
+	newBox.add(start);
 
 	// Add all existing fields/methods(and Paramters) to editBox
 	if (section == "Fields:") {
@@ -161,8 +184,8 @@ public class EditBox {
 	    visTypes.setSelectedItem(e.copyMethod(sectionName).getVisibility().toString().toLowerCase());
 	}
 	JButton xButton = new JButton("X");
-	JTextField Type = new JTextField(sectionType);
-	JTextField Name = new JTextField(sectionName);
+	JTextField Type = new JTextField(sectionType, 10);
+	JTextField Name = new JTextField(sectionName, 10);
 	xButton.setBackground(Color.RED);
 
 	if (parameter) {
@@ -202,9 +225,9 @@ public class EditBox {
 	    newSection.add(Box.createHorizontalStrut(5));
 	}
 
-	newSection.add(new JTextField(7)); // Type
+	newSection.add(new JTextField(10)); // Type
 	newSection.add(Box.createHorizontalStrut(5));
-	newSection.add(new JTextField(7)); // Name
+	newSection.add(new JTextField(10)); // Name
 	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(plusButton);
 	newSection.add(Box.createHorizontalStrut(5));
@@ -218,7 +241,7 @@ public class EditBox {
 	JPanel panel = new JPanel();
 	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 	panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-	panel.setBackground(Color.LIGHT_GRAY);
+	panel.setBackground(new Color(30, 30, 30));
 	panel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
 	return panel;
     }

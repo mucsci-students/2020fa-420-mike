@@ -38,6 +38,10 @@ public class Method extends Formal{
     
     /* CREATE, RENAME, DELETE parameter methods */
     public boolean createParameter(String name, String type){
+	if (name.contains(" ") || type.contains(" ")) {
+	    return false;
+	}
+	
         if(containsParameter(name)){
             return false; //parameter already exists
         }
@@ -45,6 +49,10 @@ public class Method extends Formal{
     }
 
     public boolean renameParameter(String name, String newname){
+	if (newname.contains(" ")) {
+	    return false;
+	}
+	
         if(containsParameter(newname)) {
             //parameter with new name already exists
             return false;
@@ -63,6 +71,10 @@ public class Method extends Formal{
     }
     
     public boolean changeParameterType(String name, String newType){
+	if (newType.contains(" ")) {
+	    return false;
+	}
+	
         for (Parameter p : parameters) {
             // If target found.
             if (p.getName().equals(name)) {
