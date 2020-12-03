@@ -97,6 +97,10 @@ public class Entity {
     // *********************************************************//
 
     public boolean createField(String name, String type, String visType) {
+	if (name.contains(" ") || type.contains(" ")) {
+	    return false;
+	}
+	
 	if (containsField(name)) {
 	    return false; // already contains field
 	}
@@ -104,6 +108,10 @@ public class Entity {
     }
 
     public boolean renameField(String target, String newfield) {
+	if (newfield.contains(" ")) {
+	    return false;
+	}
+	
 	if (containsField(newfield)) {
 	    // new field already exists
 	    return false;
@@ -122,6 +130,10 @@ public class Entity {
     }
 
     public boolean changeFieldType(String target, String newType) {
+	if (newType.contains(" ")) {
+	    return false;
+	}
+	
 	for (Field f : fields) {
 	    // If target found
 	    if (f.getName().equals(target)) {
@@ -159,6 +171,10 @@ public class Entity {
     // *********************************************************//
 
     public boolean createMethod(String method, String type, String visType) {
+	if (method.contains(" ") || type.contains(" ")) {
+	    return false;
+	}
+	
 	if (containsMethod(method)) {
 	    return false; // already contains method
 	}
@@ -166,6 +182,10 @@ public class Entity {
     }
 
     public boolean renameMethod(String target, String newmethod) {
+	if (newmethod.contains(" ")) {
+	    return false;
+	}
+	
 	if (containsMethod(newmethod)) {
 	    // new method already exists
 	    return false;
@@ -184,6 +204,10 @@ public class Entity {
     }
 
     public boolean changeMethodType(String target, String newType) {
+	if (newType.contains(" ")) {
+	    return false;
+	}
+	
 	for (Method m : methods) {
 	    // If target found
 	    if (m.getName().equals(target)) {
@@ -220,7 +244,7 @@ public class Entity {
     // Parameter Functions //
     // *********************************************************//
 
-    public boolean createParameter(String method, String name, String type) {
+    public boolean createParameter(String method, String name, String type) {	
 	for (Method m : methods) {
 	    // If target found.
 	    if (m.getName().equals(method)) {

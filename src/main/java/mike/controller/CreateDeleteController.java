@@ -45,7 +45,7 @@ public class CreateDeleteController {
 			moveLabels(entity.getName(), attribute);
 		    } else {
 			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make field with the same name");
+				"Cannot make field");
 		    }
 
 		} else if (attribute == "method") {
@@ -57,7 +57,7 @@ public class CreateDeleteController {
 			moveLabels(entity.getName(), attribute);
 		    } else {
 			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make method with the same name");
+				"Cannot make method");
 		    }
 
 		} else if (attribute == "parameter") {
@@ -73,7 +73,7 @@ public class CreateDeleteController {
 			control.deleteParam(EditBox.editSection(newType, newName, true, spot), methodName);
 		    } else {
 			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make parameter with the same name");
+				"Cannot make parameter");
 		    }
 		}
 		((JTextField) panel.getComponent(2)).setText("");
