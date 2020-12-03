@@ -129,11 +129,11 @@ public class Line extends JComponent {
     }
 
     private void drawSelfRelationship(Graphics2D g2d) {
-	g2d.setColor(Color.BLACK);
+	g2d.setColor(Color.CYAN.darker());
 
 	if (type == Type.REALIZATION) {
 	    float[] dashedpattern = { 4f, 4f };
-	    Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
+	    Stroke dashedstroke = new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
 		    1.0f);
 
 	    g2d.setStroke(dashedstroke);
@@ -141,13 +141,13 @@ public class Line extends JComponent {
 
 	    int x = (int) (x1 - 4);
 	    int y = (int) (y1 + 16);
-	    g2d.setStroke(new BasicStroke(1f));
+	    g2d.setStroke(new BasicStroke(2f));
 	    g2d.rotate(-Math.toRadians(85), x, y);
 	    drawEmptyArrow(g2d, x, y);
 	    return;
 	}
 
-	g2d.setStroke(new BasicStroke(1f));
+	g2d.setStroke(new BasicStroke(2f));
 	g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 0, 240, Arc2D.OPEN));
 
 	if (type == Type.COMPOSITION) {
@@ -177,8 +177,8 @@ public class Line extends JComponent {
 	double length = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
 
 	// Draw line
-	g2d.setColor(Color.BLACK);
-	g2d.setStroke(new BasicStroke(1f));
+	g2d.setColor(Color.CYAN.darker());
+	g2d.setStroke(new BasicStroke(2f));
 	g2d.rotate(-Math.atan2(xdiff, ydiff), x1, y1);
 
 	int y = (int) (y1 + length - 4);
@@ -187,13 +187,13 @@ public class Line extends JComponent {
 	if (type == Type.REALIZATION) {
 	    // Dashed line
 	    float[] dashedpattern = { 4f, 4f };
-	    Stroke dashedstroke = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
+	    Stroke dashedstroke = new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dashedpattern,
 		    1.0f);
 
 	    g2d.setStroke(dashedstroke);
 	    g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
 
-	    g2d.setStroke(new BasicStroke(1f));
+	    g2d.setStroke(new BasicStroke(2f));
 	    drawEmptyArrow(g2d, x, y);
 	    return;
 	}
@@ -210,26 +210,27 @@ public class Line extends JComponent {
     }
 
     private void drawFilledDiamond(Graphics2D g2d, int x, int y) {
+	g2d.setColor(Color.CYAN.darker());
 	int xpoints[] = { x, x + 6, x, x - 6, x };
 	int ypoints[] = { y, y - 10, y - 20, y - 10, y };
 	g2d.fillPolygon(xpoints, ypoints, 5);
     }
 
     private void drawEmptyDiamond(Graphics2D g2d, int x, int y) {
-	g2d.setColor(Color.WHITE);
+	g2d.setColor(new Color(45, 45, 45));
 	int xpoints[] = { x, x + 6, x, x - 6, x };
 	int ypoints[] = { y, y - 10, y - 20, y - 10, y };
 	g2d.fillPolygon(xpoints, ypoints, 5);
-	g2d.setColor(Color.BLACK);
+	g2d.setColor(Color.CYAN.darker());
 	g2d.drawPolygon(xpoints, ypoints, 5);
     }
 
     private void drawEmptyArrow(Graphics2D g2d, int x, int y) {
-	g2d.setColor(Color.WHITE);
+	g2d.setColor(new Color(45, 45, 45));
 	int xpoints[] = { x, x + 7, x - 7, x };
 	int ypoints[] = { y, y - 14, y - 14, y };
 	g2d.fillPolygon(xpoints, ypoints, 4);
-	g2d.setColor(Color.BLACK);
+	g2d.setColor(Color.CYAN.darker());
 	g2d.drawPolygon(xpoints, ypoints, 4);
     }
 }

@@ -70,7 +70,7 @@ public class ClassController {
 			GUIView view = (GUIView) control.getView();
 			JButton addClassButton = (JButton) view.getMenuBar().getComponent(5);
 			JButton editModeButton = (JButton) view.getMenuBar().getComponent(6);
-			editModeButton.setBackground(Color.LIGHT_GRAY);
+			editModeButton.setBackground(new Color(30, 30, 30));
 			editModeButton.setEnabled(false);
 			addClassButton.setEnabled(false);
 			control.setinClass(view.htmlBoxToEditBox(newview, control, control.getModel()));
@@ -119,7 +119,6 @@ public class ClassController {
 		    // Change button to signify we are out of edit mode
 		    editButton.setText("Enable Edit Mode");
 		    editButton.setFont(editButton.getFont().deriveFont(Font.PLAIN));
-		    editButton.setBackground(new Color(240, 240, 240));
 		    editButton.setContentAreaFilled(true);
 		    editButton.setOpaque(false);
 		    if (control.getinClass() != null) {
