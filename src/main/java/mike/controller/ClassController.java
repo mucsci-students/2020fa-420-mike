@@ -44,7 +44,7 @@ public class ClassController {
 		for (int x = 0; x < entities.size(); ++x) {
 		    entityStrings[x] = entities.get(x).getName();
 		}
-		createRelation(EditBox.getEditModel(), entityStrings, view.getFrame(), view);
+		createRelation(EditBox.getEditModel(), entityStrings, view.getFrame(), control);
 		EditBox.newEditMeme();
 	    }
 	});
@@ -55,7 +55,7 @@ public class ClassController {
 	    @Override
 	    public void mousePressed(MouseEvent e) {
 		GUIView view = (GUIView) control.getView();
-		deleteRelation(EditBox.getEditModel(), view.getFrame(), view);
+		deleteRelation(EditBox.getEditModel(), view.getFrame(), control);
 		EditBox.newEditMeme();
 	    }
 	});
@@ -149,7 +149,7 @@ public class ClassController {
 	});
     }
 
-    private static void createRelation(Model classes, String[] entityStrings, JFrame frame, GUIView view) {
+    private static void createRelation(Model classes, String[] entityStrings, JFrame frame, GUIController control) {
 	if (classes.getEntities().size() < 1) {
 	    JOptionPane.showMessageDialog(frame, "There are not enough classes to create a relationship.");
 	    return;
@@ -228,11 +228,12 @@ public class ClassController {
 	    String name1 = EditBox.getBox().getName();
 	    String name2 = listTwo.getSelectedItem().toString();
 	    classes.createRelationship(type, name1, name2);
-	    view.createRelationship(type, name1, name2, classes);
+	    control.getView().createRelationship(type, name1, name2, classes);
+	    control.setChanged(true);
 	}
     }
 
-    private static void deleteRelation(Model classes, JFrame frame, GUIView view) {
+    private static void deleteRelation(Model classes, JFrame frame, GUIController control) {
 	if (classes.getRelationships().size() == 0) {
 	    JOptionPane.showMessageDialog(frame, "There are no relationships to delete.");
 	    return;
@@ -286,7 +287,8 @@ public class ClassController {
 		}
 	    }
 	    classes.deleteRelationship(targetType, class1, class2);
-	    view.deleteLine(class1, class2);
+	    control.getView().deleteLine(class1, class2);
+	    control.setChanged(true);
 	}
     }
 }

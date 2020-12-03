@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -38,43 +37,29 @@ public class CreateDeleteController {
 
 		// Create attribute in model and view (makes controllers at the same time)
 		if (attribute == "field") {
-		    if (EditBox.getEditModel().createField(entity.getName(), newName, newType, visType)) {
-			int spot = EditBox.getEntity().getFields().size() + 3;
-			control.deleteField(EditBox.editSection(newType, newName, false, spot));
-			((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
-			moveLabels(entity.getName(), attribute);
-		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make field");
-		    }
-
+		    EditBox.getEditModel().createField(entity.getName(), newName, newType, visType);
+		    int spot = EditBox.getEntity().getFields().size() + 3;
+		    control.deleteField(EditBox.editSection(newType, newName, false, spot));
+		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute == "method") {
-		    if (EditBox.getEditModel().createMethod(entity.getName(), newName, newType, visType)) {
-			int spot = newview.getComponentCount() - 1;
-			control.deleteMethod(EditBox.editSection(newType, newName, false, spot));
-			control.createParam(EditBox.newSection(true, spot + 1), newName);
-			((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
-			moveLabels(entity.getName(), attribute);
-		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make method");
-		    }
-
+		    EditBox.getEditModel().createMethod(entity.getName(), newName, newType, visType);
+		    int spot = newview.getComponentCount() - 1;
+		    control.deleteMethod(EditBox.editSection(newType, newName, false, spot));
+		    control.createParam(EditBox.newSection(true, spot + 1), newName);
+		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute == "parameter") {
-		    if (EditBox.getEditModel().createParameter(entity.getName(), methodName, newName, newType)) {
-			int spot = entity.getFields().size() + 6;
-			for (Method m : entity.getMethods()) {
-			    spot += m.getParameters().size() + 2;
-			    if (m.getName().equals(methodName)) {
-				--spot;
-				break;
-			    }
+		    EditBox.getEditModel().createParameter(entity.getName(), methodName, newName, newType);
+		    int spot = entity.getFields().size() + 6;
+		    for (Method m : entity.getMethods()) {
+			spot += m.getParameters().size() + 2;
+			if (m.getName().equals(methodName)) {
+			    --spot;
+			    break;
 			}
-			control.deleteParam(EditBox.editSection(newType, newName, true, spot), methodName);
-		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make parameter");
 		    }
+		    control.deleteParam(EditBox.editSection(newType, newName, true, spot), methodName);
 		}
 		((JTextField) panel.getComponent(2)).setText("");
 		((JTextField) panel.getComponent(4)).setText("");
@@ -97,7 +82,7 @@ public class CreateDeleteController {
 		JLabel newview = EditBox.getBox();
 		Entity entity = EditBox.getEntity();
 		String deleteAtt = ((JTextField) panel.getComponent(6)).getText();
-
+		
 		// Delete attribute from model
 		if (attribute.equals("field")) {
 		    moveLabels(entity.getName(), attribute);
@@ -124,9 +109,9 @@ public class CreateDeleteController {
 	    }
 	});
     }
-
+    
     private static void moveLabels(String entityName, String attribute) {
-	if (attribute == "field") {
+	if(attribute == "field") {
 	    JLabel start = (JLabel) EditBox.getBox().getComponent(3);
 	    if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
 		start.setText(" Visibility        Type              Name");
@@ -134,8 +119,7 @@ public class CreateDeleteController {
 		start.setText("            Visibility        Type              Name");
 	    }
 	} else if (attribute == "method") {
-	    JLabel start = (JLabel) EditBox.getBox()
-		    .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
+	    JLabel start = (JLabel) EditBox.getBox() .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
 	    if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
 		start.setText(" Visibility        Type              Name");
 	    } else {

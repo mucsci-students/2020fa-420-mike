@@ -137,7 +137,7 @@ public class Line extends JComponent {
 		    1.0f);
 
 	    g2d.setStroke(dashedstroke);
-	    g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 0, 240, Arc2D.OPEN));
+	    g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 4, 236, Arc2D.OPEN));
 
 	    int x = (int) (x1 - 4);
 	    int y = (int) (y1 + 16);
@@ -148,7 +148,7 @@ public class Line extends JComponent {
 	}
 
 	g2d.setStroke(new BasicStroke(2f));
-	g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 0, 240, Arc2D.OPEN));
+	g2d.draw(new Arc2D.Double(x1 - 29, y1 - 29, 50, 50, 4, 236, Arc2D.OPEN));
 
 	if (type == Type.COMPOSITION) {
 	    int x = (int) (x1 - 22);
@@ -191,14 +191,14 @@ public class Line extends JComponent {
 		    1.0f);
 
 	    g2d.setStroke(dashedstroke);
-	    g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
+	    g2d.draw(new Line2D.Double(x1, y1 + 6, x1, y1 + length - 8));
 
 	    g2d.setStroke(new BasicStroke(2f));
 	    drawEmptyArrow(g2d, x, y);
 	    return;
 	}
 
-	g2d.draw(new Line2D.Double(x1, y1 + 4, x1, y1 + length - 8));
+	g2d.draw(new Line2D.Double(x1, y1 + 6, x1, y1 + length - 8));
 	// Stylizing line
 	if (type == Type.COMPOSITION) {
 	    drawFilledDiamond(g2d, x, y);

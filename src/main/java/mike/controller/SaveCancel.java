@@ -56,14 +56,8 @@ public class SaveCancel {
 			madeChange = true;
 		    }
 		    if (!textField.equals(entityField.getName())) {
-			if (model.renameField(eName, fieldName, textField)) {
-			    madeChange = true;
-			} else {
-			    JOptionPane.showMessageDialog(control.getView().getFrame(),
-				    "Cannot rename a field with an existing name");
-			    return;
-			}
-
+			model.renameField(eName, fieldName, textField);
+			madeChange = true;
 		    }
 		}
 
@@ -85,14 +79,8 @@ public class SaveCancel {
 			madeChange = true;
 		    }
 		    if (!textMethod.equals(m.getName())) {
-			if (model.renameMethod(eName, m.getName(), textMethod)) {
-			    madeChange = true;
-			} else {
-			    JOptionPane.showMessageDialog(control.getView().getFrame(),
-				    "Cannot rename a method with an existing name");
-			    return;
-			}
-
+			model.renameMethod(eName, m.getName(), textMethod);
+			madeChange = true;
 		    }
 
 		    for (int y = 0; y < paramSize; ++y) {
@@ -106,27 +94,15 @@ public class SaveCancel {
 			    madeChange = true;
 			}
 			if (!textParam.equals(p.getName())) {
-			    if (m.renameParameter(p.getName(), textParam)) {
-				madeChange = true;
-			    } else {
-				JOptionPane.showMessageDialog(control.getView().getFrame(),
-					"Cannot rename a parameter with an existing name");
-				 return;
-			    }
-
+			    m.renameParameter(p.getName(), textParam);
+			    madeChange = true;
 			}
 		    }
 
 		}
 		if (!eName.equals(text.getText())) {
-		    if (model.renameClass(eName, text.getText())) {
-			madeChange = true;
-		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot rename a class with an existing name");
-			 return;
-		    }
-
+		    model.renameClass(eName, text.getText());
+		    madeChange = true;
 		}
 
 		control.getinClass().setName(text.getText());
