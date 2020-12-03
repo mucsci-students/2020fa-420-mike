@@ -33,13 +33,13 @@ public class HelperMethods {
 	Object obj = new JSONParser().parse(new FileReader(file));
 
 	userClasses.clear();
-	
+
 	// Variable initialization. If the types look stupid that's because they are.
 	JSONObject javaObj = (JSONObject) obj;
 	JSONArray list = (JSONArray) javaObj.get("Classes");
 	ArrayList<JSONObject> objList = new ArrayList<JSONObject>();
 
-	loadClasses(userClasses, javaObj, list, objList, (GUIController)control, view);
+	loadClasses(userClasses, javaObj, list, objList, (GUIController) control, view);
 
 	// Clear out variables for reuse
 	list = (JSONArray) javaObj.get("Relationships");
@@ -93,12 +93,11 @@ public class HelperMethods {
 	    }
 	    // Extract name of class, add to loadFile
 	    Entity e = userClasses.getEntities().get(x);
-	    Long location = (Long) objList.get(x).get("xPosition");
-	    e.setXLocation(Math.toIntExact(location));
-	    location = (Long) objList.get(x).get("yPosition");
-	    e.setYLocation(Math.toIntExact(location));
+	    Long xLocation = (Long) objList.get(x).get("xPosition");
+	    Long yLocation = (Long) objList.get(x).get("yPosition");
+	    e.setLocation(Math.toIntExact(xLocation), Math.toIntExact(yLocation));
 	    if (ViewTemplate.isGUI()) {
-		((GUIView) view).showClass(e, (GUIController)control);
+		((GUIView) view).showClass(e, (GUIController) control);
 	    }
 	}
 	if (ViewTemplate.isGUI()) {
@@ -239,7 +238,8 @@ public class HelperMethods {
 	    ArrayList<Field> fields = curEntity.getFields();
 	    for (int x = 0; x < fields.size(); x++) {
 
-		System.out.print("(" + fields.get(x).getVisibility().toString().toLowerCase() + ") " + fields.get(x).getType() + " " + fields.get(x).getName());
+		System.out.print("(" + fields.get(x).getVisibility().toString().toLowerCase() + ") "
+			+ fields.get(x).getType() + " " + fields.get(x).getName());
 		if (x != fields.size() - 1) {
 		    System.out.print(", ");
 		}
@@ -250,7 +250,8 @@ public class HelperMethods {
 	    System.out.print("		methods: [ ");
 	    for (int x = 0; x < curEntity.getMethods().size(); x++) {
 		Method curMethod = curEntity.getMethods().get(x);
-		System.out.print("(" + curMethod.getVisibility().toString().toLowerCase() + ") " + curMethod.getType() + " " + curMethod.getName() + " -- {");
+		System.out.print("(" + curMethod.getVisibility().toString().toLowerCase() + ") " + curMethod.getType()
+			+ " " + curMethod.getName() + " -- {");
 
 		// Loop through parameters of method
 		ArrayList<Parameter> parameters = curMethod.getParameters();

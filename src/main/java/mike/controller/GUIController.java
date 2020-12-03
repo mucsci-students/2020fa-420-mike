@@ -64,21 +64,24 @@ public class GUIController extends ControllerType {
 	ClassController.editModeListener((JButton) menubar.getComponent(6), this);
 	FrameController.exitListener(this.view, this);
 	FrameController.resizeListener(this.view);
-	
+
 	Action save = new SaveAction(this);
 	Action undo = new UndoAction(this);
 	Action redo = new RedoAction(this);
-	
+
 	JComponent contentPane = ((JComponent) view.getFrame().getContentPane());
-	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "save");
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "save");
 	contentPane.getActionMap().put("save", save);
 
-	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "undo");
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "undo");
 	contentPane.getActionMap().put("undo", undo);
-	
-	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "redo");
+
+	contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+		.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "redo");
 	contentPane.getActionMap().put("redo", redo);
-	
+
     }
 
     protected void truncateMemes(int end) {

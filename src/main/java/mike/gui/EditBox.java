@@ -59,6 +59,8 @@ public class EditBox {
 	newBox.setName(e.getName());
 	newBox.setBounds(e.getXLocation(), e.getYLocation(), newBox.getLayout().preferredLayoutSize(newBox).width,
 		newBox.getLayout().preferredLayoutSize(newBox).height);
+
+	newBox.setLocation(label.getX(), label.getY());
     }
 
     public static JLabel getBox() {

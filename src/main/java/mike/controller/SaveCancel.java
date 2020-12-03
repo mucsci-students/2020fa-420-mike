@@ -82,13 +82,13 @@ public class SaveCancel {
 			model.renameMethod(eName, m.getName(), textMethod);
 			madeChange = true;
 		    }
-		    
+
 		    for (int y = 0; y < paramSize; ++y) {
 			JPanel panelParam = (JPanel) newBox.getComponent(x + y + 1);
 			String typeParam = ((JTextField) panelParam.getComponent(4)).getText();
 			String textParam = ((JTextField) panelParam.getComponent(6)).getText();
 			Parameter p = m.getParameters().get(y);
-			
+
 			if (!typeParam.equals(p.getType())) {
 			    m.changeParameterType(p.getName(), typeParam);
 			    madeChange = true;
@@ -98,7 +98,7 @@ public class SaveCancel {
 			    madeChange = true;
 			}
 		    }
-		    
+
 		}
 		if (!eName.equals(text.getText())) {
 		    model.renameClass(eName, text.getText());
@@ -108,7 +108,7 @@ public class SaveCancel {
 		control.getinClass().setName(text.getText());
 		view.exitEditingClass(control.getinClass(), control, model);
 
-		if(madeChange) {
+		if (madeChange) {
 		    EditBox.newEditMeme();
 		}
 		control.setModel(EditBox.getEditModel());

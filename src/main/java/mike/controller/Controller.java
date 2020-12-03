@@ -17,9 +17,8 @@ public class Controller {
 	    control = new CLIController(model, view);
 	}
     }
-    
-    public void init()
-    {
+
+    public void init() {
 	control.init();
     }
 }
