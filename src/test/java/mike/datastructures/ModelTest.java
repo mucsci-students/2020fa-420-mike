@@ -399,6 +399,7 @@ public class ModelTest {
 	assertEquals("Field f1 should have type of String", "String", model.copyEntity("c").copyField("f1").getType());
 	assertFalse("False when changing type with a non-valid class", model.changeFieldType("c2", "f1", "int"));
 	assertFalse("False when changing type with a non-valid field", model.changeFieldType("c", "f2", "int"));
+	assertFalse("False when changing type with a space", model.changeFieldType("c", "f1", "in t"));
     }
     
     /** test changeFieldVis
@@ -453,6 +454,8 @@ public class ModelTest {
 
         assertFalse("False when creating method that already exists", model.createMethod("e", "a", "int", "PUBLIC"));
         assertEquals("e's method list size is still 1", 1, model.getEntities().get(0).getMethods().size());
+        
+        assertFalse("False when changing type with a space", model.changeMethodType("e", "a", "in t"));
     }
 
     /** test renameMethod
@@ -540,9 +543,10 @@ public class ModelTest {
 	model.changeParameterType("c", "m1", "p1", "String");
 	
 	assertEquals("Parameter p1 should have type of String", "String", model.copyEntity("c").copyMethod("m1").copyParameter("p1").getType());
-	assertFalse("False when changing type with a non-valid class", model.changeParameterType("c2", "m1", "f1", "int"));
-	assertFalse("False when changing type with a non-valid method", model.changeParameterType("c", "m2", "f1", "int"));
-	assertFalse("False when changing type with a non-valid parameter", model.changeParameterType("c", "m1", "f2", "int"));
+	assertFalse("False when changing type with a non-valid class", model.changeParameterType("c2", "m1", "p1", "int"));
+	assertFalse("False when changing type with a non-valid method", model.changeParameterType("c", "m2", "p1", "int"));
+	assertFalse("False when changing type with a non-valid parameter", model.changeParameterType("c", "m1", "p2", "int"));
+	assertFalse("False when changing type with a space in new type name", model.changeParameterType("c", "m1", "p1", "in t"));
     }
 
     /* ------------------------------------------------------------------------------ */
