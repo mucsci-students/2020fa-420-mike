@@ -82,11 +82,11 @@ public class CreateDeleteController {
 		JLabel newview = EditBox.getBox();
 		Entity entity = EditBox.getEntity();
 		String deleteAtt = ((JTextField) panel.getComponent(6)).getText();
-
+		
 		// Delete attribute from model
 		if (attribute.equals("field")) {
-		    EditBox.getEditModel().deleteField(entity.getName(), deleteAtt);
 		    moveLabels(entity.getName(), attribute);
+		    EditBox.getEditModel().deleteField(entity.getName(), deleteAtt);
 		} else if (attribute.equals("method")) {
 		    // Delete parameters in view as well
 		    int methodSpot = newview.getComponentZOrder(panel);
@@ -94,7 +94,7 @@ public class CreateDeleteController {
 		    for (int x = 0; x < numParams + 1; ++x) {
 			newview.remove(methodSpot + 1);
 		    }
-		   
+
 		    EditBox.getEditModel().deleteMethod(entity.getName(), deleteAtt);
 		    moveLabels(entity.getName(), attribute);
 		} else if (attribute.equals("parameter")) {
@@ -109,31 +109,29 @@ public class CreateDeleteController {
 	    }
 	});
     }
-
-    private static void ending(GUIController control, JLabel newview, Entity entity) {
-	Dimension dim = newview.getLayout().preferredLayoutSize(newview);
-	newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
-	((GUIView) control.getView()).validateRepaint();
-    }
-
+    
     private static void moveLabels(String entityName, String attribute) {
 	if(attribute == "field") {
-	    JLabel start = (JLabel) EditBox.getBox()
-		    .getComponent(3);
+	    JLabel start = (JLabel) EditBox.getBox().getComponent(3);
 	    if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
 		start.setText(" Visibility        Type              Name");
 	    } else {
 		start.setText("            Visibility        Type              Name");
 	    }
 	} else if (attribute == "method") {
-	    JLabel start = (JLabel) EditBox.getBox()
-		    .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
+	    JLabel start = (JLabel) EditBox.getBox() .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
 	    if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
 		start.setText(" Visibility        Type              Name");
 	    } else {
 		start.setText("            Visibility        Type              Name");
 	    }
 	}
+    }
+
+    private static void ending(GUIController control, JLabel newview, Entity entity) {
+	Dimension dim = newview.getLayout().preferredLayoutSize(newview);
+	newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
+	((GUIView) control.getView()).validateRepaint();
     }
 
 }

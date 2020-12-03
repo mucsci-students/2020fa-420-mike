@@ -95,6 +95,7 @@ public class GUIViewTest {
 	assertEquals("There are more or less than 0 entityLabels", 0, guiViewMock.getEntityLabels().size());
     }
 
+
     @Test
     public void createRelationshipsTest() throws Exception {
 	// Pre make things
@@ -112,8 +113,7 @@ public class GUIViewTest {
 	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
 	assertEquals("There is more or less than 1 relationship", 1, guiViewMock.getRelations().size());
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
-	assertEquals("There are more or less than 2 relationships", rel,
-		model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("There are more or less than 2 relationships", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
 
     @Test
@@ -227,16 +227,15 @@ public class GUIViewTest {
 	guiViewMock.showClass(model.copyEntity("c1"), control);
 	guiViewMock.showClass(model.copyEntity("c2"), control);
 	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
-
+	
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
 	System.out.println(entityLabels.get("c1"));
 	guiViewMock.repaintEverything(model, control);
-	assertEquals("There are more or less than 1 relationships in model", rel,
-		model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("There are more or less than 1 relationships in model", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
 	assertEquals("There is more or less than 1 relationship in gui", 1, guiViewMock.getRelations().size());
 	assertEquals("There are more or less than 2 entityLabels in gui", 2, guiViewMock.getEntityLabels().size());
     }
-
+    
     @Test
     public void repaintLineTest() throws Exception {
 	// Pre make things
@@ -253,13 +252,12 @@ public class GUIViewTest {
 	// Make a relationship
 	guiViewMock.createRelationship(Type.AGGREGATION, "c1", "c2", model);
 	guiViewMock.repaintLine("c1");
-
+	
 	assertEquals("There is more or less than 1 relationship", 1, guiViewMock.getRelations().size());
 	Relationship rel = new Relationship(Type.AGGREGATION, "c1", "c2");
-	assertEquals("There are more or less than 2 relationships", rel,
-		model.getRelationship(Type.AGGREGATION, "c1", "c2"));
+	assertEquals("There are more or less than 2 relationships", rel, model.getRelationship(Type.AGGREGATION, "c1", "c2"));
     }
-
+    
     @Test
     public void exitEditingClassTest() {
 	// Pre make things
@@ -276,7 +274,7 @@ public class GUIViewTest {
 	// Make a relationship
 	guiViewMock.createRelationship(Type.INHERITANCE, "c1", "c1", model);
 	assertEquals("There is more or less than 1 relationships", 1, guiViewMock.getRelations().size());
-	
+
 	JLabel c1 = new JLabel();
 	c1.setName("c1");
 	guiViewMock.exitEditingClass(c1, control, model);

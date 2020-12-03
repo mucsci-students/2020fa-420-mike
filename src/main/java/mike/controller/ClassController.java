@@ -85,7 +85,7 @@ public class ClassController {
 	});
     }
 
-    protected static void moveClass(JLabel newview, Entity entity, ViewTemplate view) {
+    protected static void moveClass(JLabel newview, Entity entity, ViewTemplate view, GUIController control) {
 	newview.addMouseMotionListener(new MouseMotionAdapter() {
 	    @Override
 	    public void mouseDragged(MouseEvent e) {
@@ -97,7 +97,7 @@ public class ClassController {
 			int yLoc = jc.getY() + e.getY() - y_pressed;
 
 			jc.setLocation(xLoc, yLoc);
-			entity.setLocation(xLoc, yLoc);
+			control.getModel().copyEntity(entity.getName()).setLocation(xLoc, yLoc);
 		    }
 		    ((GUIView) view).repaintLine(entity.getName());
 		}

@@ -132,7 +132,7 @@ public class EditBox {
 	Label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
 	Label.setForeground(Color.WHITE);
 	newBox.add(Label);
-
+	
 	JLabel start;
 	if(section == "Fields:") {
 	    if (control.getModel().copyEntity(e.getName()).getFields().size() == 0) {
@@ -151,7 +151,7 @@ public class EditBox {
 	start.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0));
 	start.setForeground(Color.WHITE);
 	newBox.add(start);
-	
+
 	// Add all existing fields/methods(and Paramters) to editBox
 	if (section == "Fields:") {
 	    for (Field f : e.getFields()) {
