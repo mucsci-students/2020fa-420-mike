@@ -133,6 +133,25 @@ public class EditBox {
 	Label.setForeground(Color.WHITE);
 	newBox.add(Label);
 
+	JLabel start;
+	if(section == "Fields:") {
+	    if (control.getModel().copyEntity(e.getName()).getFields().size() == 0) {
+		start = new JLabel(" Visibility        Type              Name");
+	    } else {
+		start = new JLabel("            Visibility        Type              Name");
+	    }
+	} else {
+	    if (control.getModel().copyEntity(e.getName()).getMethods().size() == 0) {
+		start = new JLabel(" Visibility        Type              Name");
+	    } else {
+		start = new JLabel("            Visibility        Type              Name");
+	    }
+	}
+	start.setFont(new Font("", Font.BOLD, 14));
+	start.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0));
+	start.setForeground(Color.WHITE);
+	newBox.add(start);
+	
 	// Add all existing fields/methods(and Paramters) to editBox
 	if (section == "Fields:") {
 	    for (Field f : e.getFields()) {
@@ -165,8 +184,8 @@ public class EditBox {
 	    visTypes.setSelectedItem(e.copyMethod(sectionName).getVisibility().toString().toLowerCase());
 	}
 	JButton xButton = new JButton("X");
-	JTextField Type = new JTextField(sectionType);
-	JTextField Name = new JTextField(sectionName);
+	JTextField Type = new JTextField(sectionType, 10);
+	JTextField Name = new JTextField(sectionName, 10);
 	xButton.setBackground(Color.RED);
 
 	if (parameter) {
@@ -206,9 +225,9 @@ public class EditBox {
 	    newSection.add(Box.createHorizontalStrut(5));
 	}
 
-	newSection.add(new JTextField(7)); // Type
+	newSection.add(new JTextField(10)); // Type
 	newSection.add(Box.createHorizontalStrut(5));
-	newSection.add(new JTextField(7)); // Name
+	newSection.add(new JTextField(10)); // Name
 	newSection.add(Box.createHorizontalStrut(5));
 	newSection.add(plusButton);
 	newSection.add(Box.createHorizontalStrut(5));

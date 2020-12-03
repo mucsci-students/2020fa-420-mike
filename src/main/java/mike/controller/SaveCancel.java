@@ -40,7 +40,7 @@ public class SaveCancel {
 		Model model = EditBox.getEditModel();
 
 		for (int x = 0; x < fieldSize; ++x) {
-		    JPanel panelField = (JPanel) newBox.getComponent(x + 3);
+		    JPanel panelField = (JPanel) newBox.getComponent(x + 4);
 		    String textField = ((JTextField) panelField.getComponent(6)).getText();
 		    String typeField = ((JTextField) panelField.getComponent(4)).getText();
 		    String visType = ((JComboBox<String>) panelField.getComponent(2)).getSelectedItem().toString();
@@ -61,7 +61,7 @@ public class SaveCancel {
 		    }
 		}
 
-		for (int x = fieldSize + 5; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
+		for (int x = fieldSize + 7; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
 		    JPanel panelMethod = (JPanel) newBox.getComponent(x);
 		    String textMethod = ((JTextField) panelMethod.getComponent(6)).getText();
 		    String typeMethod = ((JTextField) panelMethod.getComponent(4)).getText();
@@ -82,13 +82,13 @@ public class SaveCancel {
 			model.renameMethod(eName, m.getName(), textMethod);
 			madeChange = true;
 		    }
-
+		    
 		    for (int y = 0; y < paramSize; ++y) {
 			JPanel panelParam = (JPanel) newBox.getComponent(x + y + 1);
 			String typeParam = ((JTextField) panelParam.getComponent(4)).getText();
 			String textParam = ((JTextField) panelParam.getComponent(6)).getText();
 			Parameter p = m.getParameters().get(y);
-
+			
 			if (!typeParam.equals(p.getType())) {
 			    m.changeParameterType(p.getName(), typeParam);
 			    madeChange = true;
@@ -98,7 +98,7 @@ public class SaveCancel {
 			    madeChange = true;
 			}
 		    }
-
+		    
 		}
 		if (!eName.equals(text.getText())) {
 		    model.renameClass(eName, text.getText());
@@ -108,7 +108,7 @@ public class SaveCancel {
 		control.getinClass().setName(text.getText());
 		view.exitEditingClass(control.getinClass(), control, model);
 
-		if (madeChange) {
+		if(madeChange) {
 		    EditBox.newEditMeme();
 		}
 		control.setModel(EditBox.getEditModel());

@@ -38,18 +38,20 @@ public class CreateDeleteController {
 		// Create attribute in model and view (makes controllers at the same time)
 		if (attribute == "field") {
 		    EditBox.getEditModel().createField(entity.getName(), newName, newType, visType);
-		    int spot = EditBox.getEntity().getFields().size() + 2;
+		    int spot = EditBox.getEntity().getFields().size() + 3;
 		    control.deleteField(EditBox.editSection(newType, newName, false, spot));
 		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute == "method") {
 		    EditBox.getEditModel().createMethod(entity.getName(), newName, newType, visType);
 		    int spot = newview.getComponentCount() - 1;
 		    control.deleteMethod(EditBox.editSection(newType, newName, false, spot));
 		    control.createParam(EditBox.newSection(true, spot + 1), newName);
 		    ((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute == "parameter") {
 		    EditBox.getEditModel().createParameter(entity.getName(), methodName, newName, newType);
-		    int spot = entity.getFields().size() + 4;
+		    int spot = entity.getFields().size() + 6;
 		    for (Method m : entity.getMethods()) {
 			spot += m.getParameters().size() + 2;
 			if (m.getName().equals(methodName)) {
@@ -84,6 +86,7 @@ public class CreateDeleteController {
 		// Delete attribute from model
 		if (attribute.equals("field")) {
 		    EditBox.getEditModel().deleteField(entity.getName(), deleteAtt);
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute.equals("method")) {
 		    // Delete parameters in view as well
 		    int methodSpot = newview.getComponentZOrder(panel);
@@ -91,8 +94,9 @@ public class CreateDeleteController {
 		    for (int x = 0; x < numParams + 1; ++x) {
 			newview.remove(methodSpot + 1);
 		    }
-
+		   
 		    EditBox.getEditModel().deleteMethod(entity.getName(), deleteAtt);
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute.equals("parameter")) {
 		    EditBox.getEditModel().deleteParameter(entity.getName(), methodName, deleteAtt);
 		}
@@ -110,6 +114,26 @@ public class CreateDeleteController {
 	Dimension dim = newview.getLayout().preferredLayoutSize(newview);
 	newview.setBounds(entity.getXLocation(), entity.getYLocation(), dim.width, dim.height);
 	((GUIView) control.getView()).validateRepaint();
+    }
+
+    private static void moveLabels(String entityName, String attribute) {
+	if(attribute == "field") {
+	    JLabel start = (JLabel) EditBox.getBox()
+		    .getComponent(3);
+	    if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
+		start.setText(" Visibility        Type              Name");
+	    } else {
+		start.setText("            Visibility        Type              Name");
+	    }
+	} else if (attribute == "method") {
+	    JLabel start = (JLabel) EditBox.getBox()
+		    .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
+	    if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
+		start.setText(" Visibility        Type              Name");
+	    } else {
+		start.setText("            Visibility        Type              Name");
+	    }
+	}
     }
 
 }
