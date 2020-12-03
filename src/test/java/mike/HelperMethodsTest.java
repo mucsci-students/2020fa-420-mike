@@ -63,7 +63,8 @@ public class HelperMethodsTest {
     public void HelperMethodConstructor() {
 	new HelperMethods();
     }
-    
+
+    /*
     @Test
     public void listClassesTest() {
 	// Easy
@@ -113,7 +114,7 @@ public class HelperMethodsTest {
 	actual = out.toString();
 	assertEquals("Initial print all does not equal printout", expected, actual);
     }
-    
+    */
     @Test
     public void listRelationshipTest() {
 	// Easy
