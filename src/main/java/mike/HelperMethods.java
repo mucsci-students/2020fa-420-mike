@@ -230,58 +230,153 @@ public class HelperMethods {
     // Lists all of the classes and their respective attributes
     public static void listClasses(Model userClasses) {
         System.out.println("Classes:");
+        for(Entity curEntity : userClasses.getEntities()) {
+            int longestStringLength = getLongestStringInClass(curEntity).length();
+            String divider = "+";
+            String spaces = " ";
+
+            //add bars for divider and top and bottom string
+            //number of bars = longest string + 2 (for spacing)
+            for(int i = 0; i < longestStringLength + 2; ++i) {
+                divider += "-";
+            }
+            divider += "+";
+
+            //print top string
+            System.out.println("\t" + divider);
+
+            //print class name
+            String className = curEntity.getName();
+            spaces = calculateSpaces(className, longestStringLength);
+            System.out.println("\t| " + curEntity.getName() + spaces + "|");
+
+            //print divider
+            System.out.println("\t" + divider);
+
+            //print fields
+            String fieldsString = "Fields:";
+            spaces = calculateSpaces(fieldsString, longestStringLength);
+            System.out.println("\t| " + fieldsString + spaces + "|");
+
+            ArrayList<Field> fields = curEntity.getFields();
+            for(Field f : fields) {
+                String fieldToString = f.getVisibility().toString() + " " + f.getType() + " " + f.getName();
+                spaces = calculateSpaces(fieldToString, longestStringLength);
+                System.out.println("\t| " + fieldToString + spaces + "|");
+            }
+
+            //print divider
+            System.out.println("\t" + divider);
+
+            //print methods
+            String methodsString = "Methods:";
+            spaces = calculateSpaces(methodsString, longestStringLength);
+            System.out.println("\t| " + methodsString + spaces + "|");
+
+            ArrayList<Method> methods = curEntity.getMethods();
+            for(Method m : methods) {
+                String methodToString = m.getVisibility().toString() + " " + m.getType() + " " + m.getName() + "(";
+                //Add parameters to method string
+                ArrayList<Parameter> parameters = m.getParameters();
+                for (Parameter p : parameters) {
+                    methodToString += p.getType() + " " + p.getName();
+                    //Add comma if not last parameter
+                    if (!p.equals(parameters.get(parameters.size() - 1))) {
+                        methodToString += ", ";
+                    }
+                }
+                methodToString += ")";
+                spaces = calculateSpaces(methodToString, longestStringLength);
+                System.out.println("\t| " + methodToString + spaces + "|");
+            }
+
+            //print bottom string
+            System.out.println("\t" + divider);
+
+        }
+        /* i tried ...
         //loop through classes
         for (Entity curEntity : userClasses.getEntities()) {
-			int nameLength = curEntity.getName().length();
-			String spaces = " ", bars = "";
-			for(int i = 0; i < nameLength; ++i) {
-				spaces += " ";
-			}
+			int longestStringLength = getLongestStringInClass(curEntity).length();
+			String bars = "", spaces = "";
 
-			//print top bar underscores based on length of class name + tabs
+			//print top bar underscores based on length of longest string + spaces and |s
             //tab ~= 7 spaces
-        	for(int i = 0; i < nameLength + 12; ++i) {
+        	for(int i = 0; i < longestStringLength + 2; ++i) {
 				bars += "_";
 			}
-            System.out.println("\t " + bars);
+            System.out.println("\t" + bars);
         	//System.out.println("\t|\t" + spaces + "\t|");
 
+            //update spaces for class name
+            for(int i = curEntity.getName().length(); i <longestStringLength; ++i) {
+                spaces += " ";
+            }
+
         	//print class name
-        	System.out.println("\t|\t" + curEntity.getName() + "\t|");
+        	System.out.println("\t| " + curEntity.getName() + spaces + " |");
         	System.out.println("\t|" + bars + "|");
 
+            //update spaces for fields: string
+            spaces = "";
+            for(int i = 8; i <longestStringLength; ++i) {
+                spaces += " ";
+            }
+
         	//print fields
-			System.out.println("\t| Fields: " + spaces + "\t|");
+			System.out.println("\t| Fields: " + spaces + " |");
 			ArrayList<Field> fields = curEntity.getFields();
 			for(Field f : fields) {
-				System.out.println("\t| (" + f.getVisibility().toString().toLowerCase() + ") "
-						+ f.getType() + " " + f.getName() + "\t|");
+                //update spaces for each field
+                spaces = "";
+                for(int i = f.getName().length(); i <longestStringLength; ++i) {
+                    spaces += " ";
+                }
+				System.out.println("\t| " + f.getVisibility().toString().toLowerCase() + " "
+						+ f.getType() + " " + f.getName() + spaces + " |");
 			}
 
 			System.out.println("\t|" + bars + "|");
 
+            //update spaces for fields: string
+            spaces = "";
+            for(int i = 9; i <longestStringLength; ++i) {
+                spaces += " ";
+            }
+
 			//print methods
-			System.out.println("\t| Methods: " + spaces + "\t|");
+			System.out.println("\t| Methods: " + spaces + " |");
 			ArrayList<Method> methods = curEntity.getMethods();
 			for(Method m : methods) {
-				System.out.print("\t| (" + m.getVisibility().toString().toLowerCase() + ") "
-						+ m.getType() + " " + m.getName() + "(");
+			    String currString = m.getVisibility().toString().toLowerCase() + " "
+                        + m.getType() + " " + m.getName() + "(";
+				System.out.print("\t| " + currString);
 
 				//print parameters for each method
                 ArrayList<Parameter> parameters = m.getParameters();
                 for (Parameter p : parameters) {
-                    System.out.print(p.getType() + " " + p.getName());
+                    currString += p.getType() + " " + p.getName();
+                    System.out.print(currString);
                     // Print comma if not last parameter
                     if (!p.equals(parameters.get(parameters.size() - 1))) {
-                        System.out.print(", ");
+                        currString += ", ";
+                        System.out.print(currString);
                     }
                 }
-                System.out.print(")|\n");
+
+                //update spaces for each method
+                spaces = "";
+                for(int i = currString.length() + 1; i <longestStringLength; ++i) {
+                    spaces += " ";
+                }
+
+                System.out.print(")" + spaces + "|\n");
 			}
 
 			System.out.println("\t|" + bars + "|");
 
 		}
+		*/
         /*
         for (Entity curEntity : userClasses.getEntities()) {
             System.out.println("	" + curEntity.getName() + ":");
@@ -349,6 +444,52 @@ public class HelperMethods {
             default:
                 return null;
         }
+    }
+
+    //calculates the number of spaces needed based on a string and the biggest string's size
+    //returns the spaces as a string
+    //to be used for formatting the box for list classes in the CLI
+    private static String calculateSpaces(String smallString, int maxStringLength) {
+        String spaces = " ";
+        int numSpaces = maxStringLength - smallString.length();
+        while(numSpaces-- > 0) {
+            spaces += " ";
+        }
+        return spaces;
+    }
+
+    //calculates the longest string length in the class and returns that string
+    //to be used for formatting the box for list classes in the CLI
+    private static String getLongestStringInClass(Entity entity) {
+        String longestString = "Methods:";
+
+        //look at fields
+        for(Field f : entity.getFields()) {
+            String currString = f.getVisibility().toString() + " " + f.getType() + " " + f.getName();
+            if(currString.length() > longestString.length()) {
+                longestString = currString;
+            }
+        }
+
+        //look at methods
+        for(Method m : entity.getMethods()) {
+            String currString = m.getVisibility().toString() + " " + m.getType() + " " + m.getName() + "(";
+            //have to remember parameters!
+            ArrayList<Parameter> parameters = m.getParameters();
+            for(Parameter p : parameters) {
+                currString += p.getType() + " " + p.getName();
+                //if not the last parameter add a comma
+                if(!p.equals(parameters.get(parameters.size() - 1))) {
+                    currString += ", ";
+                }
+            }
+            currString += ")";
+            if(currString.length() > longestString.length()) {
+                longestString = currString;
+            }
+        }
+
+        return longestString;
     }
 
 }
