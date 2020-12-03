@@ -62,6 +62,12 @@ public class FrameController {
 		    return;
 		}
 
+		if (name.getText().isEmpty()) {
+		    JOptionPane.showMessageDialog(((GUIView) control.getView()).getFrame(),
+			    "The class name must contain at least one character");
+		    return;
+		}
+
 		if (result == 0) {
 		    Memento meme = new Memento(new Model(control.getModel()));
 		    if (meme.getModel().createClass(name.getText())) {
