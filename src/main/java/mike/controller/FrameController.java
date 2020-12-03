@@ -7,7 +7,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,10 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import mike.datastructures.Entity;
 import mike.datastructures.Memento;
 import mike.datastructures.Model;
-import mike.datastructures.Relationship;
 import mike.gui.Line;
 import mike.view.GUIView;
 import mike.view.ViewTemplate;
@@ -74,20 +71,8 @@ public class FrameController {
 			JOptionPane.showMessageDialog(((GUIView) control.getView()).getFrame(),
 				"An entity with that name already exists.");
 		    }
+		    control.setChanged(true);
 		}
-
-		ArrayList<Entity> entities = control.getModel().getEntities();
-
-		// prevent classes from gathering in middle after class is added
-		for (Entity curEntity : entities) {
-		    JLabel curLabel = ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
-		    curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
-		}
-		for (Relationship r : control.getModel().getRelationships()) {
-		    ((GUIView) control.getView()).createRelationship(r.getName(), r.getFirstClass(), r.getSecondClass(),
-			    control.getModel());
-		}
-		control.setChanged(true);
 	    }
 	});
     }

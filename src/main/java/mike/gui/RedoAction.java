@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import mike.controller.GUIController;
 
-public class RedoAction extends AbstractAction{
+public class RedoAction extends AbstractAction {
 
     private static final long serialVersionUID = 5936682208339408960L;
     private GUIController control;

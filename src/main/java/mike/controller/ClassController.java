@@ -93,9 +93,11 @@ public class ClassController {
 		if (!editMode) {
 		    if (e.getSource() == newview) {
 			JComponent jc = (JComponent) e.getSource();
-			jc.setLocation(jc.getX() + e.getX() - x_pressed, jc.getY() + e.getY() - y_pressed);
-			entity.setXLocation(jc.getX() + e.getX() - x_pressed);
-			entity.setYLocation(jc.getY() + e.getY() - y_pressed);
+			int xLoc = jc.getX() + e.getX() - x_pressed;
+			int yLoc = jc.getY() + e.getY() - y_pressed;
+
+			jc.setLocation(xLoc, yLoc);
+			entity.setLocation(xLoc, yLoc);
 		    }
 		    ((GUIView) view).repaintLine(entity.getName());
 		}
@@ -122,7 +124,7 @@ public class ClassController {
 		    editButton.setOpaque(false);
 		    if (control.getinClass() != null) {
 			view.exitEditingClass(control.getinClass(), control, control.getModel());
-			
+
 			view.getMenuBar().remove(6);
 			view.getMenuBar().remove(5);
 			view.getFrame().validate();
@@ -141,8 +143,8 @@ public class ClassController {
 		    editButton.setText("Disable Edit Mode");
 		    editButton.setFont(editButton.getFont().deriveFont(Font.BOLD));
 		    editButton.setBackground(Color.RED);
-                    editButton.setContentAreaFilled(false);
-                    editButton.setOpaque(true);
+		    editButton.setContentAreaFilled(false);
+		    editButton.setOpaque(true);
 		}
 	    }
 	});

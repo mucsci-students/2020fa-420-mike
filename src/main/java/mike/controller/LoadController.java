@@ -46,11 +46,11 @@ public class LoadController {
 			    JLabel curLabel = ((GUIView) control.getView()).getEntityLabels().get(curEntity.getName());
 			    curLabel.setLocation(curEntity.getXLocation(), curEntity.getYLocation());
 			}
-			
+
 			control.getMementos().clear();
 			control.newMeme(new Memento(new Model(control.getModel())));
 			control.setCurrMeme(0);
-			
+
 		    }
 		} catch (Exception e1) {
 		    e1.printStackTrace();

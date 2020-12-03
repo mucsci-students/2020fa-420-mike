@@ -25,9 +25,9 @@ public class GUIView extends ViewTemplate implements ViewInterface {
     private ArrayList<Line> relations;
     private JFrame frame;
     private JMenuBar menuBar;
-    
-    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, JScrollPane scrollPane, ArrayList<Line> relations,
-	    JMenuBar menuBar) {
+
+    public GUIView(HashMap<String, JLabel> entityLabels, JLayeredPane pane, JScrollPane scrollPane,
+	    ArrayList<Line> relations, JMenuBar menuBar) {
 	super();
 
 	// initialize globals
@@ -53,16 +53,16 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	relations = new ArrayList<Line>();
 	menuBar = new JMenuBar();
 	frame = new JFrame("Team mike UML Editor");
-	
+
 	GUIInit();
-	
+
 	// Creating the menu bar and its options
 	JButton[] buttons = { new JButton("Save"), new JButton("Save As"), new JButton("Load"), new JButton("Undo"),
 		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
 	for (int x = 0; x < 7; ++x) {
 	    menuBar.add(buttons[x]);
 	}
-	
+
 	// Adding all panels onto frame
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setSize(1000, 800);
@@ -70,7 +70,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
-	
+
     }
 
     public void GUIInit() {
@@ -82,7 +82,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	    System.out.println("UIManager had a big oopsy-woopsy");
 	    e.printStackTrace();
 	}
-	
+
 	// Creating the middle panel
 	pane.setBackground(Color.WHITE);
 	pane.setOpaque(true);
@@ -128,7 +128,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 	validateRepaint();
     }
-    
+
     public HtmlBox showClass(Entity entity, GUIController control) {
 	HtmlBox newview = new HtmlBox(entity, control);
 	pane.add(newview.getBox(), JLayeredPane.PALETTE_LAYER);
@@ -221,14 +221,14 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	HtmlBox box = showClass(e, control);
 	JLabel label = box.getBox();
 	// Create border and margin
-        Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
-        Border margin = new EmptyBorder(6, 6, 6, 6);
-        label.setBorder(new CompoundBorder(border, margin));
+	Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+	Border margin = new EmptyBorder(6, 6, 6, 6);
+	label.setBorder(new CompoundBorder(border, margin));
 
-        // Create settings so the box can appear at right spot
-        label.setBounds(0, 0, label.getPreferredSize().width, label.getPreferredSize().height);
-        label.setLocation(e.getXLocation(), e.getYLocation());
-	
+	// Create settings so the box can appear at right spot
+	label.setBounds(0, 0, label.getPreferredSize().width, label.getPreferredSize().height);
+	label.setLocation(inClass.getX(), inClass.getY());
+
 	resetLinesFromConversion(inClass, label);
     }
 

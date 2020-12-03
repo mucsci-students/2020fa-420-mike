@@ -33,10 +33,9 @@ public class ViewTemplate {
     public static void setViewinterface(ViewInterface viewinterface) {
 	ViewTemplate.viewinterface = viewinterface;
     }
-    
+
     public static boolean isGUI() {
-	if (viewtype.equals(InterfaceType.GUI))
-	{
+	if (viewtype.equals(InterfaceType.GUI)) {
 	    return true;
 	}
 	return false;

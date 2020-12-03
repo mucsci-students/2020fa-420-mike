@@ -21,8 +21,8 @@ public abstract class CommandObj {
     }
 
     private static String[] getCommandUsage() {
-	String[] commandUsage = { "\n  save <name>.json", "\n  load <path>",
-		"\n  create class <name>", "\n  create field <class name> <field visibility> <field type> <field name>",
+	String[] commandUsage = { "\n  save <name>.json", "\n  load <path>", "\n  create class <name>",
+		"\n  create field <class name> <field visibility> <field type> <field name>",
 		"\n  create method <class name> <method visibility> <method type> <method name>",
 		"\n  create relationship <type> <class name1> <class name2>",
 		"\n  create parameter <class name> <method> <parameter type> <parameter name>",

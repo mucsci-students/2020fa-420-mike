@@ -12,7 +12,7 @@ import mike.view.CLIView;
 public class LoadCommand extends CommandObj {
 
     private static LineReader savePromptReader;
-    
+
     public LoadCommand(Model m, CLIView v, String[] com, boolean p, LineReader reader) {
 	super(m, v, com, p);
 	savePromptReader = reader;

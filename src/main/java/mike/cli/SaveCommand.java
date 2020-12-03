@@ -8,7 +8,7 @@ import mike.datastructures.Model;
 import mike.view.CLIView;
 
 public class SaveCommand extends CommandObj {
-    
+
     public SaveCommand(Model m, CLIView v, String[] com, boolean p) {
 	super(m, v, com, p);
     }
@@ -23,7 +23,7 @@ public class SaveCommand extends CommandObj {
 		view.printError("Failed to parse directory. Exiting.");
 		return prompt;
 	    }
-	} else { 
+	} else {
 	    view.printError(errorMessage + commandUsage[0] + "\n");
 	    return prompt;
 	}
