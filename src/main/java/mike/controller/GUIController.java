@@ -31,6 +31,15 @@ public class GUIController extends ControllerType {
     protected ArrayList<Memento> mementos;
     private int currMeme;
 
+    // For testing
+    public GUIController(Model model) {
+	super();
+	this.model = model;
+	currMeme = 0;
+	mementos = new ArrayList<Memento>();
+	mementos.add(new Memento(this.model));
+    }
+	
     public GUIController(Model model, ViewTemplate view) {
 	super();
 	this.model = model;
