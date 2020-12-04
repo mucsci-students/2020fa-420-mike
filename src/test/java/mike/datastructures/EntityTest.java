@@ -70,6 +70,13 @@ public class EntityTest {
         assertTrue("Field a1 was created", e.containsField("a1"));
         assertEquals("List size is 1", 1, e.getFields().size());
         assertFalse("False when duplicating field", e.createField("a1", "int", "PUBLIC"));
+        
+        e.createField("a 2", "int", "PUBLIC");
+        assertFalse("Field a2 was not created", e.containsField("a 2"));
+        assertEquals("List size is 1", 1, e.getFields().size());
+        
+        e.createField("a3", "in t", "PUBLIC");
+        assertFalse("Field a3 was not created", e.containsField("a3"));
     }
 
     /* test renameField */
@@ -87,6 +94,8 @@ public class EntityTest {
 
         assertFalse("a1 field no longer exists", e.containsField("a1"));
         assertEquals("List size still 2", 2, e.getFields().size());
+        
+        assertFalse("Renamed a1 to a a 1", e.renameField("a1", "a 1"));
     }
     
     /* test changeFieldVis */
@@ -126,6 +135,13 @@ public class EntityTest {
         assertTrue("Method a1 was created", e.containsMethod("a1"));
         assertEquals("List size is 1", 1, e.getMethods().size());
         assertFalse("False when duplicating method", e.createMethod("a1", "int", "PUBLIC"));
+        
+        e.createMethod("a 2", "int", "PUBLIC");
+        assertFalse("Field a2 was not created", e.containsMethod("a 2"));
+        assertEquals("List size is 1", 1, e.getMethods().size());
+        
+        e.createMethod("a3", "in t", "PUBLIC");
+        assertFalse("Field a3 was not created", e.containsMethod("a3"));
     }
 
     /* test renameMethod */
@@ -143,6 +159,8 @@ public class EntityTest {
 
         assertFalse("a1 method no longer exists", e.containsMethod("a1"));
         assertEquals("List size still 2", 2, e.getMethods().size());
+        
+        assertFalse("Renamed a1 to a a 1", e.renameMethod("a1", "a 1"));
     }
     
     /* test changeMethodVis */

@@ -43,12 +43,12 @@ public class HtmlBox {
 	this.newBox = new JLabel(entityToHTML(entity));
 	newBox.setFont(f);
 	newBox.setName(entity.getName());
-	this.newBox.setBackground(Color.LIGHT_GRAY);
-	this.newBox.setForeground(Color.BLACK);
+	this.newBox.setBackground(new Color(30, 30, 30));
+	this.newBox.setForeground(Color.WHITE);
 	this.newBox.setOpaque(true);
 
 	// Create border and margin
-	Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+	Border border = BorderFactory.createLineBorder(Color.CYAN.darker(), 2);
 	Border margin = new EmptyBorder(6, 6, 6, 6);
 	this.newBox.setBorder(new CompoundBorder(border, margin));
 

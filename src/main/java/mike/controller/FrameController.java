@@ -57,12 +57,17 @@ public class FrameController {
 		int result = JOptionPane.showConfirmDialog(null, inputFields, "Create Class",
 			JOptionPane.OK_CANCEL_OPTION);
 
-		if (name.getText().contains(" ")) {
-		    JOptionPane.showMessageDialog(((GUIView) control.getView()).getFrame(), "Spaces are not allowed");
-		    return;
-		}
-
 		if (result == 0) {
+		    if (name.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(((GUIView) control.getView()).getFrame(),
+				"The class name must contain at least one character");
+			return;
+		    } else if (name.getText().contains(" ")) {
+			JOptionPane.showMessageDialog(((GUIView) control.getView()).getFrame(),
+				"Spaces are not allowed");
+			return;
+		    }
+
 		    Memento meme = new Memento(new Model(control.getModel()));
 		    if (meme.getModel().createClass(name.getText())) {
 			control.newMeme(meme);

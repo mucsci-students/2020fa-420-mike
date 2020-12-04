@@ -52,6 +52,9 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	scrollPane.getHorizontalScrollBar().setUnitIncrement(15);
 	relations = new ArrayList<Line>();
 	menuBar = new JMenuBar();
+	menuBar.setBorder(new EmptyBorder(0, 0, 0, 0));
+	scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+	menuBar.setBackground(new Color(30, 30, 30));
 	frame = new JFrame("Team mike UML Editor");
 
 	GUIInit();
@@ -61,6 +64,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 		new JButton("Redo"), new JButton("Add Class"), new JButton("Enable Edit Mode") };
 	for (int x = 0; x < 7; ++x) {
 	    menuBar.add(buttons[x]);
+	    buttons[x].setBackground(new Color(30, 30, 30));
 	}
 
 	// Adding all panels onto frame
@@ -84,7 +88,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	}
 
 	// Creating the middle panel
-	pane.setBackground(Color.WHITE);
+	pane.setBackground(new Color(45, 45, 45));
 	pane.setOpaque(true);
 	validateRepaint();
     }
@@ -221,7 +225,7 @@ public class GUIView extends ViewTemplate implements ViewInterface {
 	HtmlBox box = showClass(e, control);
 	JLabel label = box.getBox();
 	// Create border and margin
-	Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+	Border border = BorderFactory.createLineBorder(Color.CYAN.darker(), 2);
 	Border margin = new EmptyBorder(6, 6, 6, 6);
 	label.setBorder(new CompoundBorder(border, margin));
 

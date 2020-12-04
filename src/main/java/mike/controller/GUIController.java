@@ -42,7 +42,7 @@ public class GUIController extends ControllerType {
 
     public void classControls(JLabel box, Entity e) {
 	ClassController.clickClass(box, this);
-	ClassController.moveClass(box, e, view);
+	ClassController.moveClass(box, e, view, this);
     }
 
     public void saveCancel(JButton save, JButton cancel, JButton xButton, JButton addRelation, JButton deleteRelation) {

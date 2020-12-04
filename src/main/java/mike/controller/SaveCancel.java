@@ -40,7 +40,7 @@ public class SaveCancel {
 		Model model = EditBox.getEditModel();
 
 		for (int x = 0; x < fieldSize; ++x) {
-		    JPanel panelField = (JPanel) newBox.getComponent(x + 3);
+		    JPanel panelField = (JPanel) newBox.getComponent(x + 4);
 		    String textField = ((JTextField) panelField.getComponent(6)).getText();
 		    String typeField = ((JTextField) panelField.getComponent(4)).getText();
 		    String visType = ((JComboBox<String>) panelField.getComponent(2)).getSelectedItem().toString();
@@ -61,7 +61,7 @@ public class SaveCancel {
 		    }
 		}
 
-		for (int x = fieldSize + 5; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
+		for (int x = fieldSize + 7; x < newBox.getComponentCount() - 1; x += paramSize + 2, ++methodNum) {
 		    JPanel panelMethod = (JPanel) newBox.getComponent(x);
 		    String textMethod = ((JTextField) panelMethod.getComponent(6)).getText();
 		    String typeMethod = ((JTextField) panelMethod.getComponent(4)).getText();
