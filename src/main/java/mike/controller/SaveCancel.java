@@ -56,8 +56,13 @@ public class SaveCancel {
 			madeChange = true;
 		    }
 		    if (!textField.equals(entityField.getName())) {
-			model.renameField(eName, fieldName, textField);
-			madeChange = true;
+			if (model.renameField(eName, fieldName, textField)) {
+			    madeChange = true;
+			} else {
+			    JOptionPane.showMessageDialog(control.getView().getFrame(),
+				    "Cannot rename a field with an existing name");
+			    return;
+			}
 		    }
 		}
 
@@ -79,8 +84,14 @@ public class SaveCancel {
 			madeChange = true;
 		    }
 		    if (!textMethod.equals(m.getName())) {
-			model.renameMethod(eName, m.getName(), textMethod);
-			madeChange = true;
+			if (model.renameMethod(eName, m.getName(), textMethod)) {
+			    madeChange = true;
+			} else {
+			    JOptionPane.showMessageDialog(control.getView().getFrame(),
+				    "Cannot rename a method with an existing name");
+			    return;
+			}
+
 		    }
 
 		    for (int y = 0; y < paramSize; ++y) {
@@ -94,15 +105,27 @@ public class SaveCancel {
 			    madeChange = true;
 			}
 			if (!textParam.equals(p.getName())) {
-			    m.renameParameter(p.getName(), textParam);
-			    madeChange = true;
+			    if (m.renameParameter(p.getName(), textParam)) {
+				madeChange = true;
+			    } else {
+				JOptionPane.showMessageDialog(control.getView().getFrame(),
+					"Cannot rename a parameter with an existing name");
+				 return;
+			    }
+
 			}
 		    }
 
 		}
 		if (!eName.equals(text.getText())) {
-		    model.renameClass(eName, text.getText());
-		    madeChange = true;
+		    if (model.renameClass(eName, text.getText())) {
+			madeChange = true;
+		    } else {
+			JOptionPane.showMessageDialog(control.getView().getFrame(),
+				"Cannot rename a class with an existing name");
+			 return;
+		    }
+
 		}
 
 		control.getinClass().setName(text.getText());
@@ -148,7 +171,7 @@ public class SaveCancel {
 		if (n == 0) {
 		    GUIView view = entering(control);
 		    view.deleteLines(EditBox.getEntity().getName());
-		    EditBox.getEditModel().deleteClass(EditBox.getEntity().getName());
+		    control.getModel().deleteClass(EditBox.getEntity().getName());
 		    view.getPane().remove(control.getinClass());
 		    exiting(view.getMenuBar(), control, view.getFrame());
 		    EditBox.newEditMeme();
