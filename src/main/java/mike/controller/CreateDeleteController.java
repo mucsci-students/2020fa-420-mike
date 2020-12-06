@@ -146,17 +146,17 @@ public class CreateDeleteController {
 	    if (attribute == "field") {
 		JLabel start = (JLabel) EditBox.getBox().getComponent(3);
 		if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
-		    start.setText(" Visibility        Type              Name");
+		    start.setText(" Visibility             Type                        Name");
 		} else {
-		    start.setText("            Visibility        Type              Name");
+		    start.setText("      Visibility             Type                        Name");
 		}
 	    } else if (attribute == "method") {
 		JLabel start = (JLabel) EditBox.getBox()
 			.getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
 		if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
-		    start.setText(" Visibility        Type              Name");
+		    start.setText(" Visibility             Type                        Name");
 		} else {
-		    start.setText("            Visibility        Type              Name");
+		    start.setText("      Visibility             Type                        Name");
 		}
 	    }
 	}

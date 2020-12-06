@@ -133,18 +133,36 @@ public class EditBox {
 	Label.setForeground(Color.WHITE);
 	newBox.add(Label);
 	
-	JLabel start;
-	if(section == "Fields:") {
-	    if (control.getModel().copyEntity(e.getName()).getFields().size() == 0) {
-		start = new JLabel(" Visibility        Type              Name");
-	    } else {
-		start = new JLabel("            Visibility        Type              Name");
+	JLabel start = new JLabel();
+	String os = System.getProperty("os.name").toLowerCase();
+	if (os.indexOf("win") >= 0 || os.indexOf("mac") >= 0) {
+	    if (section == "Fields:") {
+		if (EditBox.getEditModel().copyEntity(e.getName()).getFields().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
+	    } else if (section == "Methods:") {
+		if (EditBox.getEditModel().copyEntity(e.getName()).getMethods().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
 	    }
-	} else {
-	    if (control.getModel().copyEntity(e.getName()).getMethods().size() == 0) {
-		start = new JLabel(" Visibility        Type              Name");
-	    } else {
-		start = new JLabel("            Visibility        Type              Name");
+	}
+	if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
+	    if (section == "Fields:") {
+		if (EditBox.getEditModel().copyEntity(e.getName()).getFields().size() == 0) {
+		    start.setText(" Visibility             Type                        Name");
+		} else {
+		    start.setText("      Visibility             Type                        Name");
+		}
+	    } else if (section == "Methods:") {
+		if (EditBox.getEditModel().copyEntity(e.getName()).getMethods().size() == 0) {
+		    start.setText(" Visibility             Type                        Name");
+		} else {
+		    start.setText("      Visibility             Type                        Name");
+		}
 	    }
 	}
 	start.setFont(new Font("", Font.BOLD, 14));
