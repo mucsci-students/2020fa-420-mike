@@ -100,8 +100,8 @@ public class CreateDeleteController {
 
 		// Delete attribute from model
 		if (attribute.equals("field")) {
-		    moveLabels(entity.getName(), attribute);
 		    EditBox.getEditModel().deleteField(entity.getName(), deleteAtt);
+		    moveLabels(entity.getName(), attribute);
 		} else if (attribute.equals("method")) {
 		    // Delete parameters in view as well
 		    int methodSpot = newview.getComponentZOrder(panel);
