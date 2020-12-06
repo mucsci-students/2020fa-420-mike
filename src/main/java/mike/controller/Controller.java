@@ -13,7 +13,7 @@ public class Controller {
     public Controller(Model model, ViewTemplate view) throws IOException {
 
 	if (ViewTemplate.isGUI()) {
-	    control = new GUIController(model, (GUIView) view);
+	    control = new GUIController(model, (GUIView) view.getViewinterface());
 	} else {
 	    control = new CLIController(model, view);
 	}
