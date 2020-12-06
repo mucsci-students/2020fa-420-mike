@@ -44,8 +44,7 @@ public class CreateDeleteController {
 			((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
 			moveLabels(entity.getName(), attribute);
 		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make field");
+			JOptionPane.showMessageDialog(control.getView().getFrame(), "Cannot make field");
 		    }
 
 		} else if (attribute == "method") {
@@ -56,8 +55,7 @@ public class CreateDeleteController {
 			((JComboBox<String>) panel.getComponent(0)).setSelectedItem("public");
 			moveLabels(entity.getName(), attribute);
 		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make method");
+			JOptionPane.showMessageDialog(control.getView().getFrame(), "Cannot make method");
 		    }
 
 		} else if (attribute == "parameter") {
@@ -72,8 +70,7 @@ public class CreateDeleteController {
 			}
 			control.deleteParam(EditBox.editSection(newType, newName, true, spot), methodName);
 		    } else {
-			JOptionPane.showMessageDialog(control.getView().getFrame(),
-				"Cannot make parameter");
+			JOptionPane.showMessageDialog(control.getView().getFrame(), "Cannot make parameter");
 		    }
 		}
 		((JTextField) panel.getComponent(2)).setText("");
@@ -126,20 +123,41 @@ public class CreateDeleteController {
     }
 
     private static void moveLabels(String entityName, String attribute) {
-	if (attribute == "field") {
-	    JLabel start = (JLabel) EditBox.getBox().getComponent(3);
-	    if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
-		start.setText(" Visibility        Type              Name");
-	    } else {
-		start.setText("            Visibility        Type              Name");
+	String os = System.getProperty("os.name").toLowerCase();
+	if (os.indexOf("win") >= 0 || os.indexOf("mac") >= 0) {
+	    if (attribute == "field") {
+		JLabel start = (JLabel) EditBox.getBox().getComponent(3);
+		if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
+	    } else if (attribute == "method") {
+		JLabel start = (JLabel) EditBox.getBox()
+			.getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
+		if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
 	    }
-	} else if (attribute == "method") {
-	    JLabel start = (JLabel) EditBox.getBox()
-		    .getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
-	    if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
-		start.setText(" Visibility        Type              Name");
-	    } else {
-		start.setText("            Visibility        Type              Name");
+	}
+	if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
+	    if (attribute == "field") {
+		JLabel start = (JLabel) EditBox.getBox().getComponent(3);
+		if (EditBox.getEditModel().copyEntity(entityName).getFields().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
+	    } else if (attribute == "method") {
+		JLabel start = (JLabel) EditBox.getBox()
+			.getComponent(6 + EditBox.getEditModel().copyEntity(entityName).getFields().size());
+		if (EditBox.getEditModel().copyEntity(entityName).getMethods().size() == 0) {
+		    start.setText(" Visibility        Type              Name");
+		} else {
+		    start.setText("            Visibility        Type              Name");
+		}
 	    }
 	}
     }
