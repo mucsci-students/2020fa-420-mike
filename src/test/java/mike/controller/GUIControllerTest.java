@@ -70,6 +70,7 @@ public class GUIControllerTest {
 	assertEquals("Model is not equal", model, GUIControllerMock.getModel());
 	assertFalse("changed is true", GUIControllerMock.getChanged());
 	assertEquals("Model is not equal", model, GUIControllerMock.getModel());
+	assertEquals("Model is not equal", guiViewMock, GUIControllerMock.getView());
 	
 	JLabel no = new JLabel("NO");
 	GUIControllerMock.setinClass(no);
