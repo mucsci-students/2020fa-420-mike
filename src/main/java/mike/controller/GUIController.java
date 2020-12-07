@@ -20,7 +20,6 @@ import mike.gui.RedoAction;
 import mike.gui.SaveAction;
 import mike.gui.UndoAction;
 import mike.view.GUIView;
-import mike.view.ViewTemplate;
 
 public class GUIController extends ControllerType {
     private Model model;
@@ -30,20 +29,11 @@ public class GUIController extends ControllerType {
     private JLabel inClass;
     protected ArrayList<Memento> mementos;
     private int currMeme;
-
-    // For testing
-    public GUIController(Model model) {
-	super();
-	this.model = model;
-	currMeme = 0;
-	mementos = new ArrayList<Memento>();
-	mementos.add(new Memento(this.model));
-    }
 	
-    public GUIController(Model model, ViewTemplate view) {
+    public GUIController(Model model, GUIView view) {
 	super();
 	this.model = model;
-	this.view = (GUIView) view.getViewinterface();
+	this.view = view;
 	currMeme = 0;
 	mementos = new ArrayList<Memento>();
 	mementos.add(new Memento(this.model));
