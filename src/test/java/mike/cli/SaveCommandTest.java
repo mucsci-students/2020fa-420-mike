@@ -72,6 +72,29 @@ public class SaveCommandTest {
         control.evaluateCommand(justSave);
         saveWorked(file);
 
+        //calling SaveCommand's execute to hit the try catch loop
+        //equivalent to executing the command "save" with a current working file
+        CLIView cliView = new CLIView();
+        SaveCommand saveCommand = new SaveCommand(model, cliView, justSave, false, file);
+
+        resetStreams();
+        System.out.println("File saved at: " + file.getAbsolutePath());
+        expected = out.toString();
+        resetStreams();
+        saveCommand.execute();
+        assertEquals("Save message did not appear correctly", expected, out.toString());
+        resetStreams();
+
+        //test with bad file (to hit the catch Exception)
+        saveCommand = new SaveCommand(model, cliView, justSave, false, new File("bad//dir./us.r/w"));
+        resetStreams();
+        System.out.println("\nERROR: Failed to parse directory. Exiting.");
+        expected = out.toString();
+        resetStreams();
+        saveCommand.execute();
+        assertEquals("Save error message did not appear correctly", expected, out.toString());
+        resetStreams();
+
         resetStreams();
         // Test relative Path error length 4
         System.out.println("\nERROR: "
