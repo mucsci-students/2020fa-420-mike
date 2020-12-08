@@ -3,7 +3,10 @@ package mike.cli;
 import mike.HelperMethods;
 import mike.controller.CLIController;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 import mike.view.ViewTemplate;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
@@ -19,6 +22,7 @@ public class SaveCommandTest {
     Model model;
     ViewTemplate view;
     CLIController control;
+    File file;
     
     private final String sep = File.separator;
     private final String partialPath = sep + "src" + sep + "test" + sep + "java" + sep + "mike";
@@ -44,6 +48,7 @@ public class SaveCommandTest {
         System.setErr(origErr);
         String[] commands = {"sudo", "clear"};
         control.evaluateCommand(commands);
+        file = null;
     }
 
     private void resetStreams() {
@@ -53,11 +58,49 @@ public class SaveCommandTest {
 
     @Test
     public void saveTest() throws IOException, ParseException {
+        //Test only calling "save" with no current file
+        System.out.println("\nSpecify a file path to save to. Proper command usage is: \n  save <name>.json\n");
+        String expected = out.toString();
+        resetStreams();
+        String[] justSave = {"save"};
+        control.evaluateCommand(justSave);
+        assertEquals("save error message did not appear correctly.", expected, out.toString());
+        resetStreams();
+
+        //Test only calling "save" with a current file
+        file = new File(System.getProperty("user.dir") + partialPath + sep + "testDemoCLI.json");
+        control.evaluateCommand(justSave);
+        saveWorked(file);
+
+        //calling SaveCommand's execute to hit the try catch loop
+        //equivalent to executing the command "save" with a current working file
+        CLIView cliView = new CLIView();
+        SaveCommand saveCommand = new SaveCommand(model, cliView, justSave, false, file);
+
+        resetStreams();
+        System.out.println("File saved at: " + file.getAbsolutePath());
+        expected = out.toString();
+        resetStreams();
+        saveCommand.execute();
+        assertEquals("Save message did not appear correctly", expected, out.toString());
+        resetStreams();
+
+        //test with bad file (to hit the catch Exception)
+        saveCommand = new SaveCommand(model, cliView, justSave, false, new File("bad//dir./us.r/w"));
+        resetStreams();
+        System.out.println("\nERROR: Failed to parse directory. Exiting.");
+        expected = out.toString();
+        resetStreams();
+        saveCommand.execute();
+        assertEquals("Save error message did not appear correctly", expected, out.toString());
+        resetStreams();
+
+        resetStreams();
         // Test relative Path error length 4
         System.out.println("\nERROR: "
                 + "Error in parsing command. Proper command usage is: \n"
                 + "  save <name>.json\n");
-        String expected = out.toString();
+        expected = out.toString();
         resetStreams();
         String[] saveErr2 = {"save", "testDemoCLI.json", partialPath, "WRONG"};
         control.evaluateCommand(saveErr2);
@@ -67,7 +110,6 @@ public class SaveCommandTest {
         // Test relative Path
         String[] save = {"save", partialPath + sep + "testDemoCLI.json"};
         control.evaluateCommand(save);
-	File file = new File(System.getProperty("user.dir") + partialPath + sep + "testDemoCLI.json");
         saveWorked(file);
 
         // Test absolute Path
@@ -86,12 +128,27 @@ public class SaveCommandTest {
         saveWorked(file);
     }
 
-    private void saveWorked(File file) throws IOException, ParseException {
-        HelperMethods.save(file, model);
-        Object obj = new JSONParser().parse(new FileReader(file));
+    private void saveWorked(File f) throws IOException, ParseException {
+        HelperMethods.save(f, model);
+        Object obj = new JSONParser().parse(new FileReader(f));
 
         String emptyModelFile = "{\"Relationships\":[],\"Classes\":[]}";
         assertEquals("CLI is null; Should not be null.", emptyModelFile, obj.toString());
+    }
+
+    @Test
+    public void testGetFile() {
+        CLIView cliView = new CLIView();
+        String[] com = { "commands", "array" };
+        SaveCommand save = new SaveCommand(model, cliView, com, false, file);
+
+        assertEquals("File passed in is not equal to SaveCommand's file", file, save.getFile());
+
+        //test with file not null
+        file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
+        SaveCommand save2 = new SaveCommand(model, cliView, com, false, file);
+
+        assertEquals("File passed in is not equal to SaveCommand's file", file, save2.getFile());
     }
 
 }
