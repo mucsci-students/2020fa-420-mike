@@ -29,7 +29,7 @@ public class SaveCommand extends CommandObj {
             }
         } else if(commands.length == 1) {
         	if(file == null) {
-        		System.out.println("Specify a file path to save to. Proper command usage is: " + commandUsage[0] + "\n");
+        		System.out.println("\nSpecify a file path to save to. Proper command usage is: " + commandUsage[0] + "\n");
         		return prompt;
 			}
         	//save to current file
