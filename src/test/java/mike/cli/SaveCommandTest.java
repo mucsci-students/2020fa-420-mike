@@ -3,7 +3,10 @@ package mike.cli;
 import mike.HelperMethods;
 import mike.controller.CLIController;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 import mike.view.ViewTemplate;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
@@ -19,6 +22,7 @@ public class SaveCommandTest {
     Model model;
     ViewTemplate view;
     CLIController control;
+    File file;
     
     private final String sep = File.separator;
     private final String partialPath = sep + "src" + sep + "test" + sep + "java" + sep + "mike";
@@ -44,6 +48,7 @@ public class SaveCommandTest {
         System.setErr(origErr);
         String[] commands = {"sudo", "clear"};
         control.evaluateCommand(commands);
+        file = null;
     }
 
     private void resetStreams() {
@@ -92,6 +97,21 @@ public class SaveCommandTest {
 
         String emptyModelFile = "{\"Relationships\":[],\"Classes\":[]}";
         assertEquals("CLI is null; Should not be null.", emptyModelFile, obj.toString());
+    }
+
+    @Test
+    public void testGetFile() {
+        CLIView cliView = new CLIView();
+        String[] com = { "commands", "array" };
+        SaveCommand save = new SaveCommand(model, cliView, com, false, file);
+
+        assertEquals("File passed in is not equal to SaveCommand's file", file, save.getFile());
+
+        //test with file not null
+        file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
+        SaveCommand save2 = new SaveCommand(model, cliView, com, false, file);
+
+        assertEquals("File passed in is not equal to SaveCommand's file", file, save2.getFile());
     }
 
 }

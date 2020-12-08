@@ -3,7 +3,10 @@ package mike.cli;
 import mike.HelperMethods;
 import mike.controller.CLIController;
 import mike.datastructures.Model;
+import mike.view.CLIView;
 import mike.view.ViewTemplate;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +24,7 @@ public class LoadCommandTest {
     Model model;
     ViewTemplate view;
     CLIController control;
+    File file;
 
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -45,6 +49,7 @@ public class LoadCommandTest {
         System.setErr(origErr);
         String[] commands = {"sudo", "clear"};
         control.evaluateCommand(commands);
+        file = null;
     }
 
     private void resetStreams() {
@@ -76,7 +81,7 @@ public class LoadCommandTest {
         // Test relative Path
         String[] load = {"load", sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json"};
         control.evaluateCommand(load);
-	File file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
+	    file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
         loadWorked(file);
 
         // Test absolute Path
@@ -86,13 +91,29 @@ public class LoadCommandTest {
         loadWorked(file2);
     }
 
-    private void loadWorked(File file) throws IOException, ParseException, java.text.ParseException {
-        HelperMethods.save(file, model);
+    private void loadWorked(File f) throws IOException, ParseException, java.text.ParseException {
+        HelperMethods.save(f, model);
         Model loadModel = new Model();
-        HelperMethods.load(file, loadModel, null, null);
+        HelperMethods.load(f, loadModel, null, null);
 
         assertEquals("loadModel contains a class.", 0, loadModel.getEntities().size());
         assertEquals("loadModel contains a relationship.", 0, loadModel.getRelationships().size());
+    }
+
+    @Test
+    public void testGetFile() {
+        CLIView cliView = new CLIView();
+        String[] com = { "commands", "array" };
+        LineReader reader = LineReaderBuilder.builder().build();
+        LoadCommand load = new LoadCommand(model, cliView, com, false, reader, file);
+
+        assertEquals("File passed in is not equal to LoadCommand's file", file, load.getFile());
+
+        //test with file not null
+        file = new File(System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "java" + sep + "mike" + sep + "testDemoCLI.json");
+        LoadCommand load2 = new LoadCommand(model, cliView, com, false, reader, file);
+
+        assertEquals("File passed in is not equal to LoadCommand's file", file, load2.getFile());
     }
 
 }
